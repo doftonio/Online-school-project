@@ -1,4 +1,7 @@
-﻿#include <string>
+﻿#ifndef HEADER_H
+#define HEADER_H
+
+#include <string>
 
 class Student {
 private:
@@ -51,4 +54,5 @@ public:
 
     void printFullCourseInfo();
 };
- 
+
+#endif
