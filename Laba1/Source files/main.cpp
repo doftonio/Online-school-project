@@ -1,4 +1,5 @@
-﻿#include "../Header files/header.h"
+﻿#include "../Header files/course.h"
+#include "../Header files/student.h"
 #include <iostream>
 #include <string>
 
