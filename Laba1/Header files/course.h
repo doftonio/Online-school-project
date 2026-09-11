@@ -1,4 +1,6 @@
-﻿
+﻿#include <string>
+class Student;
+
 class Course {
 private:
     std::string courseTitle;

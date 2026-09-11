@@ -1,4 +1,5 @@
-﻿class Student {
+﻿#include <string>
+class Student {
 private:
     int studentId;
     std::string studentName;
