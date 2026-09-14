@@ -6,7 +6,7 @@ void populateInitialData(CourseList& courseList)
     courseList.addCourse(1, "C++ Programming", "Alex Sidorov", 10, 2);
     courseList.addCourse(2, "Web Development", "Elena Kuznetsova", 8, 5);
 
-    // Получаем узлы курсов через единый поиск и записываем студентов
+   
     CourseNode* cppNode = courseList.getCoursePointerById(1);
     if (cppNode != nullptr)
     {
@@ -27,7 +27,7 @@ void populateInitialData(CourseList& courseList)
 
         webNode->data.recordTaskCompletion(5583003);
     }
-}
+} 
 
 void verifyBasicOperations()
 {
@@ -48,13 +48,7 @@ int main()
     std::cout << "\033[34mInitializing default courses and students through CourseList:\033[0m\n";
     populateInitialData(courseList);
 
-    std::cout << "\n\033[34mCurrent course statuses:\033[0m\n";
-
-    CourseNode* cppNode = courseList.getCoursePointerById(1);
-    if (cppNode != nullptr) cppNode->data.printFullCourseInfo();
-
-    CourseNode* webNode = courseList.getCoursePointerById(2);
-    if (webNode != nullptr) webNode->data.printFullCourseInfo();
+    mainMenu(courseList);
 
     return 0;
 }

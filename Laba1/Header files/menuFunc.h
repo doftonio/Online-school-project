@@ -1,4 +1,4 @@
 ﻿#pragma once
 
-void mainMenu();
+void mainMenu(CourseList);
 void courseMenu(Course* course);

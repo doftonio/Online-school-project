@@ -62,9 +62,8 @@ void courseMenu(Course* course) {
     }
 }
 
-void mainMenu()
+void mainMenu(CourseList courseList)
 {
-    CourseList courseList;
     int userChoice = -1;
 
     while (userChoice != 0) {
@@ -123,6 +122,7 @@ void mainMenu()
             CourseNode* node = courseList.getCoursePointerById(targetId);
             if (node != nullptr) {
                 std::cout << "\033[32mCourse selected: " << node->data.getCourseTitle() << "\033[0m\n";
+                courseMenu(&(node->data)); 
             }
             else {
                 std::cout << "\033[31mCourse not found.\033[0m\n";

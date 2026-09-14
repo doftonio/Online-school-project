@@ -203,7 +203,7 @@ void Course::printFullCourseInfo()
             std::cout << "  " << i + 1 << ". "
                 << enrolledStudents[i].getStudentName()
                 << " (ID: " << enrolledStudents[i].getStudentId() << ")"
-                << " — tasks completed: " << enrolledStudents[i].getCompletedTasks()
+                << " - tasks completed: " << enrolledStudents[i].getCompletedTasks()
                 << ", progress: \033[32m" << progress << "%\033[0m" << std::endl;
         }
     }
@@ -262,11 +262,9 @@ CourseNode* CourseList::getCoursePointerById(int targetId)
 
 void CourseList::addCourse(int id, std::string title, std::string teacher, int lessons, int capacity)
 {
-    Course newCourse;
-    newCourse.initCourse(id, title, teacher, lessons, capacity);
-
+    
     CourseNode* newNode = new CourseNode();
-    newNode->data = newCourse;
+    newNode->data.initCourse(id, title, teacher, lessons, capacity); 
     newNode->next = nullptr;
     newNode->prev = nullptr;
 
