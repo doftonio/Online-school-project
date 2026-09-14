@@ -15,7 +15,7 @@ int main() {
 
     Course cppCourse;
     cppCourse.initCourse("C++ Programming", "Alex Sidorov", 10, 2);
-
+    
     Course webCourse;
     webCourse.initCourse("Web Development", "Elena Kuznetsova", 8, 5);
 
