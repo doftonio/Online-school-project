@@ -1,0 +1,154 @@
+﻿#include "../Header files/header.h"
+
+void courseMenu(Course* course) {
+    int userChoice = -1;
+    while (userChoice != 0) {
+        std::cout << "\033[33m" << course->getCourseTitle() << " Course Management : \033[0m\n";
+        std::cout << "1. Enroll new student\n";
+        std::cout << "2. Remove student from course\n";
+        std::cout << "3. Record task completion\n";
+        std::cout << "4. Assign new instructor\n";
+        std::cout << "5. Display course summary\n";
+        std::cout << "0. Back\n";
+        std::cout << "Select an option: ";
+        std::cin >> userChoice;
+
+        switch (userChoice) {
+        case 1: {
+            int studentId;
+            std::string studentName;
+            std::cout << "Enter student ID: ";
+            std::cin >> studentId;
+            std::cin.ignore();
+            std::cout << "Enter student name: ";
+            std::getline(std::cin, studentName);
+            course->enrollStudent(studentId, studentName);
+            break;
+        }
+        case 2: {
+            int studentId;
+            std::cout << "Enter student ID to remove: ";
+            std::cin >> studentId;
+            course->removeStudent(studentId);
+            break;
+        }
+        case 3: {
+            int studentId;
+            std::cout << "Enter student ID: ";
+            std::cin >> studentId;
+            course->recordTaskCompletion(studentId);
+            break;
+        }
+        case 4: {
+            std::string newTeacherName;
+            std::cin.ignore();
+            std::cout << "Enter new instructor name: ";
+            std::getline(std::cin, newTeacherName);
+            course->setTeacherName(newTeacherName);
+            std::cout << "\033[32mCourse instructor updated.\033[0m\n";
+            break;
+        }
+        case 5:
+            course->printFullCourseInfo();
+            break;
+        case 0:
+            std::cout << "Exiting application.\n";
+            break;
+        default:
+            std::cout << "\033[31mInvalid option, please try again.\033[0m\n";
+            break;
+        }
+        std::cout << "\n";
+    }
+}
+
+void mainMenu()
+{
+    CourseList courseList;
+    int userChoice = -1;
+
+    while (userChoice != 0) {
+        std::cout << "\n\033[33mMain Menu / Course select\033[0m\n";
+        std::cout << "1. Display list of courses\n";
+        std::cout << "2. Add course\n";
+        std::cout << "3. Remove course\n";
+        std::cout << "4. Select course by id\n";
+        std::cout << "5. Display course summary\n";
+        std::cout << "0. Close program\n";
+        std::cout << "Select an option: ";
+        std::cin >> userChoice;
+
+        switch (userChoice) {
+        case 1:
+            courseList.displayListOfCourses();
+            break;
+        case 2: {
+            int id, lessons, capacity;
+            std::string title, teacher;
+
+            std::cout << "Enter course ID: ";
+            std::cin >> id;
+            std::cout << "Enter course title: ";
+            std::cin.ignore();
+            std::getline(std::cin, title);
+            std::cout << "Enter teacher name: ";
+            std::getline(std::cin, teacher);
+            std::cout << "Enter total lessons: ";
+            std::cin >> lessons;
+            std::cout << "Enter max capacity: ";
+            std::cin >> capacity;
+
+            courseList.addCourse(id, title, teacher, lessons, capacity);
+            std::cout << "\033[32mCourse added successfully!\033[0m\n";
+            break;
+        }
+        case 3: {
+            int targetId;
+            std::cout << "Enter course ID to remove: ";
+            std::cin >> targetId;
+
+            if (courseList.removeCourseById(targetId)) {
+                std::cout << "\033[32mCourse removed successfully.\033[0m\n";
+            }
+            else {
+                std::cout << "\033[31mCourse not found.\033[0m\n";
+            }
+            break;
+        }
+        case 4: {
+            int targetId;
+            std::cout << "Enter course ID: ";
+            std::cin >> targetId;
+
+            CourseNode* node = courseList.getCoursePointerById(targetId);
+            if (node != nullptr) {
+                std::cout << "\033[32mCourse selected: " << node->data.getCourseTitle() << "\033[0m\n";
+            }
+            else {
+                std::cout << "\033[31mCourse not found.\033[0m\n";
+            }
+            break;
+        }
+        case 5: {
+            int targetId;
+            std::cout << "Enter course ID: ";
+            std::cin >> targetId;
+
+            CourseNode* node = courseList.getCoursePointerById(targetId);
+            if (node != nullptr) {
+                node->data.printFullCourseInfo();
+            }
+            else {
+                std::cout << "\033[31mCourse not found.\033[0m\n";
+            }
+            break;
+        }
+        case 0:
+            std::cout << "\033[32mExiting program...\033[0m\n";
+            break;
+        default:
+            std::cout << "\033[31mInvalid choice. Please try again.\033[0m\n";
+            break;
+        }
+    }
+}

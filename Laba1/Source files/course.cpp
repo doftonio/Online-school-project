@@ -8,6 +8,7 @@ Course::Course()
     teacherName = "";
     totalLessons = 0;
     maxCapacity = 0;
+    Id = 0;
     currentStudentsCount = 0;
     enrolledStudents = nullptr;
 }
@@ -21,7 +22,7 @@ Course::~Course()
     }
 }
 
-void Course::initCourse(std::string title, std::string teacher, int lessons, int capacity)
+void Course::initCourse(int id, std::string title, std::string teacher, int lessons, int capacity)
 {
     if (enrolledStudents != nullptr)
     {
@@ -33,6 +34,7 @@ void Course::initCourse(std::string title, std::string teacher, int lessons, int
     teacherName = teacher;
     totalLessons = lessons;
     maxCapacity = capacity;
+    Id = id;
     currentStudentsCount = 0;
 
     if (maxCapacity > 0)
@@ -40,6 +42,12 @@ void Course::initCourse(std::string title, std::string teacher, int lessons, int
         enrolledStudents = new Student[maxCapacity];
     }
 }
+
+int Course::getCourseId()
+{
+    return Id;
+}
+
 
 std::string Course::getCourseTitle()
 {
@@ -200,4 +208,114 @@ void Course::printFullCourseInfo()
         }
     }
     std::cout << std::endl;
+}
+CourseList::CourseList()
+{
+    head = nullptr;
+    numberOfCourses = 0;
+}
+
+CourseList::~CourseList()
+{
+    while (head != nullptr)
+    {
+        deleteNode(head);
+    }
+}
+
+void CourseList::deleteNode(CourseNode* node)
+{
+    if (node == nullptr) return;
+
+    if (node == head)
+    {
+        head = node->next;
+    }
+
+    if (node->prev != nullptr)
+    {
+        node->prev->next = node->next;
+    }
+
+    if (node->next != nullptr)
+    {
+        node->next->prev = node->prev;
+    }
+
+    delete node;
+    numberOfCourses--;
+}
+
+CourseNode* CourseList::getCoursePointerById(int targetId)
+{
+    CourseNode* current = head;
+    while (current != nullptr)
+    {
+        if (current->data.getCourseId() == targetId)
+        {
+            return current;
+        }
+        current = current->next;
+    }
+    return nullptr;
+}
+
+void CourseList::addCourse(int id, std::string title, std::string teacher, int lessons, int capacity)
+{
+    Course newCourse;
+    newCourse.initCourse(id, title, teacher, lessons, capacity);
+
+    CourseNode* newNode = new CourseNode();
+    newNode->data = newCourse;
+    newNode->next = nullptr;
+    newNode->prev = nullptr;
+
+    if (head == nullptr)
+    {
+        head = newNode;
+    }
+    else
+    {
+        CourseNode* current = head;
+        while (current->next != nullptr)
+        {
+            current = current->next;
+        }
+        current->next = newNode;
+        newNode->prev = current;
+    }
+
+    numberOfCourses++;
+}
+
+bool CourseList::removeCourseById(int targetId)
+{
+    CourseNode* targetNode = getCoursePointerById(targetId);
+    if (targetNode != nullptr)
+    {
+        deleteNode(targetNode);
+        return true;
+    }
+    return false;
+}
+
+void CourseList::displayListOfCourses()
+{
+    if (head == nullptr)
+    {
+        std::cout << "\033[33mNo courses available.\033[0m\n";
+        return;
+    }
+
+    std::cout << "\n\033[34m--- Courses List (" << numberOfCourses << ") ---\033[0m\n";
+    CourseNode* current = head;
+    while (current != nullptr)
+    {
+        std::cout << "ID: " << current->data.getCourseId()
+            << " | Title: \033[36m" << current->data.getCourseTitle() << "\033[0m"
+            << " | Students: " << current->data.getEnrolledCount() << "/" << current->data.getMaxCapacity()
+            << std::endl;
+        current = current->next;
+    }
+    std::cout << "------------------------------------\n";
 }
