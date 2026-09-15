@@ -1,5 +1,4 @@
-﻿#include "../Header files/course.h"
-#include "../Header files/student.h"
+﻿#include "../Header files/header.h"
 #include <iostream>
 
 Course::Course()
@@ -22,7 +21,8 @@ Course::~Course()
     }
 }
 
-void Course::initCourse(int id, std::string title, std::string teacher, int lessons, int capacity)
+void Course::initCourse(int id, std::string title, std::string teacher,
+    int lessons, int capacity)
 {
     if (enrolledStudents != nullptr)
     {

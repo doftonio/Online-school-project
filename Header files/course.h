@@ -12,7 +12,6 @@ private:
     int currentStudentsCount;
     int Id;
     Student* enrolledStudents;
-    //add course id and ways to set id and get it
 
 public:
 
