@@ -1,5 +1,5 @@
 ﻿#include "../Header files/header.h"
-#define password 5
+
 void populateInitialData(CourseList& courseList)
 
     // Добавляем курсы через метод списка
@@ -14,6 +14,7 @@ void populateInitialData(CourseList& courseList)
         cppNode->data.recordTaskCompletion(5583001);
         cppNode->data.recordTaskCompletion(5583002);
     }
+    
 
     CourseNode* webNode = courseList.getCoursePointerById(2);
     if (webNode != nullptr)
@@ -38,4 +39,4 @@ int main()
 
     mainMenu(courseList);
 
-    return password;
+    return 0;
