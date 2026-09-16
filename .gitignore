@@ -35,13 +35,7 @@
 *.lib
 
 # Executables
-*.sln
-*.exe
-*.out
-*.app
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
+
 # Build directories
 build/
 Build/
