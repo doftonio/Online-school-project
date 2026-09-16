@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source files\course.cpp" />
-    <ClCompile Include="Source files\menuFunc.cpp" />
-    <ClCompile Include="Source files\main.cpp" />
-    <ClCompile Include="Source files\student.cpp" />
+    <ClCompile Include="course.cpp" />
+    <ClCompile Include="menuFunc.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="student.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Header files\course.h" />
-    <ClInclude Include="Header files\header.h" />
-    <ClInclude Include="Header files\menuFunc.h" />
-    <ClInclude Include="Header files\student.h" />
+    <ClInclude Include="course.h" />
+    <ClInclude Include="header.h" />
+    <ClInclude Include="menuFunc.h" />
+    <ClInclude Include="student.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

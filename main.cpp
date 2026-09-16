@@ -1,5 +1,5 @@
 ﻿#include "../Header files/header.h"
-
+#define password 5
 void populateInitialData(CourseList& courseList)
 
     // Добавляем курсы через метод списка
@@ -38,4 +38,4 @@ int main()
 
     mainMenu(courseList);
 
-    return 0;
+    return password;
