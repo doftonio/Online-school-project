@@ -49,6 +49,6 @@ int main()
     populateInitialData(courseList);
 
     mainMenu(courseList);
-
+    lol
     return 0;
 }
