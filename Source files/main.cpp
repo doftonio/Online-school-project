@@ -2,41 +2,37 @@
 
 void populateInitialData(CourseList& courseList)
 {
-    // Добавляем курсы через метод списка
     courseList.addCourse(1, "C++ Programming", "Alex Sidorov", 10, 2);
     courseList.addCourse(2, "Web Development", "Elena Kuznetsova", 8, 5);
 
-   
-    CourseNode* cppNode = courseList.getCoursePointerById(1);
-    if (cppNode != nullptr)
+    if (CourseNode* cppNode = courseList.getCoursePointerById(1))
     {
         cppNode->data.enrollStudent(5583001, "John Smith");
         cppNode->data.enrollStudent(5583002, "Anna Smirnova");
-        cppNode->data.enrollStudent(5583003, "Paul Kovalev"); // Проверка лимита
+        cppNode->data.enrollStudent(5583003, "Paul Kovalev");
 
         cppNode->data.recordTaskCompletion(5583001);
         cppNode->data.recordTaskCompletion(5583001);
         cppNode->data.recordTaskCompletion(5583002);
     }
 
-    CourseNode* webNode = courseList.getCoursePointerById(2);
-    if (webNode != nullptr)
+    if (CourseNode* webNode = courseList.getCoursePointerById(2))
     {
         webNode->data.enrollStudent(5583001, "Anna Smirnova");
         webNode->data.enrollStudent(5583003, "Paul Kovalev");
 
         webNode->data.recordTaskCompletion(5583003);
     }
-} 
+}
 
 void verifyBasicOperations()
 {
-    std::cout << "\033[34mVerifying basic object operations:\033[0m\n";
+    std::cout << "\o{33}[34mVerifying basic object operations:\o{33}[0m\n";
     Student singleStudent;
     singleStudent.initStudent(101, "John Doe");
     singleStudent.printInfo();
     singleStudent.setStudentName("John Smith");
-    std::cout << "Updated name: \033[36m" << singleStudent.getStudentName() << "\033[0m\n\n";
+    std::cout << "Updated name: \o{33}[36m" << singleStudent.getStudentName() << "\o{33}[0m\n\n";
 }
 
 int main()
@@ -45,10 +41,10 @@ int main()
 
     CourseList courseList;
 
-    std::cout << "\033[34mInitializing default courses and students through CourseList:\033[0m\n";
+    std::cout << "\o{33}[34mInitializing default courses and students through CourseList:\o{33}[0m\n";
     populateInitialData(courseList);
 
     mainMenu(courseList);
-    lol
+
     return 0;
 }

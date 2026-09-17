@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <string>
+
 class Student {
 private:
     int studentId;
@@ -9,14 +10,14 @@ private:
 public:
     Student();
 
-    void initStudent(int id, std::string name);
-    int getStudentId();
-    std::string getStudentName();
-    int getCompletedTasks();
+    void initStudent(int id, const std::string& name);
+    int getStudentId() const;
+    std::string getStudentName() const;
+    int getCompletedTasks() const;
 
-    void setStudentName(std::string name);
+    void setStudentName(const std::string& name);
     void completeTask();
     void resetTasks();
 
-    void printInfo();
+    void printInfo() const;
 };

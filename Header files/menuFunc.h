@@ -1,4 +1,7 @@
 ﻿#pragma once
 
-void mainMenu(CourseList);
+class Course;
+class CourseList;
+
+void mainMenu(CourseList& courseList);
 void courseMenu(Course* course);

@@ -2,35 +2,35 @@
 #include <iostream>
 
 Student::Student()
+    : studentId(0),
+    studentName(""),
+    completedTasks(0)
 {
-    studentId = 0;
-    studentName = "";
-    completedTasks = 0;
 }
 
-void Student::initStudent(int id, std::string name)
+void Student::initStudent(int id, const std::string& name)
 {
     studentId = id;
     studentName = name;
     completedTasks = 0;
 }
 
-int Student::getStudentId()
+int Student::getStudentId() const
 {
     return studentId;
 }
 
-std::string Student::getStudentName()
+std::string Student::getStudentName() const
 {
     return studentName;
 }
 
-int Student::getCompletedTasks()
+int Student::getCompletedTasks() const
 {
     return completedTasks;
 }
 
-void Student::setStudentName(std::string name)
+void Student::setStudentName(const std::string& name)
 {
     studentName = name;
 }
@@ -45,9 +45,9 @@ void Student::resetTasks()
     completedTasks = 0;
 }
 
-void Student::printInfo()
+void Student::printInfo() const
 {
-    std::cout << "Student: \033[36m" << studentName << "\033[0m"
+    std::cout << "Student: \o{33}[36m" << studentName << "\o{33}[0m"
         << ", Student ID: " << studentId
-        << ", completed tasks: \033[32m" << completedTasks << "\033[0m" << std::endl;
+        << ", completed tasks: \o{33}[32m" << completedTasks << "\o{33}[0m" << std::endl;
 }
