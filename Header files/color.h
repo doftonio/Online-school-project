@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+
 namespace Color {
     inline void setAttribute(WORD attr) {
         static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
