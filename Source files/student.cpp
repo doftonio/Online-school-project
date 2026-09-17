@@ -1,13 +1,6 @@
 ﻿#include "../Header files/student.h"
 #include <iostream>
 
-Student::Student()
-    : studentId(0),
-    studentName(""),
-    completedTasks(0)
-{
-}
-
 void Student::initStudent(int id, const std::string& name)
 {
     studentId = id;
@@ -47,7 +40,7 @@ void Student::resetTasks()
 
 void Student::printInfo() const
 {
-    std::cout << "Student: \o{33}[36m" << studentName << "\o{33}[0m"
+    std::cout << "Student: \x1b[36m" << studentName << "\x1b[0m"
         << ", Student ID: " << studentId
-        << ", completed tasks: \o{33}[32m" << completedTasks << "\o{33}[0m" << std::endl;
+        << ", completed tasks: \x1b[32m" << completedTasks << "\x1b[0m" << std::endl;
 }

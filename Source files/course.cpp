@@ -1,73 +1,19 @@
 ﻿#include "../Header files/course.h"
-#include "../Header files/student.h"
 #include <iostream>
-
-Course::Course()
-    : courseTitle(""),
-    teacherName(""),
-    totalLessons(0),
-    maxCapacity(0),
-    currentStudentsCount(0),
-    Id(0),
-    enrolledStudents(nullptr)
-{
-}
-
-Course::Course(const Course& other)
-    : courseTitle(other.courseTitle),
-    teacherName(other.teacherName),
-    totalLessons(other.totalLessons),
-    maxCapacity(other.maxCapacity),
-    currentStudentsCount(other.currentStudentsCount),
-    Id(other.Id),
-    enrolledStudents(other.maxCapacity > 0 ? std::make_unique<Student[]>(other.maxCapacity) : nullptr)
-{
-    for (int i = 0; i < currentStudentsCount; ++i)
-    {
-        enrolledStudents[i] = other.enrolledStudents[i];
-    }
-}
-
-Course& Course::operator=(const Course& other)
-{
-    if (this != &other)
-    {
-        courseTitle = other.courseTitle;
-        teacherName = other.teacherName;
-        totalLessons = other.totalLessons;
-        maxCapacity = other.maxCapacity;
-        currentStudentsCount = other.currentStudentsCount;
-        Id = other.Id;
-        if (other.maxCapacity > 0)
-        {
-            enrolledStudents = std::make_unique<Student[]>(other.maxCapacity);
-            for (int i = 0; i < currentStudentsCount; ++i)
-            {
-                enrolledStudents[i] = other.enrolledStudents[i];
-            }
-        }
-        else
-        {
-            enrolledStudents = nullptr;
-        }
-    }
-    return *this;
-}
 
 void Course::initCourse(int id, const std::string& title, const std::string& teacher, int lessons, int capacity)
 {
-    enrolledStudents = nullptr;
-
     courseTitle = title;
     teacherName = teacher;
     totalLessons = lessons;
     maxCapacity = capacity;
     Id = id;
     currentStudentsCount = 0;
+    enrolledStudents.clear();
 
     if (maxCapacity > 0)
     {
-        enrolledStudents = std::make_unique<Student[]>(maxCapacity);
+        enrolledStudents.reserve(maxCapacity);
     }
 }
 
@@ -117,8 +63,8 @@ bool Course::enrollStudent(int id, const std::string& name)
 {
     if (currentStudentsCount >= maxCapacity)
     {
-        std::cout << "\o{33}[31mFailed to enroll student " << name
-            << ": course limit reached (limit: " << maxCapacity << ").\o{33}[0m" << std::endl;
+        std::cout << "\x1b[31mFailed to enroll student " << name
+            << ": course limit reached (limit: " << maxCapacity << ").\x1b[0m" << std::endl;
         return false;
     }
 
@@ -126,16 +72,18 @@ bool Course::enrollStudent(int id, const std::string& name)
     {
         if (enrolledStudents[i].getStudentId() == id)
         {
-            std::cout << "\o{33}[33mStudent with ID " << id
-                << " is already enrolled in this course.\o{33}[0m" << std::endl;
+            std::cout << "\x1b[33mStudent with ID " << id
+                << " is already enrolled in this course.\x1b[0m" << std::endl;
             return false;
         }
     }
 
-    enrolledStudents[currentStudentsCount].initStudent(id, name);
+    Student newStudent;
+    newStudent.initStudent(id, name);
+    enrolledStudents.push_back(newStudent);
     currentStudentsCount++;
-    std::cout << "\o{33}[32mStudent " << name << " successfully enrolled in \""
-        << courseTitle << "\".\o{33}[0m" << std::endl;
+    std::cout << "\x1b[32mStudent " << name << " successfully enrolled in \""
+        << courseTitle << "\".\x1b[0m" << std::endl;
     return true;
 }
 
@@ -154,21 +102,16 @@ bool Course::removeStudent(int id)
 
     if (targetIndex == -1)
     {
-        std::cout << "\o{33}[31mStudent with ID " << id
-            << " was not found on this course.\o{33}[0m" << std::endl;
+        std::cout << "\x1b[31mStudent with ID " << id
+            << " was not found on this course.\x1b[0m" << std::endl;
         return false;
     }
 
     std::string deletedName = enrolledStudents[targetIndex].getStudentName();
-
-    for (int i = targetIndex; i < currentStudentsCount - 1; i++)
-    {
-        enrolledStudents[i] = enrolledStudents[i + 1];
-    }
-
+    enrolledStudents.erase(enrolledStudents.begin() + targetIndex);
     currentStudentsCount--;
-    std::cout << "\o{33}[32mStudent " << deletedName
-        << " has been removed from \"" << courseTitle << "\". Spot freed.\o{33}[0m" << std::endl;
+    std::cout << "\x1b[32mStudent " << deletedName
+        << " has been removed from \"" << courseTitle << "\". Spot freed.\x1b[0m" << std::endl;
     return true;
 }
 
@@ -179,16 +122,16 @@ void Course::recordTaskCompletion(int studentId)
         if (enrolledStudents[i].getStudentId() == studentId)
         {
             enrolledStudents[i].completeTask();
-            std::cout << "\o{33}[32mCompleted task recorded for " << enrolledStudents[i].getStudentName()
-                << ".\o{33}[0m" << std::endl;
+            std::cout << "\x1b[32mCompleted task recorded for " << enrolledStudents[i].getStudentName()
+                << ".\x1b[0m" << std::endl;
             return;
         }
     }
-    std::cout << "\o{33}[31mStudent with ID " << studentId
-        << " was not found on this course.\o{33}[0m" << std::endl;
+    std::cout << "\x1b[31mStudent with ID " << studentId
+        << " was not found on this course.\x1b[0m" << std::endl;
 }
 
-int Course::calculateStudentProgress(int studentId)
+int Course::calculateStudentProgress(int studentId) const
 {
     if (totalLessons <= 0)
     {
@@ -210,17 +153,17 @@ int Course::calculateStudentProgress(int studentId)
     return -1;
 }
 
-void Course::printFullCourseInfo()
+void Course::printFullCourseInfo() const
 {
-    std::cout << "\n\o{33}[34mCourse Information:\o{33}[0m" << std::endl;
-    std::cout << "Title: \o{33}[36m" << courseTitle << "\o{33}[0m" << std::endl;
+    std::cout << "\n\x1b[34mCourse Information:\x1b[0m" << std::endl;
+    std::cout << "Title: \x1b[36m" << courseTitle << "\x1b[0m" << std::endl;
     std::cout << "Instructor: " << teacherName << std::endl;
     std::cout << "Total lessons: " << totalLessons << std::endl;
     std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << std::endl;
 
     if (currentStudentsCount == 0)
     {
-        std::cout << "\o{33}[33mNo students currently enrolled.\o{33}[0m" << std::endl;
+        std::cout << "\x1b[33mNo students currently enrolled.\x1b[0m" << std::endl;
     }
     else {
         std::cout << "Student list:" << std::endl;
@@ -231,16 +174,10 @@ void Course::printFullCourseInfo()
                 << enrolledStudents[i].getStudentName()
                 << " (ID: " << enrolledStudents[i].getStudentId() << ")"
                 << " - tasks completed: " << enrolledStudents[i].getCompletedTasks()
-                << ", progress: \o{33}[32m" << progress << "%\o{33}[0m" << std::endl;
+                << ", progress: \x1b[32m" << progress << "%\x1b[0m" << std::endl;
         }
     }
     std::cout << std::endl;
-}
-
-CourseList::CourseList()
-    : head(nullptr),
-    numberOfCourses(0)
-{
 }
 
 void CourseList::deleteNode(CourseNode* node)
@@ -327,16 +264,16 @@ void CourseList::displayListOfCourses()
 {
     if (head == nullptr)
     {
-        std::cout << "\o{33}[33mNo courses available.\o{33}[0m\n";
+        std::cout << "\x1b[33mNo courses available.\x1b[0m\n";
         return;
     }
 
-    std::cout << "\n\o{33}[34m--- Courses List (" << numberOfCourses << ") ---\o{33}[0m\n";
-    CourseNode* current = head.get();
+    std::cout << "\n\x1b[34m--- Courses List (" << numberOfCourses << ") ---\x1b[0m\n";
+    const CourseNode* current = head.get();
     while (current != nullptr)
     {
         std::cout << "ID: " << current->data.getCourseId()
-            << " | Title: \o{33}[36m" << current->data.getCourseTitle() << "\o{33}[0m"
+            << " | Title: \x1b[36m" << current->data.getCourseTitle() << "\x1b[0m"
             << " | Students: " << current->data.getEnrolledCount() << "/" << current->data.getMaxCapacity()
             << std::endl;
         current = current->next.get();

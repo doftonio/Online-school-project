@@ -3,12 +3,12 @@
 
 class Student {
 private:
-    int studentId;
-    std::string studentName;
-    int completedTasks;
+    int studentId{ 0 };
+    std::string studentName{};
+    int completedTasks{ 0 };
 
 public:
-    Student();
+    Student() = default;
 
     void initStudent(int id, const std::string& name);
     int getStudentId() const;

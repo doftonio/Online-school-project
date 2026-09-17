@@ -1,25 +1,25 @@
 ﻿#pragma once
 #include <string>
+#include <vector>
 #include <memory>
-
-class Student;
+#include "student.h"
 
 class Course
 {
 private:
-    std::string courseTitle;
-    std::string teacherName;
-    int totalLessons;
-    int maxCapacity;
-    int currentStudentsCount;
-    int Id;
-    std::unique_ptr<Student[]> enrolledStudents;
+    std::string courseTitle{};
+    std::string teacherName{};
+    int totalLessons{ 0 };
+    int maxCapacity{ 0 };
+    int currentStudentsCount{ 0 };
+    int Id{ 0 };
+    std::vector<Student> enrolledStudents{};
 
 public:
-    Course();
+    Course() = default;
     ~Course() = default;
-    Course(const Course& other);
-    Course& operator=(const Course& other);
+    Course(const Course& other) = default;
+    Course& operator=(const Course& other) = default;
     Course(Course&& other) noexcept = default;
     Course& operator=(Course&& other) noexcept = default;
 
@@ -37,25 +37,25 @@ public:
     bool enrollStudent(int id, const std::string& name);
     bool removeStudent(int id);
     void recordTaskCompletion(int studentId);
-    int calculateStudentProgress(int studentId);
+    int calculateStudentProgress(int studentId) const;
 
-    void printFullCourseInfo();
+    void printFullCourseInfo() const;
 };
 
 struct CourseNode
 {
-    Course data;
-    std::unique_ptr<CourseNode> next{};
-    CourseNode* prev{};
+    Course data{};
+    std::unique_ptr<CourseNode> next{ nullptr };
+    CourseNode* prev{ nullptr };
 };
 
 class CourseList
 {
-    std::unique_ptr<CourseNode> head;
-    int numberOfCourses;
+    std::unique_ptr<CourseNode> head{ nullptr };
+    int numberOfCourses{ 0 };
 
 public:
-    CourseList();
+    CourseList() = default;
     ~CourseList() = default;
     CourseList(const CourseList&) = delete;
     CourseList& operator=(const CourseList&) = delete;
