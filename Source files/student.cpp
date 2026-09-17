@@ -1,7 +1,8 @@
 ﻿#include "../Header files/student.h"
+#include "../Header files/color.h"
 #include <iostream>
 
-void Student::initStudent(int id, const std::string& name)
+void Student::initStudent(int id, std::string_view name)
 {
     studentId = id;
     studentName = name;
@@ -23,7 +24,7 @@ int Student::getCompletedTasks() const
     return completedTasks;
 }
 
-void Student::setStudentName(const std::string& name)
+void Student::setStudentName(std::string_view name)
 {
     studentName = name;
 }
@@ -40,7 +41,7 @@ void Student::resetTasks()
 
 void Student::printInfo() const
 {
-    std::cout << "Student: \x1b[36m" << studentName << "\x1b[0m"
+    std::cout << "Student: " << Color::cyan << studentName << Color::reset
         << ", Student ID: " << studentId
-        << ", completed tasks: \x1b[32m" << completedTasks << "\x1b[0m" << std::endl;
+        << ", completed tasks: " << Color::green << completedTasks << Color::reset << std::endl;
 }

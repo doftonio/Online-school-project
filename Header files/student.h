@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <string>
+#include <string_view>
 
 class Student {
 private:
@@ -10,12 +11,12 @@ private:
 public:
     Student() = default;
 
-    void initStudent(int id, const std::string& name);
+    void initStudent(int id, std::string_view name);
     int getStudentId() const;
     std::string getStudentName() const;
     int getCompletedTasks() const;
 
-    void setStudentName(const std::string& name);
+    void setStudentName(std::string_view name);
     void completeTask();
     void resetTasks();
 

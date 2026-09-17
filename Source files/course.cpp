@@ -1,7 +1,8 @@
 ﻿#include "../Header files/course.h"
+#include "../Header files/color.h"
 #include <iostream>
 
-void Course::initCourse(int id, const std::string& title, const std::string& teacher, int lessons, int capacity)
+void Course::initCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
 {
     courseTitle = title;
     teacherName = teacher;
@@ -47,7 +48,7 @@ int Course::getEnrolledCount() const
     return currentStudentsCount;
 }
 
-void Course::setTeacherName(const std::string& teacher)
+void Course::setTeacherName(std::string_view teacher)
 {
     teacherName = teacher;
 }
@@ -59,12 +60,12 @@ void Course::setTotalLessons(int lessons)
     }
 }
 
-bool Course::enrollStudent(int id, const std::string& name)
+bool Course::enrollStudent(int id, std::string_view name)
 {
     if (currentStudentsCount >= maxCapacity)
     {
-        std::cout << "\x1b[31mFailed to enroll student " << name
-            << ": course limit reached (limit: " << maxCapacity << ").\x1b[0m" << std::endl;
+        std::cout << Color::red << "Failed to enroll student " << name
+            << ": course limit reached (limit: " << maxCapacity << ")." << Color::reset << std::endl;
         return false;
     }
 
@@ -72,8 +73,8 @@ bool Course::enrollStudent(int id, const std::string& name)
     {
         if (enrolledStudents[i].getStudentId() == id)
         {
-            std::cout << "\x1b[33mStudent with ID " << id
-                << " is already enrolled in this course.\x1b[0m" << std::endl;
+            std::cout << Color::yellow << "Student with ID " << id
+                << " is already enrolled in this course." << Color::reset << std::endl;
             return false;
         }
     }
@@ -82,8 +83,8 @@ bool Course::enrollStudent(int id, const std::string& name)
     newStudent.initStudent(id, name);
     enrolledStudents.push_back(newStudent);
     currentStudentsCount++;
-    std::cout << "\x1b[32mStudent " << name << " successfully enrolled in \""
-        << courseTitle << "\".\x1b[0m" << std::endl;
+    std::cout << Color::green << "Student " << name << " successfully enrolled in \""
+        << courseTitle << "\"." << Color::reset << std::endl;
     return true;
 }
 
@@ -102,16 +103,16 @@ bool Course::removeStudent(int id)
 
     if (targetIndex == -1)
     {
-        std::cout << "\x1b[31mStudent with ID " << id
-            << " was not found on this course.\x1b[0m" << std::endl;
+        std::cout << Color::red << "Student with ID " << id
+            << " was not found on this course." << Color::reset << std::endl;
         return false;
     }
 
     std::string deletedName = enrolledStudents[targetIndex].getStudentName();
     enrolledStudents.erase(enrolledStudents.begin() + targetIndex);
     currentStudentsCount--;
-    std::cout << "\x1b[32mStudent " << deletedName
-        << " has been removed from \"" << courseTitle << "\". Spot freed.\x1b[0m" << std::endl;
+    std::cout << Color::green << "Student " << deletedName
+        << " has been removed from \"" << courseTitle << "\". Spot freed." << Color::reset << std::endl;
     return true;
 }
 
@@ -122,13 +123,13 @@ void Course::recordTaskCompletion(int studentId)
         if (enrolledStudents[i].getStudentId() == studentId)
         {
             enrolledStudents[i].completeTask();
-            std::cout << "\x1b[32mCompleted task recorded for " << enrolledStudents[i].getStudentName()
-                << ".\x1b[0m" << std::endl;
+            std::cout << Color::green << "Completed task recorded for " << enrolledStudents[i].getStudentName()
+                << "." << Color::reset << std::endl;
             return;
         }
     }
-    std::cout << "\x1b[31mStudent with ID " << studentId
-        << " was not found on this course.\x1b[0m" << std::endl;
+    std::cout << Color::red << "Student with ID " << studentId
+        << " was not found on this course." << Color::reset << std::endl;
 }
 
 int Course::calculateStudentProgress(int studentId) const
@@ -155,15 +156,15 @@ int Course::calculateStudentProgress(int studentId) const
 
 void Course::printFullCourseInfo() const
 {
-    std::cout << "\n\x1b[34mCourse Information:\x1b[0m" << std::endl;
-    std::cout << "Title: \x1b[36m" << courseTitle << "\x1b[0m" << std::endl;
+    std::cout << "\n" << Color::blue << "Course Information:" << Color::reset << std::endl;
+    std::cout << "Title: " << Color::cyan << courseTitle << Color::reset << std::endl;
     std::cout << "Instructor: " << teacherName << std::endl;
     std::cout << "Total lessons: " << totalLessons << std::endl;
     std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << std::endl;
 
     if (currentStudentsCount == 0)
     {
-        std::cout << "\x1b[33mNo students currently enrolled.\x1b[0m" << std::endl;
+        std::cout << Color::yellow << "No students currently enrolled." << Color::reset << std::endl;
     }
     else {
         std::cout << "Student list:" << std::endl;
@@ -174,7 +175,7 @@ void Course::printFullCourseInfo() const
                 << enrolledStudents[i].getStudentName()
                 << " (ID: " << enrolledStudents[i].getStudentId() << ")"
                 << " - tasks completed: " << enrolledStudents[i].getCompletedTasks()
-                << ", progress: \x1b[32m" << progress << "%\x1b[0m" << std::endl;
+                << ", progress: " << Color::green << progress << "%" << Color::reset << std::endl;
         }
     }
     std::cout << std::endl;
@@ -225,7 +226,21 @@ CourseNode* CourseList::getCoursePointerById(int targetId)
     return nullptr;
 }
 
-void CourseList::addCourse(int id, const std::string& title, const std::string& teacher, int lessons, int capacity)
+const CourseNode* CourseList::getCoursePointerById(int targetId) const
+{
+    const CourseNode* current = head.get();
+    while (current != nullptr)
+    {
+        if (current->data.getCourseId() == targetId)
+        {
+            return current;
+        }
+        current = current->next.get();
+    }
+    return nullptr;
+}
+
+void CourseList::addCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
 {
     auto newNode = std::make_unique<CourseNode>();
     newNode->data.initCourse(id, title, teacher, lessons, capacity);
@@ -260,20 +275,20 @@ bool CourseList::removeCourseById(int targetId)
     return false;
 }
 
-void CourseList::displayListOfCourses()
+void CourseList::displayListOfCourses() const
 {
     if (head == nullptr)
     {
-        std::cout << "\x1b[33mNo courses available.\x1b[0m\n";
+        std::cout << Color::yellow << "No courses available." << Color::reset << "\n";
         return;
     }
 
-    std::cout << "\n\x1b[34m--- Courses List (" << numberOfCourses << ") ---\x1b[0m\n";
+    std::cout << "\n" << Color::blue << "--- Courses List (" << numberOfCourses << ") ---" << Color::reset << "\n";
     const CourseNode* current = head.get();
     while (current != nullptr)
     {
         std::cout << "ID: " << current->data.getCourseId()
-            << " | Title: \x1b[36m" << current->data.getCourseTitle() << "\x1b[0m"
+            << " | Title: " << Color::cyan << current->data.getCourseTitle() << Color::reset
             << " | Students: " << current->data.getEnrolledCount() << "/" << current->data.getMaxCapacity()
             << std::endl;
         current = current->next.get();
