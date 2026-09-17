@@ -1,5 +1,4 @@
 ﻿#include "../Header files/course.h"
-#include "../Header files/color.h"
 #include <iostream>
 
 void Course::initCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
@@ -64,8 +63,8 @@ bool Course::enrollStudent(int id, std::string_view name)
 {
     if (currentStudentsCount >= maxCapacity)
     {
-        std::cout << Color::red << "Failed to enroll student " << name
-            << ": course limit reached (limit: " << maxCapacity << ")." << Color::reset << std::endl;
+        std::cout << "Failed to enroll student " << name
+            << ": course limit reached (limit: " << maxCapacity << ").\n";
         return false;
     }
 
@@ -73,8 +72,8 @@ bool Course::enrollStudent(int id, std::string_view name)
     {
         if (enrolledStudents[i].getStudentId() == id)
         {
-            std::cout << Color::yellow << "Student with ID " << id
-                << " is already enrolled in this course." << Color::reset << std::endl;
+            std::cout << "Student with ID " << id
+                << " is already enrolled in this course.\n";
             return false;
         }
     }
@@ -83,8 +82,9 @@ bool Course::enrollStudent(int id, std::string_view name)
     newStudent.initStudent(id, name);
     enrolledStudents.push_back(newStudent);
     currentStudentsCount++;
-    std::cout << Color::green << "Student " << name << " successfully enrolled in \""
-        << courseTitle << "\"." << Color::reset << std::endl;
+
+    std::cout << "Student " << name << " successfully enrolled in \""
+        << courseTitle << "\".\n";
     return true;
 }
 
@@ -103,16 +103,16 @@ bool Course::removeStudent(int id)
 
     if (targetIndex == -1)
     {
-        std::cout << Color::red << "Student with ID " << id
-            << " was not found on this course." << Color::reset << std::endl;
+        std::cout << "Student with ID " << id << " was not found on this course.\n";
         return false;
     }
 
     std::string deletedName = enrolledStudents[targetIndex].getStudentName();
     enrolledStudents.erase(enrolledStudents.begin() + targetIndex);
     currentStudentsCount--;
-    std::cout << Color::green << "Student " << deletedName
-        << " has been removed from \"" << courseTitle << "\". Spot freed." << Color::reset << std::endl;
+
+    std::cout << "Student " << deletedName << " has been removed from \""
+        << courseTitle << "\". Spot freed.\n";
     return true;
 }
 
@@ -123,13 +123,12 @@ void Course::recordTaskCompletion(int studentId)
         if (enrolledStudents[i].getStudentId() == studentId)
         {
             enrolledStudents[i].completeTask();
-            std::cout << Color::green << "Completed task recorded for " << enrolledStudents[i].getStudentName()
-                << "." << Color::reset << std::endl;
+            std::cout << "Completed task recorded for " << enrolledStudents[i].getStudentName() << ".\n";
             return;
         }
     }
-    std::cout << Color::red << "Student with ID " << studentId
-        << " was not found on this course." << Color::reset << std::endl;
+
+    std::cout << "Student with ID " << studentId << " was not found on this course.\n";
 }
 
 int Course::calculateStudentProgress(int studentId) const
@@ -156,18 +155,18 @@ int Course::calculateStudentProgress(int studentId) const
 
 void Course::printFullCourseInfo() const
 {
-    std::cout << "\n" << Color::blue << "Course Information:" << Color::reset << std::endl;
-    std::cout << "Title: " << Color::cyan << courseTitle << Color::reset << std::endl;
-    std::cout << "Instructor: " << teacherName << std::endl;
-    std::cout << "Total lessons: " << totalLessons << std::endl;
-    std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << std::endl;
+    std::cout << "\nCourse Information:\n";
+    std::cout << "Title: " << courseTitle << "\n";
+    std::cout << "Instructor: " << teacherName << "\n";
+    std::cout << "Total lessons: " << totalLessons << "\n";
+    std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << "\n";
 
     if (currentStudentsCount == 0)
     {
-        std::cout << Color::yellow << "No students currently enrolled." << Color::reset << std::endl;
+        std::cout << "No students currently enrolled.\n";
     }
     else {
-        std::cout << "Student list:" << std::endl;
+        std::cout << "Student list:\n";
         for (int i = 0; i < currentStudentsCount; i++)
         {
             int progress = calculateStudentProgress(enrolledStudents[i].getStudentId());
@@ -175,7 +174,7 @@ void Course::printFullCourseInfo() const
                 << enrolledStudents[i].getStudentName()
                 << " (ID: " << enrolledStudents[i].getStudentId() << ")"
                 << " - tasks completed: " << enrolledStudents[i].getCompletedTasks()
-                << ", progress: " << Color::green << progress << "%" << Color::reset << std::endl;
+                << ", progress: " << progress << "%\n";
         }
     }
     std::cout << std::endl;
@@ -279,18 +278,18 @@ void CourseList::displayListOfCourses() const
 {
     if (head == nullptr)
     {
-        std::cout << Color::yellow << "No courses available." << Color::reset << "\n";
+        std::cout << "No courses available.\n";
         return;
     }
 
-    std::cout << "\n" << Color::blue << "--- Courses List (" << numberOfCourses << ") ---" << Color::reset << "\n";
+    std::cout << "\n--- Courses List (" << numberOfCourses << ") ---\n";
     const CourseNode* current = head.get();
     while (current != nullptr)
     {
         std::cout << "ID: " << current->data.getCourseId()
-            << " | Title: " << Color::cyan << current->data.getCourseTitle() << Color::reset
-            << " | Students: " << current->data.getEnrolledCount() << "/" << current->data.getMaxCapacity()
-            << std::endl;
+            << " | Title: " << current->data.getCourseTitle()
+            << " | Students: " << current->data.getEnrolledCount() << "/"
+            << current->data.getMaxCapacity() << "\n";
         current = current->next.get();
     }
     std::cout << "------------------------------------\n";

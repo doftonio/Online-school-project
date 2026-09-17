@@ -1,5 +1,4 @@
 ﻿#include "../Header files/student.h"
-#include "../Header files/color.h"
 #include <iostream>
 
 void Student::initStudent(int id, std::string_view name)
@@ -41,7 +40,7 @@ void Student::resetTasks()
 
 void Student::printInfo() const
 {
-    std::cout << "Student: " << Color::cyan << studentName << Color::reset
+    std::cout << "Student: " << studentName
         << ", Student ID: " << studentId
-        << ", completed tasks: " << Color::green << completedTasks << Color::reset << std::endl;
+        << ", completed tasks: " << completedTasks << std::endl;
 }

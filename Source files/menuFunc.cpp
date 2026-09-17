@@ -3,7 +3,7 @@
 void courseMenu(Course* course) {
     int userChoice = -1;
     while (userChoice != 0) {
-        std::cout << Color::yellow << course->getCourseTitle() << " Course Management : " << Color::reset << "\n";
+        std::cout << course->getCourseTitle() << " Course Management :\n";
         std::cout << "1. Enroll new student\n";
         std::cout << "2. Remove student from course\n";
         std::cout << "3. Record task completion\n";
@@ -45,7 +45,7 @@ void courseMenu(Course* course) {
             std::cout << "Enter new instructor name: ";
             std::getline(std::cin, newTeacherName);
             course->setTeacherName(newTeacherName);
-            std::cout << Color::green << "Course instructor updated." << Color::reset << "\n";
+            std::cout << "Course instructor updated.\n";
             break;
         }
         case 5:
@@ -55,7 +55,7 @@ void courseMenu(Course* course) {
             std::cout << "Exiting application.\n";
             break;
         default:
-            std::cout << Color::red << "Invalid option, please try again." << Color::reset << "\n";
+            std::cout << "Invalid option, please try again.\n";
             break;
         }
         std::cout << "\n";
@@ -67,7 +67,7 @@ void mainMenu(CourseList& courseList)
     int userChoice = -1;
 
     while (userChoice != 0) {
-        std::cout << "\n" << Color::yellow << "Main Menu / Course select" << Color::reset << "\n";
+        std::cout << "\nMain Menu / Course select\n";
         std::cout << "1. Display list of courses\n";
         std::cout << "2. Add course\n";
         std::cout << "3. Remove course\n";
@@ -101,7 +101,7 @@ void mainMenu(CourseList& courseList)
             std::cin >> capacity;
 
             courseList.addCourse(id, title, teacher, lessons, capacity);
-            std::cout << Color::green << "Course added successfully!" << Color::reset << "\n";
+            std::cout << "Course added successfully!\n";
             break;
         }
         case 3: {
@@ -110,10 +110,10 @@ void mainMenu(CourseList& courseList)
             std::cin >> targetId;
 
             if (courseList.removeCourseById(targetId)) {
-                std::cout << Color::green << "Course removed successfully." << Color::reset << "\n";
+                std::cout << "Course removed successfully.\n";
             }
             else {
-                std::cout << Color::red << "Course not found." << Color::reset << "\n";
+                std::cout << "Course not found.\n";
             }
             break;
         }
@@ -123,11 +123,11 @@ void mainMenu(CourseList& courseList)
             std::cin >> targetId;
 
             if (CourseNode* node = courseList.getCoursePointerById(targetId)) {
-                std::cout << Color::green << "Course selected: " << node->data.getCourseTitle() << Color::reset << "\n";
+                std::cout << "Course selected: " << node->data.getCourseTitle() << "\n";
                 courseMenu(&(node->data));
             }
             else {
-                std::cout << Color::red << "Course not found." << Color::reset << "\n";
+                std::cout << "Course not found.\n";
             }
             break;
         }
@@ -140,15 +140,15 @@ void mainMenu(CourseList& courseList)
                 node->data.printFullCourseInfo();
             }
             else {
-                std::cout << Color::red << "Course not found." << Color::reset << "\n";
+                std::cout << "Course not found.\n";
             }
             break;
         }
         case 0:
-            std::cout << Color::green << "Exiting program..." << Color::reset << "\n";
+            std::cout << "Exiting program...\n";
             break;
         default:
-            std::cout << Color::red << "Invalid choice. Please try again." << Color::reset << "\n";
+            std::cout << "Invalid choice. Please try again.\n";
             break;
         }
     }
