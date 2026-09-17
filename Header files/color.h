@@ -1,11 +1,47 @@
 ﻿#pragma once
-#include <string_view>
+#include <iostream>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 namespace Color {
-    inline constexpr std::string_view reset = "\x1B" "[0m";
-    inline constexpr std::string_view red = "\x1B" "[31m";
-    inline constexpr std::string_view green = "\x1B" "[32m";
-    inline constexpr std::string_view yellow = "\x1B" "[33m";
-    inline constexpr std::string_view blue = "\x1B" "[34m";
-    inline constexpr std::string_view cyan = "\x1B" "[36m";
+    inline void setAttribute(WORD attr) {
+        static HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsole, attr);
+    }
+
+    inline std::ostream& reset(std::ostream& os) {
+        os.flush();
+        setAttribute(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+        return os;
+    }
+
+    inline std::ostream& red(std::ostream& os) {
+        os.flush();
+        setAttribute(FOREGROUND_RED | FOREGROUND_INTENSITY);
+        return os;
+    }
+
+    inline std::ostream& green(std::ostream& os) {
+        os.flush();
+        setAttribute(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+        return os;
+    }
+
+    inline std::ostream& yellow(std::ostream& os) {
+        os.flush();
+        setAttribute(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+        return os;
+    }
+
+    inline std::ostream& blue(std::ostream& os) {
+        os.flush();
+        setAttribute(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+        return os;
+    }
+
+    inline std::ostream& cyan(std::ostream& os) {
+        os.flush();
+        setAttribute(FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+        return os;
+    }
 }

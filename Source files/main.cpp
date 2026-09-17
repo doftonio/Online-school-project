@@ -27,12 +27,12 @@ void populateInitialData(CourseList& courseList)
 
 void verifyBasicOperations()
 {
-    std::cout << "\x1b[34mVerifying basic object operations:\x1b[0m\n";
+    std::cout << Color::blue << "Verifying basic object operations:" << Color::reset << "\n";
     Student singleStudent;
     singleStudent.initStudent(101, "John Doe");
     singleStudent.printInfo();
     singleStudent.setStudentName("John Smith");
-    std::cout << "Updated name: \x1b[36m" << singleStudent.getStudentName() << "\x1b[0m\n\n";
+    std::cout << "Updated name: " << Color::cyan << singleStudent.getStudentName() << Color::reset << "\n\n";
 }
 
 int main()
@@ -41,7 +41,7 @@ int main()
 
     CourseList courseList;
 
-    std::cout << "\x1b[34mInitializing default courses and students through CourseList:\x1b[0m\n";
+    std::cout << Color::blue << "Initializing default courses and students through CourseList:" << Color::reset << "\n";
     populateInitialData(courseList);
 
     mainMenu(courseList);

@@ -3,7 +3,7 @@
 void courseMenu(Course* course) {
     int userChoice = -1;
     while (userChoice != 0) {
-        std::cout << "\x1b[33m" << course->getCourseTitle() << " Course Management : \x1b[0m\n";
+        std::cout << Color::yellow << course->getCourseTitle() << " Course Management : " << Color::reset << "\n";
         std::cout << "1. Enroll new student\n";
         std::cout << "2. Remove student from course\n";
         std::cout << "3. Record task completion\n";
@@ -45,7 +45,7 @@ void courseMenu(Course* course) {
             std::cout << "Enter new instructor name: ";
             std::getline(std::cin, newTeacherName);
             course->setTeacherName(newTeacherName);
-            std::cout << "\x1b[32mCourse instructor updated.\x1b[0m\n";
+            std::cout << Color::green << "Course instructor updated." << Color::reset << "\n";
             break;
         }
         case 5:
@@ -55,7 +55,7 @@ void courseMenu(Course* course) {
             std::cout << "Exiting application.\n";
             break;
         default:
-            std::cout << "\x1b[31mInvalid option, please try again.\x1b[0m\n";
+            std::cout << Color::red << "Invalid option, please try again." << Color::reset << "\n";
             break;
         }
         std::cout << "\n";
@@ -67,7 +67,7 @@ void mainMenu(CourseList& courseList)
     int userChoice = -1;
 
     while (userChoice != 0) {
-        std::cout << "\n\x1b[33mMain Menu / Course select\x1b[0m\n";
+        std::cout << "\n" << Color::yellow << "Main Menu / Course select" << Color::reset << "\n";
         std::cout << "1. Display list of courses\n";
         std::cout << "2. Add course\n";
         std::cout << "3. Remove course\n";
@@ -101,7 +101,7 @@ void mainMenu(CourseList& courseList)
             std::cin >> capacity;
 
             courseList.addCourse(id, title, teacher, lessons, capacity);
-            std::cout << "\x1b[32mCourse added successfully!\x1b[0m\n";
+            std::cout << Color::green << "Course added successfully!" << Color::reset << "\n";
             break;
         }
         case 3: {
@@ -110,10 +110,10 @@ void mainMenu(CourseList& courseList)
             std::cin >> targetId;
 
             if (courseList.removeCourseById(targetId)) {
-                std::cout << "\x1b[32mCourse removed successfully.\x1b[0m\n";
+                std::cout << Color::green << "Course removed successfully." << Color::reset << "\n";
             }
             else {
-                std::cout << "\x1b[31mCourse not found.\x1b[0m\n";
+                std::cout << Color::red << "Course not found." << Color::reset << "\n";
             }
             break;
         }
@@ -123,11 +123,11 @@ void mainMenu(CourseList& courseList)
             std::cin >> targetId;
 
             if (CourseNode* node = courseList.getCoursePointerById(targetId)) {
-                std::cout << "\x1b[32mCourse selected: " << node->data.getCourseTitle() << "\x1b[0m\n";
+                std::cout << Color::green << "Course selected: " << node->data.getCourseTitle() << Color::reset << "\n";
                 courseMenu(&(node->data));
             }
             else {
-                std::cout << "\x1b[31mCourse not found.\x1b[0m\n";
+                std::cout << Color::red << "Course not found." << Color::reset << "\n";
             }
             break;
         }
@@ -136,19 +136,19 @@ void mainMenu(CourseList& courseList)
             std::cout << "Enter course ID: ";
             std::cin >> targetId;
 
-            if (CourseNode* node = courseList.getCoursePointerById(targetId)) {
+            if (const CourseNode* node = courseList.getCoursePointerById(targetId)) {
                 node->data.printFullCourseInfo();
             }
             else {
-                std::cout << "\x1b[31mCourse not found.\x1b[0m\n";
+                std::cout << Color::red << "Course not found." << Color::reset << "\n";
             }
             break;
         }
         case 0:
-            std::cout << "\x1b[32mExiting program...\x1b[0m\n";
+            std::cout << Color::green << "Exiting program..." << Color::reset << "\n";
             break;
         default:
-            std::cout << "\x1b[31mInvalid choice. Please try again.\x1b[0m\n";
+            std::cout << Color::red << "Invalid choice. Please try again." << Color::reset << "\n";
             break;
         }
     }
