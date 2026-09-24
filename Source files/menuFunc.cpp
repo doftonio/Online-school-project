@@ -123,7 +123,7 @@ void mainMenu(CourseList& courseList)
             std::cin >> targetId;
 
             if (CourseNode* node = courseList.getCoursePointerById(targetId)) {
-                std::cout << "Course selected: " << node->data.getCourseTitle() << "\n";
+                std::cout << "\n\nCourse selected: " << node->data.getCourseTitle() << "\n";
                 courseMenu(&(node->data));
             }
             else {

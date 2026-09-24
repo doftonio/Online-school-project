@@ -35,10 +35,14 @@ public:
     void setTeacherName(std::string_view teacher);
     void setTotalLessons(int lessons);
 
+    bool enrollStudent(const Student& student);
     bool enrollStudent(int id, std::string_view name);
     bool removeStudent(int id);
     void recordTaskCompletion(int studentId);
     int calculateStudentProgress(int studentId) const;
+
+    Course& operator+=(const Student& student);
+    Course& operator-=(const Student& student);
 
     void printFullCourseInfo() const;
 };

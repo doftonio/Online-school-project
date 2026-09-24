@@ -59,33 +59,38 @@ void Course::setTotalLessons(int lessons)
     }
 }
 
-bool Course::enrollStudent(int id, std::string_view name)
+bool Course::enrollStudent(const Student& student)
 {
     if (currentStudentsCount >= maxCapacity)
     {
-        std::cout << "Failed to enroll student " << name
+        std::cout << "Failed to enroll student " << student.getStudentName()
             << ": course limit reached (limit: " << maxCapacity << ").\n";
         return false;
     }
 
     for (int i = 0; i < currentStudentsCount; i++)
     {
-        if (enrolledStudents[i].getStudentId() == id)
+        if (enrolledStudents[i] == student)
         {
-            std::cout << "Student with ID " << id
+            std::cout << "Student with ID " << student.getStudentId()
                 << " is already enrolled in this course.\n";
             return false;
         }
     }
 
-    Student newStudent;
-    newStudent.initStudent(id, name);
-    enrolledStudents.push_back(newStudent);
+    enrolledStudents.push_back(student);
     currentStudentsCount++;
 
-    std::cout << "Student " << name << " successfully enrolled in \""
+    std::cout << "Student " << student.getStudentName() << " successfully enrolled in \""
         << courseTitle << "\".\n";
     return true;
+}
+
+bool Course::enrollStudent(int id, std::string_view name)
+{
+    Student newStudent;
+    newStudent.initStudent(id, name);
+    return enrollStudent(newStudent);
 }
 
 bool Course::removeStudent(int id)
@@ -114,6 +119,18 @@ bool Course::removeStudent(int id)
     std::cout << "Student " << deletedName << " has been removed from \""
         << courseTitle << "\". Spot freed.\n";
     return true;
+}
+
+Course& Course::operator+=(const Student& student)
+{
+    enrollStudent(student);
+    return *this;
+}
+
+Course& Course::operator-=(const Student& student)
+{
+    removeStudent(student.getStudentId());
+    return *this;
 }
 
 void Course::recordTaskCompletion(int studentId)

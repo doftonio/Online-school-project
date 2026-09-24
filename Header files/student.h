@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <string_view>
+#include <iostream>
 
 class Student {
 private:
@@ -10,6 +11,8 @@ private:
 
 public:
     Student() = default;
+    Student(int id, std::string_view name, int tasks = 0)
+        : studentId(id), studentName(name), completedTasks(tasks) {}
 
     void initStudent(int id, std::string_view name);
     int getStudentId() const;
@@ -21,4 +24,16 @@ public:
     void resetTasks();
 
     void printInfo() const;
+
+    bool operator==(const Student& other) const;
+    bool operator!=(const Student& other) const;
+    bool operator>(const Student& other) const;
+    bool operator<(const Student& other) const;
+    bool operator>=(const Student& other) const;
+    bool operator<=(const Student& other) const;
+
+    friend std::ostream& operator<<(std::ostream& os, const Student& student);
+    friend std::istream& operator>>(std::istream& is, Student& student);
+
+    friend void inspectStudentInternals(const Student& student);
 };
