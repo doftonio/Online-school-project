@@ -1,4 +1,4 @@
-# Prerequisites
+﻿# Prerequisites
 *.d
 
 # Compiled Object files
@@ -48,7 +48,7 @@ Build/
 build-*/
 x64/
 .vs/
-
+Debug/
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt
