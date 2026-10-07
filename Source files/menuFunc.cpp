@@ -175,9 +175,9 @@ void mainMenu(CourseList& courseList)
             std::cout << "Enter course ID: ";
             std::cin >> targetId;
 
-            if (CourseNode* const node = courseList.getCoursePointerById(targetId)) {
-                std::cout << "\nCourse selected: " << node->data->getCourseTitle() << "\n";
-                courseMenu(node->data.get());
+            if (Course* course = courseList.getCourseById(targetId)) {
+                std::cout << "\nCourse selected: " << course->getCourseTitle() << "\n";
+                courseMenu(course);
             }
             else {
                 std::cout << "Course not found.\n";
@@ -189,8 +189,8 @@ void mainMenu(CourseList& courseList)
             std::cout << "Enter course ID: ";
             std::cin >> targetId;
 
-            if (const CourseNode* node = courseList.getCoursePointerById(targetId)) {
-                node->data->printFullCourseInfo();
+            if (const Course* course = courseList.getCourseById(targetId)) {
+                course->printFullCourseInfo();
             }
             else {
                 std::cout << "Course not found.\n";
