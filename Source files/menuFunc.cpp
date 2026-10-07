@@ -17,8 +17,8 @@ void courseMenu(Course* course) {
 
         switch (userChoice) {
         case 1: {
-            int studentId;
-            std::string studentName;
+            int studentId = 0;
+            std::string studentName{};
             std::cout << "Enter student ID: ";
             std::cin >> studentId;
             std::cin.ignore();
@@ -28,21 +28,21 @@ void courseMenu(Course* course) {
             break;
         }
         case 2: {
-            int studentId;
+            int studentId = 0;
             std::cout << "Enter student ID to remove: ";
             std::cin >> studentId;
             course->removeStudent(studentId);
             break;
         }
         case 3: {
-            int studentId;
+            int studentId = 0;
             std::cout << "Enter student ID: ";
             std::cin >> studentId;
             course->recordTaskCompletion(studentId);
             break;
         }
         case 4: {
-            std::string newTeacherName;
+            std::string newTeacherName{};
             std::cin.ignore();
             std::cout << "Enter new instructor name: ";
             std::getline(std::cin, newTeacherName);
@@ -92,8 +92,11 @@ void mainMenu(CourseList& courseList)
             std::cout << "Choice: ";
             std::cin >> typeChoice;
 
-            int id, lessons, capacity;
-            std::string title, teacher;
+            int id = 0;
+            int lessons = 0;
+            int capacity = 0;
+            std::string title{};
+            std::string teacher{};
 
             std::cout << "Enter course ID: ";
             std::cin >> id;
@@ -109,7 +112,8 @@ void mainMenu(CourseList& courseList)
 
             if (typeChoice == 2)
             {
-                int exercises, passingScore;
+                int exercises = 0;
+                int passingScore = 0;
                 std::cout << "Enter total exercises: ";
                 std::cin >> exercises;
                 std::cout << "Enter passing score (%): ";
@@ -119,8 +123,9 @@ void mainMenu(CourseList& courseList)
             }
             else if (typeChoice == 3)
             {
-                std::string url, schedule;
-                int webinars;
+                std::string url{};
+                std::string schedule{};
+                int webinars = 0;
                 std::cin.ignore();
                 std::cout << "Enter platform URL: ";
                 std::getline(std::cin, url);
@@ -134,8 +139,8 @@ void mainMenu(CourseList& courseList)
             }
             else if (typeChoice == 4)
             {
-                std::string mentor;
-                int reviewsLimit;
+                std::string mentor{};
+                int reviewsLimit = 0;
                 std::cin.ignore();
                 std::cout << "Enter mentor name: ";
                 std::getline(std::cin, mentor);
@@ -153,7 +158,7 @@ void mainMenu(CourseList& courseList)
             break;
         }
         case 3: {
-            int targetId;
+            int targetId = 0;
             std::cout << "Enter course ID to remove: ";
             std::cin >> targetId;
 
@@ -166,7 +171,7 @@ void mainMenu(CourseList& courseList)
             break;
         }
         case 4: {
-            int targetId;
+            int targetId = 0;
             std::cout << "Enter course ID: ";
             std::cin >> targetId;
 
@@ -180,7 +185,7 @@ void mainMenu(CourseList& courseList)
             break;
         }
         case 5: {
-            int targetId;
+            int targetId = 0;
             std::cout << "Enter course ID: ";
             std::cin >> targetId;
 

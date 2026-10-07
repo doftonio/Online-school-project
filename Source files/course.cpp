@@ -219,7 +219,9 @@ InteractiveCourse::InteractiveCourse(int id, std::string_view title, std::string
 
 void InteractiveCourse::setTotalExercises(int exercises)
 {
-    if (exercises >= 0) totalExercises = exercises;
+    if (exercises >= 0) {
+        totalExercises = exercises;
+    }
 }
 
 int InteractiveCourse::getTotalExercises() const
@@ -248,7 +250,9 @@ void InteractiveCourse::submitExercise(int studentId, bool passed)
 int InteractiveCourse::calculateStudentProgress(int studentId) const
 {
     int baseProgress = Course::calculateStudentProgress(studentId);
-    if (baseProgress < 0) return -1;
+    if (baseProgress < 0) {
+        return -1;
+    }
     return baseProgress;
 }
 
@@ -337,23 +341,24 @@ void MentoredCourse::setMentorName(std::string_view mentor)
 
 void MentoredCourse::conductReview(int studentId)
 {
-    for (int i = 0; i < getEnrolledCount(); i++)
+    if (calculateStudentProgress(studentId) == -1)
     {
-        totalReviewsConducted++;
-        recordTaskCompletion(studentId);
-        std::cout << "Mentor " << mentorName << " approved project for student ID "
-            << studentId << ".\n";
+        std::cout << "Student with ID " << studentId << " not found for review.\n";
         return;
     }
-    std::cout << "Student with ID " << studentId << " not found for review.\n";
+
+    totalReviewsConducted++;
+    recordTaskCompletion(studentId);
+    std::cout << "Mentor " << mentorName << " approved project for student ID "
+        << studentId << ".\n";
 }
 
 bool MentoredCourse::enrollStudent(const Student& student)
 {
-    if (constexpr int MAX_MENTOR_LOAD = 5; getEnrolledCount() >= MAX_MENTOR_LOAD)
+    if (constexpr int maxMentorLoad = 5; getEnrolledCount() >= maxMentorLoad)
     {
         std::cout << "Cannot enroll in Mentored Course: mentor workload limit ("
-            << MAX_MENTOR_LOAD << " students) reached for " << mentorName << ".\n";
+            << maxMentorLoad << " students) reached for " << mentorName << ".\n";
         return false;
     }
     return Course::enrollStudent(student);
