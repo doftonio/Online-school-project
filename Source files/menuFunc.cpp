@@ -198,7 +198,6 @@ void mainMenu(CourseList& courseList)
             break;
         }
         case 0:
-            std::cout << "Exiting program...\n";
             break;
         default:
             std::cout << "Invalid choice. Please try again.\n";
