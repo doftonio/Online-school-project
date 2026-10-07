@@ -5,9 +5,16 @@
 #include <memory>
 #include "student.h"
 
+struct WebinarDetails
+{
+    std::string_view platformUrl{};
+    std::string_view scheduleTime{};
+    int totalWebinars{ 0 };
+};
+
 class Course
 {
-protected:
+private:
     std::string courseTitle{};
     std::string teacherName{};
     int totalLessons{ 0 };
@@ -15,6 +22,9 @@ protected:
     int currentStudentsCount{ 0 };
     int Id{ 0 };
     std::vector<Student> enrolledStudents{};
+
+protected:
+    void printEnrolledStudentsList(std::string_view taskLabel) const;
 
 public:
     Course() = default;
@@ -82,7 +92,7 @@ private:
 public:
     WebinarCourse() = default;
     WebinarCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-        std::string_view url, std::string_view schedule, int webinars);
+        const WebinarDetails& details);
 
     std::string getPlatformUrl() const;
     std::string getScheduleTime() const;

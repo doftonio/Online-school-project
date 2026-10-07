@@ -3,7 +3,7 @@
 
 Course::Course(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
     : courseTitle(title), teacherName(teacher), totalLessons(lessons), maxCapacity(capacity),
-    currentStudentsCount(0), Id(id)
+    Id(id)
 {
     if (maxCapacity > 0)
     {
@@ -180,6 +180,26 @@ int Course::calculateStudentProgress(int studentId) const
     return -1;
 }
 
+void Course::printEnrolledStudentsList(std::string_view taskLabel) const
+{
+    if (currentStudentsCount == 0)
+    {
+        std::cout << "No students currently enrolled.\n";
+        return;
+    }
+
+    std::cout << "Student list:\n";
+    for (int i = 0; i < currentStudentsCount; i++)
+    {
+        int progress = calculateStudentProgress(enrolledStudents[i].getStudentId());
+        std::cout << "  " << i + 1 << ". "
+            << enrolledStudents[i].getStudentName()
+            << " (ID: " << enrolledStudents[i].getStudentId() << ")"
+            << " - " << taskLabel << ": " << enrolledStudents[i].getCompletedTasks()
+            << ", progress: " << progress << "%\n";
+    }
+}
+
 void Course::printFullCourseInfo() const
 {
     std::cout << "\nCourse Information:\n";
@@ -187,23 +207,7 @@ void Course::printFullCourseInfo() const
     std::cout << "Instructor: " << teacherName << "\n";
     std::cout << "Total lessons: " << totalLessons << "\n";
     std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << "\n";
-
-    if (currentStudentsCount == 0)
-    {
-        std::cout << "No students currently enrolled.\n";
-    }
-    else {
-        std::cout << "Student list:\n";
-        for (int i = 0; i < currentStudentsCount; i++)
-        {
-            int progress = calculateStudentProgress(enrolledStudents[i].getStudentId());
-            std::cout << "  " << i + 1 << ". "
-                << enrolledStudents[i].getStudentName()
-                << " (ID: " << enrolledStudents[i].getStudentId() << ")"
-                << " - tasks completed: " << enrolledStudents[i].getCompletedTasks()
-                << ", progress: " << progress << "%\n";
-        }
-    }
+    printEnrolledStudentsList("tasks completed");
     std::cout << std::endl;
 }
 
@@ -211,8 +215,7 @@ InteractiveCourse::InteractiveCourse(int id, std::string_view title, std::string
     int exercises, int passingScore)
     : Course(id, title, teacher, lessons, capacity),
     totalExercises(exercises), autoCheckPassingScore(passingScore)
-{
-}
+{}
 
 void InteractiveCourse::setTotalExercises(int exercises)
 {
@@ -252,38 +255,21 @@ int InteractiveCourse::calculateStudentProgress(int studentId) const
 void InteractiveCourse::printFullCourseInfo() const
 {
     std::cout << "\nCourse Information (Interactive Course):\n";
-    std::cout << "Title: " << courseTitle << "\n";
-    std::cout << "Instructor: " << teacherName << "\n";
-    std::cout << "Theory lessons: " << totalLessons << "\n";
+    std::cout << "Title: " << getCourseTitle() << "\n";
+    std::cout << "Instructor: " << getTeacherName() << "\n";
+    std::cout << "Theory lessons: " << getTotalLessons() << "\n";
     std::cout << "Practice exercises: " << totalExercises << "\n";
     std::cout << "Passing score threshold: " << autoCheckPassingScore << "%\n";
-    std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << "\n";
-
-    if (currentStudentsCount == 0)
-    {
-        std::cout << "No students currently enrolled.\n";
-    }
-    else {
-        std::cout << "Student list:\n";
-        for (int i = 0; i < currentStudentsCount; i++)
-        {
-            int progress = calculateStudentProgress(enrolledStudents[i].getStudentId());
-            std::cout << "  " << i + 1 << ". "
-                << enrolledStudents[i].getStudentName()
-                << " (ID: " << enrolledStudents[i].getStudentId() << ")"
-                << " - auto-tests passed: " << enrolledStudents[i].getCompletedTasks()
-                << ", progress: " << progress << "%\n";
-        }
-    }
+    std::cout << "Enrolled students: " << getEnrolledCount() << " / " << getMaxCapacity() << "\n";
+    printEnrolledStudentsList("auto-tests passed");
     std::cout << std::endl;
 }
 
 WebinarCourse::WebinarCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-    std::string_view url, std::string_view schedule, int webinars)
+    const WebinarDetails& details)
     : Course(id, title, teacher, lessons, capacity),
-    platformUrl(url), scheduleTime(schedule), totalWebinars(webinars)
-{
-}
+    platformUrl(details.platformUrl), scheduleTime(details.scheduleTime), totalWebinars(details.totalWebinars)
+{}
 
 std::string WebinarCourse::getPlatformUrl() const
 {
@@ -313,38 +299,21 @@ void WebinarCourse::setScheduleTime(std::string_view schedule)
 void WebinarCourse::printFullCourseInfo() const
 {
     std::cout << "\nCourse Information (Webinar Course):\n";
-    std::cout << "Title: " << courseTitle << "\n";
-    std::cout << "Instructor: " << teacherName << "\n";
+    std::cout << "Title: " << getCourseTitle() << "\n";
+    std::cout << "Instructor: " << getTeacherName() << "\n";
     std::cout << "Platform URL: " << platformUrl << "\n";
     std::cout << "Schedule: " << scheduleTime << "\n";
     std::cout << "Total webinars: " << totalWebinars << "\n";
-    std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << "\n";
-
-    if (currentStudentsCount == 0)
-    {
-        std::cout << "No students currently enrolled.\n";
-    }
-    else {
-        std::cout << "Student list:\n";
-        for (int i = 0; i < currentStudentsCount; i++)
-        {
-            int progress = calculateStudentProgress(enrolledStudents[i].getStudentId());
-            std::cout << "  " << i + 1 << ". "
-                << enrolledStudents[i].getStudentName()
-                << " (ID: " << enrolledStudents[i].getStudentId() << ")"
-                << " - attended sessions: " << enrolledStudents[i].getCompletedTasks()
-                << ", progress: " << progress << "%\n";
-        }
-    }
+    std::cout << "Enrolled students: " << getEnrolledCount() << " / " << getMaxCapacity() << "\n";
+    printEnrolledStudentsList("attended sessions");
     std::cout << std::endl;
 }
 
 MentoredCourse::MentoredCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
     std::string_view mentor, int reviewsLimit)
     : Course(id, title, teacher, lessons, capacity),
-    mentorName(mentor), maxReviewsPerStudent(reviewsLimit), totalReviewsConducted(0)
-{
-}
+    mentorName(mentor), maxReviewsPerStudent(reviewsLimit)
+{}
 
 std::string MentoredCourse::getMentorName() const
 {
@@ -368,24 +337,20 @@ void MentoredCourse::setMentorName(std::string_view mentor)
 
 void MentoredCourse::conductReview(int studentId)
 {
-    for (int i = 0; i < currentStudentsCount; i++)
+    for (int i = 0; i < getEnrolledCount(); i++)
     {
-        if (enrolledStudents[i].getStudentId() == studentId)
-        {
-            totalReviewsConducted++;
-            enrolledStudents[i].completeTask();
-            std::cout << "Mentor " << mentorName << " approved project for "
-                << enrolledStudents[i].getStudentName() << ".\n";
-            return;
-        }
+        totalReviewsConducted++;
+        recordTaskCompletion(studentId);
+        std::cout << "Mentor " << mentorName << " approved project for student ID "
+            << studentId << ".\n";
+        return;
     }
     std::cout << "Student with ID " << studentId << " not found for review.\n";
 }
 
 bool MentoredCourse::enrollStudent(const Student& student)
 {
-    constexpr int MAX_MENTOR_LOAD = 5;
-    if (currentStudentsCount >= MAX_MENTOR_LOAD)
+    if (constexpr int MAX_MENTOR_LOAD = 5; getEnrolledCount() >= MAX_MENTOR_LOAD)
     {
         std::cout << "Cannot enroll in Mentored Course: mentor workload limit ("
             << MAX_MENTOR_LOAD << " students) reached for " << mentorName << ".\n";
@@ -404,29 +369,13 @@ bool MentoredCourse::enrollStudent(int id, std::string_view name)
 void MentoredCourse::printFullCourseInfo() const
 {
     std::cout << "\nCourse Information (Mentored Course):\n";
-    std::cout << "Title: " << courseTitle << "\n";
-    std::cout << "Instructor: " << teacherName << "\n";
+    std::cout << "Title: " << getCourseTitle() << "\n";
+    std::cout << "Instructor: " << getTeacherName() << "\n";
     std::cout << "Mentor: " << mentorName << "\n";
     std::cout << "Reviews quota: " << maxReviewsPerStudent << "\n";
     std::cout << "Reviews conducted: " << totalReviewsConducted << "\n";
-    std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << "\n";
-
-    if (currentStudentsCount == 0)
-    {
-        std::cout << "No students currently enrolled.\n";
-    }
-    else {
-        std::cout << "Student list:\n";
-        for (int i = 0; i < currentStudentsCount; i++)
-        {
-            int progress = calculateStudentProgress(enrolledStudents[i].getStudentId());
-            std::cout << "  " << i + 1 << ". "
-                << enrolledStudents[i].getStudentName()
-                << " (ID: " << enrolledStudents[i].getStudentId() << ")"
-                << " - reviews passed: " << enrolledStudents[i].getCompletedTasks()
-                << ", progress: " << progress << "%\n";
-        }
-    }
+    std::cout << "Enrolled students: " << getEnrolledCount() << " / " << getMaxCapacity() << "\n";
+    printEnrolledStudentsList("reviews passed");
     std::cout << std::endl;
 }
 

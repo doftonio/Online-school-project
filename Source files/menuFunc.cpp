@@ -1,9 +1,11 @@
 ﻿#include "../Header files/header.h"
 
 void courseMenu(Course* course) {
+    if (!course) return;
+
     int userChoice = -1;
     while (userChoice != 0) {
-        std::cout << course->getCourseTitle() << " Course Management :\n";
+        std::cout << course->getCourseTitle() << " Course Management:\n";
         std::cout << "1. Enroll new student\n";
         std::cout << "2. Remove student from course\n";
         std::cout << "3. Record task completion\n";
@@ -52,7 +54,6 @@ void courseMenu(Course* course) {
             course->printFullCourseInfo();
             break;
         case 0:
-            std::cout << "Exiting application.\n";
             break;
         default:
             std::cout << "Invalid option, please try again.\n";
@@ -82,11 +83,17 @@ void mainMenu(CourseList& courseList)
             courseList.displayListOfCourses();
             break;
         case 2: {
-            int id;
-            int lessons;
-            int capacity;
-            std::string title;
-            std::string teacher;
+            int typeChoice = 1;
+            std::cout << "Select course type:\n";
+            std::cout << "1. Standard Course\n";
+            std::cout << "2. Interactive Course\n";
+            std::cout << "3. Webinar Course\n";
+            std::cout << "4. Mentored Course\n";
+            std::cout << "Choice: ";
+            std::cin >> typeChoice;
+
+            int id, lessons, capacity;
+            std::string title, teacher;
 
             std::cout << "Enter course ID: ";
             std::cin >> id;
@@ -100,7 +107,48 @@ void mainMenu(CourseList& courseList)
             std::cout << "Enter max capacity: ";
             std::cin >> capacity;
 
-            courseList.addCourse(id, title, teacher, lessons, capacity);
+            if (typeChoice == 2)
+            {
+                int exercises, passingScore;
+                std::cout << "Enter total exercises: ";
+                std::cin >> exercises;
+                std::cout << "Enter passing score (%): ";
+                std::cin >> passingScore;
+                courseList.addCourse(std::make_unique<InteractiveCourse>(
+                    id, title, teacher, lessons, capacity, exercises, passingScore));
+            }
+            else if (typeChoice == 3)
+            {
+                std::string url, schedule;
+                int webinars;
+                std::cin.ignore();
+                std::cout << "Enter platform URL: ";
+                std::getline(std::cin, url);
+                std::cout << "Enter schedule: ";
+                std::getline(std::cin, schedule);
+                std::cout << "Enter total webinars: ";
+                std::cin >> webinars;
+                WebinarDetails details{ url, schedule, webinars };
+                courseList.addCourse(std::make_unique<WebinarCourse>(
+                    id, title, teacher, lessons, capacity, details));
+            }
+            else if (typeChoice == 4)
+            {
+                std::string mentor;
+                int reviewsLimit;
+                std::cin.ignore();
+                std::cout << "Enter mentor name: ";
+                std::getline(std::cin, mentor);
+                std::cout << "Enter reviews limit: ";
+                std::cin >> reviewsLimit;
+                courseList.addCourse(std::make_unique<MentoredCourse>(
+                    id, title, teacher, lessons, capacity, mentor, reviewsLimit));
+            }
+            else
+            {
+                courseList.addCourse(id, title, teacher, lessons, capacity);
+            }
+
             std::cout << "Course added successfully!\n";
             break;
         }
@@ -123,8 +171,8 @@ void mainMenu(CourseList& courseList)
             std::cin >> targetId;
 
             if (CourseNode* node = courseList.getCoursePointerById(targetId)) {
-                std::cout << "\n\nCourse selected: " << node->data.getCourseTitle() << "\n";
-                courseMenu(&(node->data));
+                std::cout << "\nCourse selected: " << node->data->getCourseTitle() << "\n";
+                courseMenu(node->data.get());
             }
             else {
                 std::cout << "Course not found.\n";
@@ -137,7 +185,7 @@ void mainMenu(CourseList& courseList)
             std::cin >> targetId;
 
             if (const CourseNode* node = courseList.getCoursePointerById(targetId)) {
-                node->data.printFullCourseInfo();
+                node->data->printFullCourseInfo();
             }
             else {
                 std::cout << "Course not found.\n";

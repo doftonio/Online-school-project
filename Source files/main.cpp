@@ -8,8 +8,9 @@ void populateInitialData(CourseList& courseList)
     courseList.addCourse(std::make_unique<InteractiveCourse>(
         2, "Web Development Frontend", "Elena Kuznetsova", 8, 5, 25, 75));
 
+    WebinarDetails webDetails{ "https://meet.google.com/xyz-abc", "Tue/Fri 18:30", 12 };
     courseList.addCourse(std::make_unique<WebinarCourse>(
-        3, "DevOps & Cloud", "Maxim Ivanov", 12, 10, "https://meet.google.com/xyz-abc", "Tue/Fri 18:30", 12));
+        3, "DevOps & Cloud", "Maxim Ivanov", 12, 10, webDetails));
 
     courseList.addCourse(std::make_unique<MentoredCourse>(
         4, "Highload Backend Architecture", "Dmitry Petrov", 15, 2, "Ivan Mentor", 5));
@@ -81,8 +82,8 @@ void demonstrateInheritance()
     ic.printFullCourseInfo();
 
     // Пример работы WebinarCourse: унаследованные методы и расписание
-    WebinarCourse wc(102, "Machine Learning Seminars", "Andrew Ng", 6, 20,
-        "https://zoom.us/j/12345678", "Wed 19:00", 6);
+    WebinarDetails semDetails{ "https://zoom.us/j/12345678", "Wed 19:00", 6 };
+    WebinarCourse wc(102, "Machine Learning Seminars", "Andrew Ng", 6, 20, semDetails);
     wc.enrollStudent(testStudent2);
     wc.recordTaskCompletion(6002);
     wc.printFullCourseInfo();
@@ -105,3 +106,4 @@ int main()
     mainMenu(courseList);
 
     return 0;
+}
