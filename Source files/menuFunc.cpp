@@ -175,7 +175,7 @@ void mainMenu(CourseList& courseList)
             std::cout << "Enter course ID: ";
             std::cin >> targetId;
 
-            if (CourseNode* node = courseList.getCoursePointerById(targetId)) {
+            if (CourseNode* const node = courseList.getCoursePointerById(targetId)) {
                 std::cout << "\nCourse selected: " << node->data->getCourseTitle() << "\n";
                 courseMenu(node->data.get());
             }
