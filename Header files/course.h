@@ -159,4 +159,6 @@ public:
     void displayListOfCourses() const;
     CourseNode* getCoursePointerById(int targetId);
     const CourseNode* getCoursePointerById(int targetId) const;
+    Course* getCourseById(int targetId);
+    const Course* getCourseById(int targetId) const;
 };

@@ -3,7 +3,7 @@
 
 Course::Course(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
     : courseTitle(title), teacherName(teacher), totalLessons(lessons), maxCapacity(capacity),
-    Id(id)
+      Id(id)
 {
     if (maxCapacity > 0)
     {
@@ -212,10 +212,11 @@ void Course::printFullCourseInfo() const
 }
 
 InteractiveCourse::InteractiveCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-    int exercises, int passingScore)
+                                     int exercises, int passingScore)
     : Course(id, title, teacher, lessons, capacity),
-    totalExercises(exercises), autoCheckPassingScore(passingScore)
-{}
+      totalExercises(exercises), autoCheckPassingScore(passingScore)
+{
+}
 
 void InteractiveCourse::setTotalExercises(int exercises)
 {
@@ -270,10 +271,11 @@ void InteractiveCourse::printFullCourseInfo() const
 }
 
 WebinarCourse::WebinarCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-    const WebinarDetails& details)
+                             const WebinarDetails& details)
     : Course(id, title, teacher, lessons, capacity),
-    platformUrl(details.platformUrl), scheduleTime(details.scheduleTime), totalWebinars(details.totalWebinars)
-{}
+      platformUrl(details.platformUrl), scheduleTime(details.scheduleTime), totalWebinars(details.totalWebinars)
+{
+}
 
 std::string WebinarCourse::getPlatformUrl() const
 {
@@ -314,10 +316,11 @@ void WebinarCourse::printFullCourseInfo() const
 }
 
 MentoredCourse::MentoredCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-    std::string_view mentor, int reviewsLimit)
+                               std::string_view mentor, int reviewsLimit)
     : Course(id, title, teacher, lessons, capacity),
-    mentorName(mentor), maxReviewsPerStudent(reviewsLimit)
-{}
+      mentorName(mentor), maxReviewsPerStudent(reviewsLimit)
+{
+}
 
 std::string MentoredCourse::getMentorName() const
 {
@@ -350,15 +353,15 @@ void MentoredCourse::conductReview(int studentId)
     totalReviewsConducted++;
     recordTaskCompletion(studentId);
     std::cout << "Mentor " << mentorName << " approved project for student ID "
-        << studentId << ".\n";
+              << studentId << ".\n";
 }
 
 bool MentoredCourse::enrollStudent(const Student& student)
 {
     if (constexpr int maxMentorLoad = 5; getEnrolledCount() >= maxMentorLoad)
     {
-        std::cout << "Cannot enroll in Mentored Course: mentor workload limit ("
-            << maxMentorLoad << " students) reached for " << mentorName << ".\n";
+        std::cout << "Cannot enroll in Mentored Course: mentor workload limit (" 
+                  << maxMentorLoad << " students) reached for " << mentorName << ".\n";
         return false;
     }
     return Course::enrollStudent(student);
