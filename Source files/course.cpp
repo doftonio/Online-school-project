@@ -272,20 +272,12 @@ const CourseNode* CourseList::getCoursePointerById(int targetId) const
 
 Course* CourseList::getCourseById(int targetId)
 {
-    if (auto* foundNode = getCoursePointerById(targetId))
-    {
-        return foundNode->data.get();
-    }
-    return nullptr;
+    return getCoursePointerById(targetId) != nullptr ? getCoursePointerById(targetId)->data.get() : nullptr;
 }
 
 const Course* CourseList::getCourseById(int targetId) const
 {
-    if (const auto* foundNode = getCoursePointerById(targetId))
-    {
-        return foundNode->data.get();
-    }
-    return nullptr;
+    return getCoursePointerById(targetId) != nullptr ? getCoursePointerById(targetId)->data.get() : nullptr;
 }
 
 void CourseList::addCourse(std::unique_ptr<Course> newCourse)
