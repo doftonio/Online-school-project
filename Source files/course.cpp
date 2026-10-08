@@ -3,7 +3,7 @@
 
 Course::Course(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
     : courseTitle(title), teacherName(teacher), totalLessons(lessons), maxCapacity(capacity),
-      Id(id)
+    Id(id)
 {
     if (maxCapacity > 0)
     {
@@ -211,182 +211,6 @@ void Course::printFullCourseInfo() const
     std::cout << std::endl;
 }
 
-InteractiveCourse::InteractiveCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-                                     int exercises, int passingScore)
-    : Course(id, title, teacher, lessons, capacity),
-      totalExercises(exercises), autoCheckPassingScore(passingScore)
-{
-}
-
-void InteractiveCourse::setTotalExercises(int exercises)
-{
-    if (exercises >= 0) {
-        totalExercises = exercises;
-    }
-}
-
-int InteractiveCourse::getTotalExercises() const
-{
-    return totalExercises;
-}
-
-int InteractiveCourse::getPassingScore() const
-{
-    return autoCheckPassingScore;
-}
-
-void InteractiveCourse::submitExercise(int studentId, bool passed)
-{
-    if (passed)
-    {
-        std::cout << "Exercise submitted and passed for student ID " << studentId << ".\n";
-        recordTaskCompletion(studentId);
-    }
-    else
-    {
-        std::cout << "Exercise failed for student ID " << studentId << ".\n";
-    }
-}
-
-int InteractiveCourse::calculateStudentProgress(int studentId) const
-{
-    int baseProgress = Course::calculateStudentProgress(studentId);
-    if (baseProgress < 0) {
-        return -1;
-    }
-    return baseProgress;
-}
-
-void InteractiveCourse::printFullCourseInfo() const
-{
-    std::cout << "\nCourse Information (Interactive Course):\n";
-    std::cout << "Title: " << getCourseTitle() << "\n";
-    std::cout << "Instructor: " << getTeacherName() << "\n";
-    std::cout << "Theory lessons: " << getTotalLessons() << "\n";
-    std::cout << "Practice exercises: " << totalExercises << "\n";
-    std::cout << "Passing score threshold: " << autoCheckPassingScore << "%\n";
-    std::cout << "Enrolled students: " << getEnrolledCount() << " / " << getMaxCapacity() << "\n";
-    printEnrolledStudentsList("auto-tests passed");
-    std::cout << std::endl;
-}
-
-WebinarCourse::WebinarCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-                             const WebinarDetails& details)
-    : Course(id, title, teacher, lessons, capacity),
-      platformUrl(details.platformUrl), scheduleTime(details.scheduleTime), totalWebinars(details.totalWebinars)
-{
-}
-
-std::string WebinarCourse::getPlatformUrl() const
-{
-    return platformUrl;
-}
-
-std::string WebinarCourse::getScheduleTime() const
-{
-    return scheduleTime;
-}
-
-int WebinarCourse::getTotalWebinars() const
-{
-    return totalWebinars;
-}
-
-void WebinarCourse::setPlatformUrl(std::string_view url)
-{
-    platformUrl = url;
-}
-
-void WebinarCourse::setScheduleTime(std::string_view schedule)
-{
-    scheduleTime = schedule;
-}
-
-void WebinarCourse::printFullCourseInfo() const
-{
-    std::cout << "\nCourse Information (Webinar Course):\n";
-    std::cout << "Title: " << getCourseTitle() << "\n";
-    std::cout << "Instructor: " << getTeacherName() << "\n";
-    std::cout << "Platform URL: " << platformUrl << "\n";
-    std::cout << "Schedule: " << scheduleTime << "\n";
-    std::cout << "Total webinars: " << totalWebinars << "\n";
-    std::cout << "Enrolled students: " << getEnrolledCount() << " / " << getMaxCapacity() << "\n";
-    printEnrolledStudentsList("attended sessions");
-    std::cout << std::endl;
-}
-
-MentoredCourse::MentoredCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-                               std::string_view mentor, int reviewsLimit)
-    : Course(id, title, teacher, lessons, capacity),
-      mentorName(mentor), maxReviewsPerStudent(reviewsLimit)
-{
-}
-
-std::string MentoredCourse::getMentorName() const
-{
-    return mentorName;
-}
-
-int MentoredCourse::getMaxReviews() const
-{
-    return maxReviewsPerStudent;
-}
-
-int MentoredCourse::getTotalReviewsConducted() const
-{
-    return totalReviewsConducted;
-}
-
-void MentoredCourse::setMentorName(std::string_view mentor)
-{
-    mentorName = mentor;
-}
-
-void MentoredCourse::conductReview(int studentId)
-{
-    if (calculateStudentProgress(studentId) == -1)
-    {
-        std::cout << "Student with ID " << studentId << " not found for review.\n";
-        return;
-    }
-
-    totalReviewsConducted++;
-    recordTaskCompletion(studentId);
-    std::cout << "Mentor " << mentorName << " approved project for student ID "
-              << studentId << ".\n";
-}
-
-bool MentoredCourse::enrollStudent(const Student& student)
-{
-    if (constexpr int maxMentorLoad = 5; getEnrolledCount() >= maxMentorLoad)
-    {
-        std::cout << "Cannot enroll in Mentored Course: mentor workload limit (" 
-                  << maxMentorLoad << " students) reached for " << mentorName << ".\n";
-        return false;
-    }
-    return Course::enrollStudent(student);
-}
-
-bool MentoredCourse::enrollStudent(int id, std::string_view name)
-{
-    Student newStudent;
-    newStudent.initStudent(id, name);
-    return enrollStudent(newStudent);
-}
-
-void MentoredCourse::printFullCourseInfo() const
-{
-    std::cout << "\nCourse Information (Mentored Course):\n";
-    std::cout << "Title: " << getCourseTitle() << "\n";
-    std::cout << "Instructor: " << getTeacherName() << "\n";
-    std::cout << "Mentor: " << mentorName << "\n";
-    std::cout << "Reviews quota: " << maxReviewsPerStudent << "\n";
-    std::cout << "Reviews conducted: " << totalReviewsConducted << "\n";
-    std::cout << "Enrolled students: " << getEnrolledCount() << " / " << getMaxCapacity() << "\n";
-    printEnrolledStudentsList("reviews passed");
-    std::cout << std::endl;
-}
-
 void CourseList::deleteNode(CourseNode* node)
 {
     if (node == nullptr) return;
@@ -444,6 +268,18 @@ const CourseNode* CourseList::getCoursePointerById(int targetId) const
         current = current->next.get();
     }
     return nullptr;
+}
+
+Course* CourseList::getCourseById(int targetId)
+{
+    CourseNode* node = getCoursePointerById(targetId);
+    return node != nullptr ? node->data.get() : nullptr;
+}
+
+const Course* CourseList::getCourseById(int targetId) const
+{
+    const CourseNode* node = getCoursePointerById(targetId);
+    return node != nullptr ? node->data.get() : nullptr;
 }
 
 void CourseList::addCourse(std::unique_ptr<Course> newCourse)

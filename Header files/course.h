@@ -5,13 +5,6 @@
 #include <memory>
 #include "student.h"
 
-struct WebinarDetails
-{
-    std::string_view platformUrl{};
-    std::string_view scheduleTime{};
-    int totalWebinars{ 0 };
-};
-
 class Course
 {
 private:
@@ -59,75 +52,6 @@ public:
     Course& operator-=(const Student& student);
 
     virtual void printFullCourseInfo() const;
-};
-
-class InteractiveCourse : public Course
-{
-private:
-    int totalExercises{ 0 };
-    int autoCheckPassingScore{ 70 };
-
-public:
-    InteractiveCourse() = default;
-    InteractiveCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-        int exercises, int passingScore);
-
-    void setTotalExercises(int exercises);
-    int getTotalExercises() const;
-    int getPassingScore() const;
-
-    void submitExercise(int studentId, bool passed);
-
-    int calculateStudentProgress(int studentId) const override;
-    void printFullCourseInfo() const override;
-};
-
-class WebinarCourse : public Course
-{
-private:
-    std::string platformUrl{};
-    std::string scheduleTime{};
-    int totalWebinars{ 0 };
-
-public:
-    WebinarCourse() = default;
-    WebinarCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-        const WebinarDetails& details);
-
-    std::string getPlatformUrl() const;
-    std::string getScheduleTime() const;
-    int getTotalWebinars() const;
-
-    void setPlatformUrl(std::string_view url);
-    void setScheduleTime(std::string_view schedule);
-
-    void printFullCourseInfo() const override;
-};
-
-class MentoredCourse : public Course
-{
-private:
-    std::string mentorName{};
-    int maxReviewsPerStudent{ 3 };
-    int totalReviewsConducted{ 0 };
-
-public:
-    MentoredCourse() = default;
-    MentoredCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity,
-        std::string_view mentor, int reviewsLimit);
-
-    std::string getMentorName() const;
-    int getMaxReviews() const;
-    int getTotalReviewsConducted() const;
-
-    void setMentorName(std::string_view mentor);
-
-    void conductReview(int studentId);
-
-    bool enrollStudent(const Student& student) override;
-    bool enrollStudent(int id, std::string_view name) override;
-
-    void printFullCourseInfo() const override;
 };
 
 struct CourseNode
