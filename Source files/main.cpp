@@ -77,8 +77,8 @@ void demonstrateInheritance()
     // Пример работы InteractiveCourse: унаследованные и специализированные методы
     InteractiveCourse ic(101, "Python Algorithms", "G. Rossum", 8, 3, 20, 80);
     ic.enrollStudent(testStudent1);
-    ic.submitExercise(6001, true);
-    ic.submitExercise(6001, false);
+    ic.submitExercise(6001, 60);
+    ic.submitExercise(6001, 81);
     ic.printFullCourseInfo();
 
     // Пример работы WebinarCourse: унаследованные методы и расписание

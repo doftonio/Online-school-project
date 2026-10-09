@@ -17,7 +17,7 @@ public:
     int getTotalExercises() const;
     int getPassingScore() const;
 
-    void submitExercise(int studentId, bool passed);
+    void submitExercise(int studentId, int mark);
 
     int calculateStudentProgress(int studentId) const override;
     void printFullCourseInfo() const override;

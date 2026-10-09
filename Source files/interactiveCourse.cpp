@@ -24,9 +24,9 @@ int InteractiveCourse::getPassingScore() const
     return autoCheckPassingScore;
 }
 
-void InteractiveCourse::submitExercise(int studentId, bool passed)
+void InteractiveCourse::submitExercise(int studentId, int mark)
 {
-    if (passed)
+    if (mark >= autoCheckPassingScore)
     {
         std::cout << "Exercise submitted and passed for student ID " << studentId << ".\n";
         recordTaskCompletion(studentId);
