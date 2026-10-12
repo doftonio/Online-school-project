@@ -229,7 +229,7 @@ namespace {
         }
     }
 
-    void courseSubMenu(Faculty& faculty, Course* course) {
+    void courseSubMenu(const Faculty& faculty, Course* course) {
         if (!course) return;
 
         int choice = -1;
@@ -295,8 +295,7 @@ namespace {
         std::cout << "1. Создать новую группу\n";
         std::cout << "2. Выбрать группу по номеру\n";
         std::cout << "0. Назад\n";
-        int sub = readInt("Выбор: ");
-        if (sub == 1) {
+        if (int sub = readInt("Выбор: "); sub == 1) {
             std::string num = readString("Номер группы: ");
             int year = readInt("Курс (1-5): ");
             int cap = readInt("Вместимость: ");
@@ -328,8 +327,7 @@ namespace {
         std::cout << "1. Создать новый курс\n";
         std::cout << "2. Выбрать курс по ID\n";
         std::cout << "0. Назад\n";
-        int sub = readInt("Выбор: ");
-        if (sub == 1) {
+        if (int sub = readInt("Выбор: "); sub == 1) {
             int id = readInt("ID курса: ");
             std::string title = readString("Название курса: ");
             faculty.createCourse(id, title);
