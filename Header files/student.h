@@ -13,9 +13,9 @@ public:
     Student() = default;
     Student(int studentId, std::string_view first, std::string_view last, std::string_view middle = "", int tasks = 0);
 
-    [[nodiscard]] int getId() const;
-    [[nodiscard]] std::string getGroupNumber() const;
-    [[nodiscard]] int getCompletedTasks() const;
+    int getId() const;
+    std::string getGroupNumber() const;
+    int getCompletedTasks() const;
 
     void setGroupNumber(std::string_view group);
     void completeTask();

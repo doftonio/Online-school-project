@@ -11,9 +11,9 @@ public:
     Date() = default;
     Date(int d, int m, int y);
 
-    [[nodiscard]] int getDay() const;
-    [[nodiscard]] int getMonth() const;
-    [[nodiscard]] int getYear() const;
+    int getDay() const;
+    int getMonth() const;
+    int getYear() const;
 
     bool operator==(const Date& other) const = default;
 

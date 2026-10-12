@@ -13,13 +13,13 @@ private:
 public:
     LabActivity(int lessons, int assignedTeacher, int labsCount, int minScore);
 
-    [[nodiscard]] ActivityType getType() const override;
-    [[nodiscard]] int getCount() const;
-    [[nodiscard]] int getMinPassingScore() const;
+    ActivityType getType() const override;
+    int getCount() const;
+    int getMinPassingScore() const;
 
     void addGradeForStudent(int studentId, const LabGrade& grade);
     bool removeGradeForStudentByDate(int studentId, const Date& date);
-    [[nodiscard]] double getGroupAverageScore() const;
+    double getGroupAverageScore() const;
 
     void printDetails() const override;
     friend void printLabJournal(std::ostream& os, const LabActivity& activity);

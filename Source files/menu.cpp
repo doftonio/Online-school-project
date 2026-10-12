@@ -101,7 +101,7 @@ namespace {
         }
     }
 
-    void handleCourseTeachers(Faculty& faculty, Course* course, int choice) {
+    void handleCourseTeachers(const Faculty& faculty, Course* course, int choice) {
         if (choice == 2) {
             int tId = readInt("¬ведите ID преподавател€ факультета: ");
             if (Teacher* t = faculty.findTeacher(tId)) {

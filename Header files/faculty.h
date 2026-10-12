@@ -19,19 +19,19 @@ private:
 public:
     explicit Faculty(std::string_view facultyName);
 
-    [[nodiscard]] std::string getName() const;
+    std::string getName() const;
 
     Teacher* createTeacher(int id, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept);
     StudyGroup* createGroup(std::string_view number, int year, int capacity = 30);
     Course* createCourse(int id, std::string_view title);
 
-    [[nodiscard]] StudyGroup* findGroup(std::string_view groupNum) const;
-    [[nodiscard]] Teacher* findTeacher(int teacherId) const;
-    [[nodiscard]] Course* findCourse(int courseId) const;
+    StudyGroup* findGroup(std::string_view groupNum) const;
+    Teacher* findTeacher(int teacherId) const;
+    Course* findCourse(int courseId) const;
 
-    [[nodiscard]] const std::vector<std::unique_ptr<Teacher>>& getTeachers() const;
-    [[nodiscard]] const std::vector<std::unique_ptr<StudyGroup>>& getGroups() const;
-    [[nodiscard]] const std::vector<std::unique_ptr<Course>>& getCourses() const;
+    const std::vector<std::unique_ptr<Teacher>>& getTeachers() const;
+    const std::vector<std::unique_ptr<StudyGroup>>& getGroups() const;
+    const std::vector<std::unique_ptr<Course>>& getCourses() const;
 
     Student* enrollStudentInGroup(int id, std::string_view first, std::string_view last,
         std::string_view middle, std::string_view groupNum);

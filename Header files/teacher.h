@@ -11,8 +11,8 @@ public:
     Teacher() = default;
     Teacher(int teacherId, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept);
 
-    [[nodiscard]] int getId() const;
-    [[nodiscard]] std::string getDepartment() const;
+    int getId() const;
+    std::string getDepartment() const;
 
     void printInfo() const override;
     bool operator==(const Teacher& other) const;

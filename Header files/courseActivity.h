@@ -22,14 +22,14 @@ public:
     CourseActivity(std::string_view actTitle, int lessons, int assignedTeacher);
     virtual ~CourseActivity() = default;
 
-    [[nodiscard]] std::string getTitle() const;
-    [[nodiscard]] int getLessonsCount() const;
-    [[nodiscard]] int getTeacherId() const;
+    std::string getTitle() const;
+    int getLessonsCount() const;
+    int getTeacherId() const;
 
     void setLessonsCount(int lessons);
     void setTeacherId(int id);
 
-    [[nodiscard]] virtual int calculateHours() const;
-    [[nodiscard]] virtual ActivityType getType() const = 0;
+    virtual int calculateHours() const;
+    virtual ActivityType getType() const = 0;
     virtual void printDetails() const = 0;
 };

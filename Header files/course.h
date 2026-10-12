@@ -22,18 +22,18 @@ private:
 public:
     Course(int courseId, std::string_view courseTitle);
 
-    [[nodiscard]] int getId() const;
-    [[nodiscard]] std::string getTitle() const;
-    [[nodiscard]] std::span<const Teacher* const> getTeachers() const;
-    [[nodiscard]] const std::vector<GroupActivityProfile>& getGroupProfiles() const;
+    int getId() const;
+    std::string getTitle() const;
+    std::span<const Teacher* const> getTeachers() const;
+    const std::vector<GroupActivityProfile>& getGroupProfiles() const;
 
     Course& operator+=(Teacher* teacher);
     Course& operator-=(int teacherId);
 
-    [[nodiscard]] Teacher* findTeacher(int teacherId) const;
+    Teacher* findTeacher(int teacherId) const;
 
     void addActivityForGroup(std::string_view groupNumber, std::unique_ptr<CourseActivity> activity);
-    [[nodiscard]] CourseActivity* findActivity(std::string_view groupNumber, ActivityType type);
+    CourseActivity* findActivity(std::string_view groupNumber, ActivityType type);
 
     void printFullCourseInfo() const;
 };

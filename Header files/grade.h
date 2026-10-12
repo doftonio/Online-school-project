@@ -11,6 +11,6 @@ public:
     Grade(int val, const Date& d);
     virtual ~Grade() = default;
 
-    [[nodiscard]] int getValue() const;
-    [[nodiscard]] Date getDate() const;
+    int getValue() const;
+    Date getDate() const;
 };

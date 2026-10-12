@@ -12,12 +12,12 @@ private:
 public:
     explicit StudentLabGradesContainer(int id);
 
-    [[nodiscard]] int getStudentId() const;
-    [[nodiscard]] const std::vector<LabGrade>& getGrades() const;
+    int getStudentId() const;
+    const std::vector<LabGrade>& getGrades() const;
 
     void addGrade(const LabGrade& grade);
     bool removeGradeByDate(const Date& targetDate);
-    [[nodiscard]] double getAverageScore() const;
+    double getAverageScore() const;
 
     friend std::ostream& operator<<(std::ostream& os, const StudentLabGradesContainer& c) {
         os << "ID " << c.studentId << " | ќценки: ";
@@ -40,12 +40,12 @@ private:
 public:
     explicit StudentPracticeGradesContainer(int id);
 
-    [[nodiscard]] int getStudentId() const;
-    [[nodiscard]] const std::vector<PracticeGrade>& getGrades() const;
+    int getStudentId() const;
+    const std::vector<PracticeGrade>& getGrades() const;
 
     void addGrade(const PracticeGrade& grade);
     bool removeGradeByDate(const Date& targetDate);
-    [[nodiscard]] double getAverageScore() const;
+    double getAverageScore() const;
 
     friend std::ostream& operator<<(std::ostream& os, const StudentPracticeGradesContainer& c) {
         os << "ID " << c.studentId << " | ќценки: ";
