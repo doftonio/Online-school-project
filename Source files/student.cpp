@@ -13,10 +13,10 @@ void Student::completeTask() { completedTasks++; }
 void Student::setCompletedTasks(int tasks) { completedTasks = tasks; }
 
 void Student::printInfo() const {
-    std::cout << "Студент: " << getFullName()
+    std::cout << "Student: " << getFullName()
         << " [ID: " << id
-        << ", Группа: " << (groupNumber.empty() ? "N/A" : groupNumber)
-        << ", Задач: " << completedTasks << "]\n";
+        << ", Group: " << (groupNumber.empty() ? "N/A" : groupNumber)
+        << ", Tasks: " << completedTasks << "]\n";
 }
 
 bool Student::operator==(const Student& other) const { return id == other.id; }

@@ -14,10 +14,10 @@ const std::vector<GroupActivityProfile>& Course::getGroupProfiles() const { retu
 
 Course& Course::operator+=(Teacher* teacher) {
     if (!teacher) {
-        throw InvalidOperationException("Преподаватель nullptr.");
+        throw InvalidOperationException("Teacher is nullptr.");
     }
     if (findTeacher(teacher->getId())) {
-        throw DuplicateEntityException(std::format("Преподаватель ID {} уже на курсе.", teacher->getId()));
+        throw DuplicateEntityException(std::format("Teacher ID {} is already on the course.", teacher->getId()));
     }
     teachers.push_back(teacher);
     return *this;
@@ -30,7 +30,7 @@ Course& Course::operator-=(int teacherId) {
             return *this;
         }
     }
-    throw EntityNotFoundException(std::format("Преподаватель ID {} не найден на курсе.", teacherId));
+    throw EntityNotFoundException(std::format("Teacher ID {} not found on the course.", teacherId));
 }
 
 Teacher* Course::findTeacher(int teacherId) const {
@@ -42,11 +42,11 @@ Teacher* Course::findTeacher(int teacherId) const {
 
 void Course::addActivityForGroup(std::string_view groupNumber, std::unique_ptr<CourseActivity> activity) {
     if (!activity) {
-        throw InvalidOperationException("Передана пустая активность.");
+        throw InvalidOperationException("Passed empty activity.");
     }
 
     if (int tId = activity->getTeacherId(); !findTeacher(tId)) {
-        throw EntityNotFoundException(std::format("Преподаватель ID {} отсутствует в пуле курса \"{}\"!", tId, title));
+        throw EntityNotFoundException(std::format("Teacher ID {} is not in the course pool \"{}\"!", tId, title));
     }
 
     size_t profileIndex = groupProfiles.size();
@@ -65,8 +65,8 @@ void Course::addActivityForGroup(std::string_view groupNumber, std::unique_ptr<C
     ActivityType incomingType = activity->getType();
     for (const auto& existing : groupProfiles[profileIndex].activities) {
         if (existing->getType() == incomingType) {
-            throw DuplicateEntityException(std::format("Для группы {} активность \"{}\" уже существует!",
-                groupNumber, activityTypeToString(incomingType)));
+            throw DuplicateEntityException(std::format("Activity \"{}\" already exists for group {}!",
+                activityTypeToString(incomingType), groupNumber));
         }
     }
 
@@ -89,20 +89,20 @@ CourseActivity* Course::findActivity(std::string_view groupNumber, ActivityType 
 
 void Course::printFullCourseInfo() const {
     std::cout << "\n=======================================================\n";
-    std::cout << "КУРС: " << title << " (ID: " << id << ")\n";
-    std::cout << "Преподаватели курса (" << teachers.size() << "):\n";
+    std::cout << "COURSE: " << title << " (ID: " << id << ")\n";
+    std::cout << "Course Teachers (" << teachers.size() << "):\n";
     for (const Teacher* const t : teachers) {
         std::cout << "  * " << t->getFullName() << " [ID: " << t->getId()
-            << ", Кафедра: " << t->getDepartment() << "]\n";
+            << ", Dept: " << t->getDepartment() << "]\n";
     }
 
-    std::cout << "\nАктивности по учебным группам:\n";
+    std::cout << "\nGroup Activities:\n";
     for (const auto& prof : groupProfiles) {
-        std::cout << ">>> Группа: " << prof.groupNumber
-            << " (Назначено типов: " << prof.activities.size() << "/3)\n";
+        std::cout << ">>> Group: " << prof.groupNumber
+            << " (Assigned types: " << prof.activities.size() << "/3)\n";
         for (const auto& act : prof.activities) {
             const Teacher* t = findTeacher(act->getTeacherId());
-            std::cout << "  Ведущий: " << (t ? t->getFullName() : "N/A") << "\n";
+            std::cout << "  Instructor: " << (t ? t->getFullName() : "N/A") << "\n";
             act->printDetails();
         }
     }

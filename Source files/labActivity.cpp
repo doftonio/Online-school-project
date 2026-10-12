@@ -1,7 +1,7 @@
 #include "../Header files/labActivity.h"
 
 LabActivity::LabActivity(int lessons, int assignedTeacher, int labsCount, int minScore)
-    : CourseActivity("Лабораторные", lessons, assignedTeacher),
+    : CourseActivity("Labs", lessons, assignedTeacher),
     count(labsCount), minPassingScore(minScore) {
 }
 
@@ -38,17 +38,17 @@ double LabActivity::getGroupAverageScore() const {
 }
 
 void LabActivity::printDetails() const {
-    std::cout << "    [Лабораторные] Занятий: " << getLessonsCount()
-        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << getTeacherId() << "\n"
-        << "      Сдать работ: " << count
-        << " | Проходной балл: " << minPassingScore << "\n";
+    std::cout << "    [Laboratory Works] Lessons: " << getLessonsCount()
+        << " (" << calculateHours() << " h) | Teacher ID: " << getTeacherId() << "\n"
+        << "      Required labs: " << count
+        << " | Min score: " << minPassingScore << "\n";
 }
 
 void printLabJournal(std::ostream& os, const LabActivity& activity) {
-    os << "--- Журнал лабораторных работ (План: " << activity.count
-        << ", Мин. балл: " << activity.minPassingScore << ") ---\n";
+    os << "--- Laboratory Journal (Required: " << activity.count
+        << ", Min score: " << activity.minPassingScore << ") ---\n";
     for (const auto& record : activity.journal) {
         os << "  * " << record << "\n";
     }
-    os << "  -> Средний балл группы за лабы: " << activity.getGroupAverageScore() << "\n";
+    os << "  -> Group average score for labs: " << activity.getGroupAverageScore() << "\n";
 }

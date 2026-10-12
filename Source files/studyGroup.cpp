@@ -6,7 +6,7 @@
 StudyGroup::StudyGroup(std::string_view groupNum, int year, int capacity)
     : number(groupNum), courseYear(year), maxCapacity(capacity) {
     if (capacity <= 0) {
-        throw InvalidOperationException("Вместимость группы должна быть положительной.");
+        throw InvalidOperationException("Group capacity must be positive.");
     }
 }
 
@@ -17,14 +17,14 @@ std::span<const Student* const> StudyGroup::getStudents() const { return student
 
 StudyGroup& StudyGroup::operator+=(Student* student) {
     if (!student) {
-        throw InvalidOperationException("Попытка привязать к группе nullptr.");
+        throw InvalidOperationException("Attempted to attach nullptr to group.");
     }
     if (static_cast<int>(students.size()) >= maxCapacity) {
-        throw CapacityExceededException(std::format("Группа {} заполнена!", number));
+        throw CapacityExceededException(std::format("Group {} is full!", number));
     }
     for (const auto* s : students) {
         if (s->getId() == student->getId()) {
-            throw DuplicateEntityException(std::format("Студент ID {} уже в этой группе.", student->getId()));
+            throw DuplicateEntityException(std::format("Student ID {} is already in this group.", student->getId()));
         }
     }
     students.push_back(student);
@@ -40,7 +40,7 @@ StudyGroup& StudyGroup::operator-=(int studentId) {
             return *this;
         }
     }
-    throw EntityNotFoundException(std::format("Студент ID {} не найден в группе {}", studentId, number));
+    throw EntityNotFoundException(std::format("Student ID {} not found in group {}", studentId, number));
 }
 
 Student* StudyGroup::findStudent(int studentId) {
@@ -58,8 +58,8 @@ const Student* StudyGroup::findStudent(int studentId) const {
 }
 
 void StudyGroup::printInfo() const {
-    std::cout << "Группа №" << number
-        << " (" << courseYear << "-й курс, студентов: "
+    std::cout << "Group #" << number
+        << " (Year " << courseYear << ", students: "
         << students.size() << "/" << maxCapacity << ")\n";
     for (const auto* s : students) {
         std::cout << "   * " << *s << "\n";

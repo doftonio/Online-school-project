@@ -1,7 +1,7 @@
 #include "../Header files/practiceActivity.h"
 
 PracticeActivity::PracticeActivity(int lessons, int assignedTeacher, int tests, int practicals, int calculations)
-    : CourseActivity("Практика", lessons, assignedTeacher),
+    : CourseActivity("Practice", lessons, assignedTeacher),
     testsCount(tests), tasksCount(practicals), calculationsCount(calculations) {
 }
 
@@ -12,11 +12,11 @@ int PracticeActivity::calculateHours() const {
 }
 
 void PracticeActivity::printDetails() const {
-    std::cout << "    [Практика] Занятий: " << getLessonsCount()
-        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << getTeacherId() << "\n"
-        << "      К/Р: " << testsCount
-        << " | Задач: " << tasksCount
-        << " | Расчетов: " << calculationsCount << "\n";
+    std::cout << "    [Practice] Lessons: " << getLessonsCount()
+        << " (" << calculateHours() << " h) | Teacher ID: " << getTeacherId() << "\n"
+        << "      Tests: " << testsCount
+        << " | Tasks: " << tasksCount
+        << " | Calculations: " << calculationsCount << "\n";
 }
 
 void PracticeActivity::addGradeForStudent(int studentId, const PracticeGrade& grade) {
@@ -48,9 +48,9 @@ double PracticeActivity::getGroupAverageScore() const {
 }
 
 void printPracticeJournal(std::ostream& os, const PracticeActivity& activity) {
-    os << "--- Журнал практических занятий ---\n";
+    os << "--- Practice Journal ---\n";
     for (const auto& record : activity.journal) {
         os << "  * " << record << "\n";
     }
-    os << "  -> Средний балл группы за практику: " << activity.getGroupAverageScore() << "\n";
+    os << "  -> Group average score for practice: " << activity.getGroupAverageScore() << "\n";
 }

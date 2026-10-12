@@ -28,29 +28,29 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Student& s) {
         os << "ID: " << s.id
-            << " | ФИО: " << s.getFullName()
-            << " | Группа: " << (s.groupNumber.empty() ? "N/A" : s.groupNumber)
-            << " | Задач: " << s.completedTasks;
+            << " | Name: " << s.getFullName()
+            << " | Group: " << (s.groupNumber.empty() ? "N/A" : s.groupNumber)
+            << " | Tasks: " << s.completedTasks;
         return os;
     }
 
     friend std::istream& operator>>(std::istream& is, Student& s) {
-        std::cout << "Введите ID студента: ";
+        std::cout << "Enter student ID: ";
         is >> s.id;
         std::string last{};
         std::string first{};
         std::string middle{};
-        std::cout << "Введите фамилию: ";
+        std::cout << "Enter last name: ";
         is >> last;
         s.setLastName(last);
-        std::cout << "Введите имя: ";
+        std::cout << "Enter first name: ";
         is >> first;
         s.setFirstName(first);
-        std::cout << "Введите отчество ('-' если нет): ";
+        std::cout << "Enter middle name ('-' if none): ";
         is >> middle;
         if (middle == "-") middle.clear();
         s.setMiddleName(middle);
-        std::cout << "Введите количество выполненных задач: ";
+        std::cout << "Enter completed tasks count: ";
         is >> s.completedTasks;
         return is;
     }

@@ -20,14 +20,14 @@ public:
     double getAverageScore() const;
 
     friend std::ostream& operator<<(std::ostream& os, const StudentLabGradesContainer& c) {
-        os << "ID " << c.studentId << " | ќценки: ";
+        os << "ID " << c.studentId << " | Grades: ";
         if (c.grades.empty()) {
-            os << "нет";
+            os << "none";
         }
         else {
             for (const auto& g : c.grades) os << g << " ";
         }
-        os << " | —р. балл: " << c.getAverageScore();
+        os << " | Avg: " << c.getAverageScore();
         return os;
     }
 };
@@ -48,14 +48,14 @@ public:
     double getAverageScore() const;
 
     friend std::ostream& operator<<(std::ostream& os, const StudentPracticeGradesContainer& c) {
-        os << "ID " << c.studentId << " | ќценки: ";
+        os << "ID " << c.studentId << " | Grades: ";
         if (c.grades.empty()) {
-            os << "нет";
+            os << "none";
         }
         else {
             for (const auto& g : c.grades) os << g << " ";
         }
-        os << " | —р. балл: " << c.getAverageScore();
+        os << " | Avg: " << c.getAverageScore();
         return os;
     }
 };

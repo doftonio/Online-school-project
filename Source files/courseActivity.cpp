@@ -3,11 +3,11 @@
 std::string activityTypeToString(ActivityType type) {
     using enum ActivityType;
     switch (type) {
-    case Lecture:  return "Лекционное занятие";
-    case Lab:      return "Лабораторная работа";
-    case Practice: return "Практическое занятие";
+    case Lecture:  return "Lecture Class";
+    case Lab:      return "Laboratory Work";
+    case Practice: return "Practical Class";
     }
-    return "Неизвестно";
+    return "Unknown";
 }
 
 CourseActivity::CourseActivity(std::string_view actTitle, int lessons, int assignedTeacher)

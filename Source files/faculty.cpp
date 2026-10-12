@@ -51,12 +51,12 @@ Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::stri
 {
     StudyGroup* group = findGroup(groupNum);
     if (!group) {
-        throw EntityNotFoundException(std::format("Группа {} не найдена на факультете.", groupNum));
+        throw EntityNotFoundException(std::format("Group {} not found on the faculty.", groupNum));
     }
 
     for (const auto& s : allStudents) {
         if (s->getId() == id) {
-            throw DuplicateEntityException(std::format("Студент ID {} уже существует.", id));
+            throw DuplicateEntityException(std::format("Student ID {} already exists.", id));
         }
     }
 
@@ -81,5 +81,5 @@ void Faculty::expelStudent(int studentId) {
         allStudents.erase(allStudents.begin() + i);
         return;
     }
-    throw EntityNotFoundException(std::format("Студент ID {} не найден на факультете.", studentId));
+    throw EntityNotFoundException(std::format("Student ID {} not found on the faculty.", studentId));
 }

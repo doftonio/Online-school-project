@@ -17,7 +17,7 @@ public:
     std::string getWorkType() const;
 
     friend std::ostream& operator<<(std::ostream& os, const PracticeGrade& g) {
-        os << "[" << g.workType << " ¹" << g.number << ": " << g.getValue() << " á. (" << g.getDate() << ")]";
+        os << "[" << g.workType << " #" << g.number << ": " << g.getValue() << " pts (" << g.getDate() << ")]";
         return os;
     }
 };

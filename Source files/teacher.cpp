@@ -8,8 +8,8 @@ int Teacher::getId() const { return id; }
 std::string Teacher::getDepartment() const { return department; }
 
 void Teacher::printInfo() const {
-    std::cout << "Преподаватель: " << getFullName()
-        << " [ID: " << id << ", Кафедра: " << department << "]\n";
+    std::cout << "Teacher: " << getFullName()
+        << " [ID: " << id << ", Department: " << department << "]\n";
 }
 
 bool Teacher::operator==(const Teacher& other) const { return id == other.id; }

@@ -6,17 +6,17 @@
 #include <iostream>
 
 void populateDemoData(Faculty& faculty) {
-    Teacher* tLec = faculty.createTeacher(101, "Алексей", "Сидоров", "Иванович", "ПОИТ");
-    Teacher* tLab = faculty.createTeacher(102, "Елена", "Кузнецова", "Васильевна", "ИИТ");
-    Teacher* tPr = faculty.createTeacher(103, "Михаил", "Громов", "Петрович", "ВМ");
+    Teacher* tLec = faculty.createTeacher(101, "Alexey", "Sidorov", "Ivanovich", "SEIT");
+    Teacher* tLab = faculty.createTeacher(102, "Elena", "Kuznetsova", "Vasilyevna", "IIT");
+    Teacher* tPr = faculty.createTeacher(103, "Mikhail", "Gromov", "Petrovich", "Higher Math");
 
     faculty.createGroup("550501", 2, 25);
     faculty.createGroup("550502", 2, 25);
-    faculty.enrollStudentInGroup(1001, "Егор", "Евсеенко", "Сергеевич", "550501");
-    faculty.enrollStudentInGroup(1002, "Иван", "Петров", "Алексеевич", "550501");
-    faculty.enrollStudentInGroup(1003, "Анна", "Смирнова", "Игоревна", "550502");
+    faculty.enrollStudentInGroup(1001, "Egor", "Evseenko", "Sergeevich", "550501");
+    faculty.enrollStudentInGroup(1002, "Ivan", "Petrov", "Alexeevich", "550501");
+    faculty.enrollStudentInGroup(1003, "Anna", "Smirnova", "Igorevna", "550502");
 
-    Course* oop = faculty.createCourse(1, "Объектно-Ориентированное Программирование");
+    Course* oop = faculty.createCourse(1, "Object-Oriented Programming");
     *oop += tLec;
     *oop += tLab;
     *oop += tPr;
@@ -33,8 +33,7 @@ void populateDemoData(Faculty& faculty) {
 }
 
 int main() {
-    setlocale(LC_ALL, "Russian");
-    Faculty faculty("ФКП БГУИР");
+    Faculty faculty("FCAD BSUIR");
 
     populateDemoData(faculty);
     runMainMenu(faculty);

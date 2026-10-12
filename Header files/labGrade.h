@@ -13,7 +13,7 @@ public:
     int getNumber() const;
 
     friend std::ostream& operator<<(std::ostream& os, const LabGrade& g) {
-        os << "[Ырс. Й" << g.number << ": " << g.getValue() << " с. (" << g.getDate() << ")]";
+        os << "[Lab #" << g.number << ": " << g.getValue() << " pts (" << g.getDate() << ")]";
         return os;
     }
 };
