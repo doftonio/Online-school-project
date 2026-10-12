@@ -14,13 +14,13 @@ private:
 public:
     PracticeActivity(int lessons, int assignedTeacher, int tests, int practicals, int calculations);
 
-    ActivityType getType() const override;
-    int calculateHours() const override;
+    [[nodiscard]] ActivityType getType() const override;
+    [[nodiscard]] int calculateHours() const override;
     void printDetails() const override;
 
     void addGradeForStudent(int studentId, const PracticeGrade& grade);
     bool removeGradeForStudentByDate(int studentId, const Date& date);
-    double getGroupAverageScore() const;
+    [[nodiscard]] double getGroupAverageScore() const;
 
     friend void printPracticeJournal(std::ostream& os, const PracticeActivity& activity);
 };

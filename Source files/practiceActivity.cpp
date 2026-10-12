@@ -12,8 +12,8 @@ int PracticeActivity::calculateHours() const {
 }
 
 void PracticeActivity::printDetails() const {
-    std::cout << "    [Практика] Занятий: " << lessonsCount
-        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << teacherId << "\n"
+    std::cout << "    [Практика] Занятий: " << getLessonsCount()
+        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << getTeacherId() << "\n"
         << "      К/Р: " << testsCount
         << " | Задач: " << tasksCount
         << " | Расчетов: " << calculationsCount << "\n";

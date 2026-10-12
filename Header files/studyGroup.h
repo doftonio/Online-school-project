@@ -1,5 +1,6 @@
 #pragma once
 #include "student.h"
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -14,14 +15,15 @@ private:
 public:
     StudyGroup(std::string_view groupNum, int year, int capacity = 30);
 
-    std::string getNumber() const;
-    int getCourseYear() const;
-    int getMaxCapacity() const;
-    const std::vector<Student*>& getStudents() const;
+    [[nodiscard]] std::string getNumber() const;
+    [[nodiscard]] int getCourseYear() const;
+    [[nodiscard]] int getMaxCapacity() const;
+    [[nodiscard]] std::span<const Student* const> getStudents() const;
 
     StudyGroup& operator+=(Student* student);
     StudyGroup& operator-=(int studentId);
 
-    Student* findStudent(int studentId) const;
+    [[nodiscard]] Student* findStudent(int studentId);
+    [[nodiscard]] const Student* findStudent(int studentId) const;
     void printInfo() const;
 };

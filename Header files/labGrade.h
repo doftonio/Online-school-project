@@ -10,6 +10,10 @@ public:
     LabGrade() = default;
     LabGrade(int val, const Date& d, int labNum);
 
-    int getNumber() const;
-    friend std::ostream& operator<<(std::ostream& os, const LabGrade& g);
+    [[nodiscard]] int getNumber() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const LabGrade& g) {
+        os << "[Ырс. Й" << g.number << ": " << g.getValue() << " с. (" << g.getDate() << ")]";
+        return os;
+    }
 };

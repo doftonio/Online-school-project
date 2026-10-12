@@ -9,7 +9,7 @@ ActivityType LectureActivity::getType() const { return ActivityType::Lecture; }
 int LectureActivity::calculateHours() const { return hours; }
 
 void LectureActivity::printDetails() const {
-    std::cout << "    [Лекции] Занятий: " << lessonsCount
-        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << teacherId << "\n"
+    std::cout << "    [Лекции] Занятий: " << getLessonsCount()
+        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << getTeacherId() << "\n"
         << "      Тем в плане: " << topicsCount << "\n";
 }

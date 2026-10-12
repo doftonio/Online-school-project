@@ -1,10 +1,11 @@
 #include "../Header files/courseActivity.h"
 
 std::string activityTypeToString(ActivityType type) {
+    using enum ActivityType;
     switch (type) {
-    case ActivityType::Lecture:  return "Лекционное занятие";
-    case ActivityType::Lab:      return "Лабораторная работа";
-    case ActivityType::Practice: return "Практическое занятие";
+    case Lecture:  return "Лекционное занятие";
+    case Lab:      return "Лабораторная работа";
+    case Practice: return "Практическое занятие";
     }
     return "Неизвестно";
 }

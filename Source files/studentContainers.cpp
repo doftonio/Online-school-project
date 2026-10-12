@@ -26,18 +26,6 @@ double StudentLabGradesContainer::getAverageScore() const {
     return static_cast<double>(sum) / grades.size();
 }
 
-std::ostream& operator<<(std::ostream& os, const StudentLabGradesContainer& c) {
-    os << "ID " << c.studentId << " | ќценки: ";
-    if (c.grades.empty()) {
-        os << "нет";
-    }
-    else {
-        for (const auto& g : c.grades) os << g << " ";
-    }
-    os << " | —р. балл: " << c.getAverageScore();
-    return os;
-}
-
 StudentPracticeGradesContainer::StudentPracticeGradesContainer(int id) : studentId(id) {}
 
 int StudentPracticeGradesContainer::getStudentId() const { return studentId; }
@@ -62,16 +50,4 @@ double StudentPracticeGradesContainer::getAverageScore() const {
     int sum = 0;
     for (const auto& g : grades) sum += g.getValue();
     return static_cast<double>(sum) / grades.size();
-}
-
-std::ostream& operator<<(std::ostream& os, const StudentPracticeGradesContainer& c) {
-    os << "ID " << c.studentId << " | ќценки: ";
-    if (c.grades.empty()) {
-        os << "нет";
-    }
-    else {
-        for (const auto& g : c.grades) os << g << " ";
-    }
-    os << " | —р. балл: " << c.getAverageScore();
-    return os;
 }

@@ -5,8 +5,3 @@ LabGrade::LabGrade(int val, const Date& d, int labNum)
 }
 
 int LabGrade::getNumber() const { return number; }
-
-std::ostream& operator<<(std::ostream& os, const LabGrade& g) {
-    os << "[Ырс. Й" << g.number << ": " << g.value << " с. (" << g.date << ")]";
-    return os;
-}

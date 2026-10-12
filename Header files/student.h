@@ -13,9 +13,9 @@ public:
     Student() = default;
     Student(int studentId, std::string_view first, std::string_view last, std::string_view middle = "", int tasks = 0);
 
-    int getId() const;
-    std::string getGroupNumber() const;
-    int getCompletedTasks() const;
+    [[nodiscard]] int getId() const;
+    [[nodiscard]] std::string getGroupNumber() const;
+    [[nodiscard]] int getCompletedTasks() const;
 
     void setGroupNumber(std::string_view group);
     void completeTask();
@@ -24,15 +24,36 @@ public:
     void printInfo() const override;
 
     bool operator==(const Student& other) const;
-    bool operator!=(const Student& other) const;
-
-    bool operator<(const Student& other) const;
-    bool operator>(const Student& other) const;
-    bool operator<=(const Student& other) const;
-    bool operator>=(const Student& other) const;
     auto operator<=>(const Student& other) const;
 
-    friend std::ostream& operator<<(std::ostream& os, const Student& s);
-    friend std::istream& operator>>(std::istream& is, Student& s);
+    friend std::ostream& operator<<(std::ostream& os, const Student& s) {
+        os << "ID: " << s.id
+            << " | ФИО: " << s.getFullName()
+            << " | Группа: " << (s.groupNumber.empty() ? "N/A" : s.groupNumber)
+            << " | Задач: " << s.completedTasks;
+        return os;
+    }
+
+    friend std::istream& operator>>(std::istream& is, Student& s) {
+        std::cout << "Введите ID студента: ";
+        is >> s.id;
+        std::string last{};
+        std::string first{};
+        std::string middle{};
+        std::cout << "Введите фамилию: ";
+        is >> last;
+        s.setLastName(last);
+        std::cout << "Введите имя: ";
+        is >> first;
+        s.setFirstName(first);
+        std::cout << "Введите отчество ('-' если нет): ";
+        is >> middle;
+        if (middle == "-") middle.clear();
+        s.setMiddleName(middle);
+        std::cout << "Введите количество выполненных задач: ";
+        is >> s.completedTasks;
+        return is;
+    }
+
     friend void inspectStudentInternals(const Student& student);
 };

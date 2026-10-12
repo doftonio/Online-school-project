@@ -20,40 +20,11 @@ void Student::printInfo() const {
 }
 
 bool Student::operator==(const Student& other) const { return id == other.id; }
-bool Student::operator!=(const Student& other) const { return !(*this == other); }
-
-bool Student::operator<(const Student& other) const { return completedTasks < other.completedTasks; }
-bool Student::operator>(const Student& other) const { return other < *this; }
-bool Student::operator<=(const Student& other) const { return !(other < *this); }
-bool Student::operator>=(const Student& other) const { return !(*this < other); }
 auto Student::operator<=>(const Student& other) const { return completedTasks <=> other.completedTasks; }
-
-std::ostream& operator<<(std::ostream& os, const Student& s) {
-    os << "ID: " << s.id
-        << " | ФИО: " << s.getFullName()
-        << " | Группа: " << (s.groupNumber.empty() ? "N/A" : s.groupNumber)
-        << " | Задач: " << s.completedTasks;
-    return os;
-}
-
-std::istream& operator>>(std::istream& is, Student& s) {
-    std::cout << "Введите ID студента: ";
-    is >> s.id;
-    std::cout << "Введите фамилию: ";
-    is >> s.lastName;
-    std::cout << "Введите имя: ";
-    is >> s.firstName;
-    std::cout << "Введите отчество ('-' если нет): ";
-    is >> s.middleName;
-    if (s.middleName == "-") s.middleName.clear();
-    std::cout << "Введите количество выполненных задач: ";
-    is >> s.completedTasks;
-    return is;
-}
 
 void inspectStudentInternals(const Student& student) {
     std::cout << "[FRIEND FUNCTION inspectStudentInternals]\n"
         << "  -> private id: " << student.id << "\n"
         << "  -> private groupNumber: \"" << student.groupNumber << "\"\n"
         << "  -> private completedTasks: " << student.completedTasks << "\n";
-}   
+}

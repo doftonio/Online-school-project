@@ -11,10 +11,16 @@ public:
     Date() = default;
     Date(int d, int m, int y);
 
-    int getDay() const;
-    int getMonth() const;
-    int getYear() const;
+    [[nodiscard]] int getDay() const;
+    [[nodiscard]] int getMonth() const;
+    [[nodiscard]] int getYear() const;
 
-    bool operator==(const Date& other) const;
-    friend std::ostream& operator<<(std::ostream& os, const Date& d);
+    bool operator==(const Date& other) const = default;
+
+    friend std::ostream& operator<<(std::ostream& os, const Date& d) {
+        os << (d.day < 10 ? "0" : "") << d.day << "."
+            << (d.month < 10 ? "0" : "") << d.month << "."
+            << d.year;
+        return os;
+    }
 };

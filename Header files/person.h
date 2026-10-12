@@ -4,7 +4,7 @@
 #include <iostream>
 
 class Person {
-protected:
+private:
     std::string firstName{};
     std::string lastName{};
     std::string middleName{};
@@ -14,11 +14,11 @@ public:
     Person(std::string_view first, std::string_view last, std::string_view middle = "");
     virtual ~Person() = default;
 
-    std::string getFirstName() const;
-    std::string getLastName() const;
-    std::string getMiddleName() const;
+    [[nodiscard]] std::string getFirstName() const;
+    [[nodiscard]] std::string getLastName() const;
+    [[nodiscard]] std::string getMiddleName() const;
 
-    virtual std::string getFullName() const;
+    [[nodiscard]] virtual std::string getFullName() const;
 
     void setFirstName(std::string_view first);
     void setLastName(std::string_view last);

@@ -38,8 +38,8 @@ double LabActivity::getGroupAverageScore() const {
 }
 
 void LabActivity::printDetails() const {
-    std::cout << "    [Лабораторные] Занятий: " << lessonsCount
-        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << teacherId << "\n"
+    std::cout << "    [Лабораторные] Занятий: " << getLessonsCount()
+        << " (" << calculateHours() << " ч.) | Преподаватель ID: " << getTeacherId() << "\n"
         << "      Сдать работ: " << count
         << " | Проходной балл: " << minPassingScore << "\n";
 }

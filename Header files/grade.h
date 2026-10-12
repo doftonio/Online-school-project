@@ -2,7 +2,7 @@
 #include "date.h"
 
 class Grade {
-protected:
+private:
     int value{ 0 };
     Date date{};
 
@@ -11,6 +11,6 @@ public:
     Grade(int val, const Date& d);
     virtual ~Grade() = default;
 
-    int getValue() const;
-    Date getDate() const;
+    [[nodiscard]] int getValue() const;
+    [[nodiscard]] Date getDate() const;
 };

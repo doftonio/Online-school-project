@@ -9,7 +9,7 @@ private:
 public:
     LectureActivity(int lessons, int assignedTeacher, int topics, int lectureHrs);
 
-    ActivityType getType() const override;
-    int calculateHours() const override;
+    [[nodiscard]] ActivityType getType() const override;
+    [[nodiscard]] int calculateHours() const override;
     void printDetails() const override;
 };

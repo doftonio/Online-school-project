@@ -13,7 +13,11 @@ public:
     PracticeGrade() = default;
     PracticeGrade(int val, const Date& d, int workNum, std::string_view type);
 
-    int getNumber() const;
-    std::string getWorkType() const;
-    friend std::ostream& operator<<(std::ostream& os, const PracticeGrade& g);
+    [[nodiscard]] int getNumber() const;
+    [[nodiscard]] std::string getWorkType() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const PracticeGrade& g) {
+        os << "[" << g.workType << " ¹" << g.number << ": " << g.getValue() << " á. (" << g.getDate() << ")]";
+        return os;
+    }
 };

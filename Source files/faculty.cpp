@@ -1,5 +1,6 @@
 #include "../Header files/faculty.h"
-#include <stdexcept>
+#include "../Header files/exceptions.h"
+#include <format>
 
 Faculty::Faculty(std::string_view facultyName) : name(facultyName) {}
 
@@ -50,12 +51,12 @@ Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::stri
 {
     StudyGroup* group = findGroup(groupNum);
     if (!group) {
-        throw std::runtime_error("Группа " + std::string(groupNum) + " не найдена на факультете.");
+        throw EntityNotFoundException(std::format("Группа {} не найдена на факультете.", groupNum));
     }
 
     for (const auto& s : allStudents) {
         if (s->getId() == id) {
-            throw std::invalid_argument("Студент ID " + std::to_string(id) + " уже существует.");
+            throw DuplicateEntityException(std::format("Студент ID {} уже существует.", id));
         }
     }
 
@@ -67,16 +68,18 @@ Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::stri
 
 void Faculty::expelStudent(int studentId) {
     for (size_t i = 0; i < allStudents.size(); ++i) {
-        if (allStudents[i]->getId() == studentId) {
-            std::string groupNum = allStudents[i]->getGroupNumber();
-            if (!groupNum.empty()) {
-                if (StudyGroup* group = findGroup(groupNum)) {
-                    *group -= studentId;
-                }
-            }
-            allStudents.erase(allStudents.begin() + i);
-            return;
+        if (allStudents[i]->getId() != studentId) {
+            continue;
         }
+
+        if (const std::string& groupNum = allStudents[i]->getGroupNumber(); !groupNum.empty()) {
+            if (StudyGroup* group = findGroup(groupNum)) {
+                *group -= studentId;
+            }
+        }
+
+        allStudents.erase(allStudents.begin() + i);
+        return;
     }
-    throw std::runtime_error("Студент ID " + std::to_string(studentId) + " не найден на факультете.");
+    throw EntityNotFoundException(std::format("Студент ID {} не найден на факультете.", studentId));
 }
