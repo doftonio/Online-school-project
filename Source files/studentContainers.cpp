@@ -1,5 +1,4 @@
 #include "../Header files/studentContainers.h"
-#include <algorithm>
 
 StudentLabGradesContainer::StudentLabGradesContainer(int id) : studentId(id) {}
 
@@ -11,12 +10,11 @@ void StudentLabGradesContainer::addGrade(const LabGrade& grade) {
 }
 
 bool StudentLabGradesContainer::removeGradeByDate(const Date& targetDate) {
-    auto it = std::find_if(grades.begin(), grades.end(),
-        [&targetDate](const LabGrade& g) { return g.getDate() == targetDate; });
-
-    if (it != grades.end()) {
-        grades.erase(it);
-        return true;
+    for (size_t i = 0; i < grades.size(); ++i) {
+        if (grades[i].getDate() == targetDate) {
+            grades.erase(grades.begin() + i);
+            return true;
+        }
     }
     return false;
 }
@@ -50,12 +48,11 @@ void StudentPracticeGradesContainer::addGrade(const PracticeGrade& grade) {
 }
 
 bool StudentPracticeGradesContainer::removeGradeByDate(const Date& targetDate) {
-    auto it = std::find_if(grades.begin(), grades.end(),
-        [&targetDate](const PracticeGrade& g) { return g.getDate() == targetDate; });
-
-    if (it != grades.end()) {
-        grades.erase(it);
-        return true;
+    for (size_t i = 0; i < grades.size(); ++i) {
+        if (grades[i].getDate() == targetDate) {
+            grades.erase(grades.begin() + i);
+            return true;
+        }
     }
     return false;
 }

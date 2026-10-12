@@ -26,6 +26,12 @@ public:
     Course* createCourse(int id, std::string_view title);
 
     StudyGroup* findGroup(std::string_view groupNum) const;
+    Teacher* findTeacher(int teacherId) const;
+    Course* findCourse(int courseId) const;
+
+    const std::vector<std::unique_ptr<Teacher>>& getTeachers() const;
+    const std::vector<std::unique_ptr<StudyGroup>>& getGroups() const;
+    const std::vector<std::unique_ptr<Course>>& getCourses() const;
 
     Student* enrollStudentInGroup(int id, std::string_view first, std::string_view last,
         std::string_view middle, std::string_view groupNum);

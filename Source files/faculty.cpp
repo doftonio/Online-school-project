@@ -1,5 +1,4 @@
 #include "../Header files/faculty.h"
-#include <algorithm>
 #include <stdexcept>
 
 Faculty::Faculty(std::string_view facultyName) : name(facultyName) {}
@@ -28,6 +27,24 @@ StudyGroup* Faculty::findGroup(std::string_view groupNum) const {
     return nullptr;
 }
 
+Teacher* Faculty::findTeacher(int teacherId) const {
+    for (const auto& t : allTeachers) {
+        if (t->getId() == teacherId) return t.get();
+    }
+    return nullptr;
+}
+
+Course* Faculty::findCourse(int courseId) const {
+    for (const auto& c : allCourses) {
+        if (c->getId() == courseId) return c.get();
+    }
+    return nullptr;
+}
+
+const std::vector<std::unique_ptr<Teacher>>& Faculty::getTeachers() const { return allTeachers; }
+const std::vector<std::unique_ptr<StudyGroup>>& Faculty::getGroups() const { return allGroups; }
+const std::vector<std::unique_ptr<Course>>& Faculty::getCourses() const { return allCourses; }
+
 Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::string_view last,
     std::string_view middle, std::string_view groupNum)
 {
@@ -49,19 +66,17 @@ Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::stri
 }
 
 void Faculty::expelStudent(int studentId) {
-    auto studentIt = std::find_if(allStudents.begin(), allStudents.end(),
-        [studentId](const std::unique_ptr<Student>& s) { return s->getId() == studentId; });
-
-    if (studentIt == allStudents.end()) {
-        throw std::runtime_error("Студент ID " + std::to_string(studentId) + " не найден на факультете.");
-    }
-
-    std::string groupNum = (*studentIt)->getGroupNumber();
-    if (!groupNum.empty()) {
-        if (StudyGroup* group = findGroup(groupNum)) {
-            *group -= studentId;
+    for (size_t i = 0; i < allStudents.size(); ++i) {
+        if (allStudents[i]->getId() == studentId) {
+            std::string groupNum = allStudents[i]->getGroupNumber();
+            if (!groupNum.empty()) {
+                if (StudyGroup* group = findGroup(groupNum)) {
+                    *group -= studentId;
+                }
+            }
+            allStudents.erase(allStudents.begin() + i);
+            return;
         }
     }
-
-    allStudents.erase(studentIt);
+    throw std::runtime_error("Студент ID " + std::to_string(studentId) + " не найден на факультете.");
 }

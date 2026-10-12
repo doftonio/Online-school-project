@@ -1,5 +1,4 @@
 #include "../Header files/studyGroup.h"
-#include <algorithm>
 #include <stdexcept>
 #include <iostream>
 
@@ -33,15 +32,14 @@ StudyGroup& StudyGroup::operator+=(Student* student) {
 }
 
 StudyGroup& StudyGroup::operator-=(int studentId) {
-    auto it = std::find_if(students.begin(), students.end(),
-        [studentId](const Student* s) { return s && s->getId() == studentId; });
-
-    if (it == students.end()) {
-        throw std::runtime_error("Студент ID " + std::to_string(studentId) + " не найден в группе " + number);
+    for (size_t i = 0; i < students.size(); ++i) {
+        if (students[i] && students[i]->getId() == studentId) {
+            students[i]->setGroupNumber("");
+            students.erase(students.begin() + i);
+            return *this;
+        }
     }
-    (*it)->setGroupNumber("");
-    students.erase(it);
-    return *this;
+    throw std::runtime_error("Студент ID " + std::to_string(studentId) + " не найден в группе " + number);
 }
 
 Student* StudyGroup::findStudent(int studentId) const {

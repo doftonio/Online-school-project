@@ -1,5 +1,4 @@
 #include "../Header files/course.h"
-#include <algorithm>
 #include <stdexcept>
 #include <iostream>
 
@@ -10,6 +9,7 @@ Course::Course(int courseId, std::string_view courseTitle)
 int Course::getId() const { return id; }
 std::string Course::getTitle() const { return title; }
 const std::vector<Teacher*>& Course::getTeachers() const { return teachers; }
+const std::vector<GroupActivityProfile>& Course::getGroupProfiles() const { return groupProfiles; }
 
 Course& Course::operator+=(Teacher* teacher) {
     if (!teacher) {
@@ -23,14 +23,13 @@ Course& Course::operator+=(Teacher* teacher) {
 }
 
 Course& Course::operator-=(int teacherId) {
-    auto it = std::find_if(teachers.begin(), teachers.end(),
-        [teacherId](const Teacher* t) { return t && t->getId() == teacherId; });
-
-    if (it == teachers.end()) {
-        throw std::runtime_error("Преподаватель ID " + std::to_string(teacherId) + " не найден на курсе.");
+    for (size_t i = 0; i < teachers.size(); ++i) {
+        if (teachers[i] && teachers[i]->getId() == teacherId) {
+            teachers.erase(teachers.begin() + i);
+            return *this;
+        }
     }
-    teachers.erase(it);
-    return *this;
+    throw std::runtime_error("Преподаватель ID " + std::to_string(teacherId) + " не найден на курсе.");
 }
 
 Teacher* Course::findTeacher(int teacherId) const {
@@ -50,23 +49,28 @@ void Course::addActivityForGroup(std::string_view groupNumber, std::unique_ptr<C
         throw std::runtime_error("Преподаватель ID " + std::to_string(tId) + " отсутствует в пуле курса \"" + title + "\"!");
     }
 
-    auto profileIt = std::find_if(groupProfiles.begin(), groupProfiles.end(),
-        [groupNumber](const GroupActivityProfile& p) { return p.groupNumber == groupNumber; });
+    size_t profileIndex = groupProfiles.size();
+    for (size_t i = 0; i < groupProfiles.size(); ++i) {
+        if (groupProfiles[i].groupNumber == groupNumber) {
+            profileIndex = i;
+            break;
+        }
+    }
 
-    if (profileIt == groupProfiles.end()) {
+    if (profileIndex == groupProfiles.size()) {
         groupProfiles.push_back(GroupActivityProfile{ std::string(groupNumber), {} });
-        profileIt = groupProfiles.end() - 1;
+        profileIndex = groupProfiles.size() - 1;
     }
 
     ActivityType incomingType = activity->getType();
-    for (const auto& existing : profileIt->activities) {
+    for (const auto& existing : groupProfiles[profileIndex].activities) {
         if (existing->getType() == incomingType) {
             throw std::logic_error("Для группы " + std::string(groupNumber) +
                 " активность \"" + activityTypeToString(incomingType) + "\" уже существует!");
         }
     }
 
-    profileIt->activities.push_back(std::move(activity));
+    groupProfiles[profileIndex].activities.push_back(std::move(activity));
 }
 
 CourseActivity* Course::findActivity(std::string_view groupNumber, ActivityType type) {

@@ -24,6 +24,7 @@ public:
     int getId() const;
     std::string getTitle() const;
     const std::vector<Teacher*>& getTeachers() const;
+    const std::vector<GroupActivityProfile>& getGroupProfiles() const;
 
     Course& operator+=(Teacher* teacher);
     Course& operator-=(int teacherId);
