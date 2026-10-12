@@ -1,9 +1,0 @@
-﻿#pragma once
-#include "course.h"
-#include "interactiveCourse.h"
-#include "webinarCourse.h"
-#include "mentoredCourse.h"
-#include "student.h"
-#include "menuFunc.h"
-#include <iostream>
-#include <string>

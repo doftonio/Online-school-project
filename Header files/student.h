@@ -1,58 +1,38 @@
-﻿#pragma once
-#include <string>
-#include <string_view>
-#include <iostream>
+#pragma once
+#include "person.h"
 #include <compare>
+#include <iostream>
 
-class Student {
+class Student : public Person {
 private:
-    int studentId{ 0 };
-    std::string studentName{};
+    int id{ 0 };
+    std::string groupNumber{};
     int completedTasks{ 0 };
 
 public:
     Student() = default;
-    Student(int id, std::string_view name, int tasks = 0)
-        : studentId(id), studentName(name), completedTasks(tasks) {
-    }
+    Student(int studentId, std::string_view first, std::string_view last, std::string_view middle = "", int tasks = 0);
 
-    void initStudent(int id, std::string_view name);
-    int getStudentId() const;
-    std::string getStudentName() const;
+    int getId() const;
+    std::string getGroupNumber() const;
     int getCompletedTasks() const;
 
-    void setStudentName(std::string_view name);
+    void setGroupNumber(std::string_view group);
     void completeTask();
-    void resetTasks();
+    void setCompletedTasks(int tasks);
 
-    void printInfo() const;
+    void printInfo() const override;
 
     bool operator==(const Student& other) const;
+    bool operator!=(const Student& other) const;
 
-    auto operator<=>(const Student& other) const
-    {
-        return completedTasks <=> other.completedTasks;
-    }
+    bool operator<(const Student& other) const;
+    bool operator>(const Student& other) const;
+    bool operator<=(const Student& other) const;
+    bool operator>=(const Student& other) const;
+    auto operator<=>(const Student& other) const;
 
-    friend std::ostream& operator<<(std::ostream& os, const Student& student)
-    {
-        os << "Student Name: " << student.studentName << "\n"
-            << "Student ID: " << student.studentId << "\n"
-            << "Completed tasks: " << student.completedTasks;
-        return os;
-    }
-
-    friend std::istream& operator>>(std::istream& is, Student& student)
-    {
-        std::cout << "Enter student ID: ";
-        is >> student.studentId;
-        is.ignore();
-        std::cout << "Enter student name: ";
-        std::getline(is, student.studentName);
-        std::cout << "Enter completed tasks count: ";
-        is >> student.completedTasks;
-        return is;
-    }
-
+    friend std::ostream& operator<<(std::ostream& os, const Student& s);
+    friend std::istream& operator>>(std::istream& is, Student& s);
     friend void inspectStudentInternals(const Student& student);
 };

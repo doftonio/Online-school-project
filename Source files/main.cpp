@@ -1,109 +1,65 @@
-п»ї#include "../Header files/header.h"
+#include "../Header files/faculty.h"
+#include "../Header files/lectureActivity.h"
+#include "../Header files/labActivity.h"
+#include "../Header files/practiceActivity.h"
+#include <iostream>
 
-void populateInitialData(CourseList& courseList)
-{
-    courseList.addCourse(std::make_unique<Course>(
-        1, "C++ Programming", "Alex Sidorov", 10, 3));
+int main() {
+    setlocale(LC_ALL, "Russian");
+    Faculty faculty("ФКП БГУИР");
 
-    courseList.addCourse(std::make_unique<InteractiveCourse>(
-        2, "Web Development Frontend", "Elena Kuznetsova", 8, 5, 25, 75));
+    // 1. Создание преподавателей факультета
+    Teacher* tLec = faculty.createTeacher(101, "Алексей", "Сидоров", "Иванович", "ПОИТ");
+    Teacher* tLab = faculty.createTeacher(102, "Елена", "Кузнецова", "Васильевна", "ИИТ");
+    Teacher* tPr = faculty.createTeacher(103, "Михаил", "Громов", "Петрович", "ВМ");
 
-    WebinarDetails webDetails{ "https://meet.google.com/xyz-abc", "Tue/Fri 18:30", 12 };
-    courseList.addCourse(std::make_unique<WebinarCourse>(
-        3, "DevOps & Cloud", "Maxim Ivanov", 12, 10, webDetails));
+    // 2. Создание группы и зачисление студентов (StudyGroup::operator+=)
+    faculty.createGroup("550501", 2, 25);
+    faculty.enrollStudentInGroup(1001, "Егор", "Евсеенко", "Сергеевич", "550501");
+    faculty.enrollStudentInGroup(1002, "Иван", "Петров", "Алексеевич", "550501");
 
-    courseList.addCourse(std::make_unique<MentoredCourse>(
-        4, "Highload Backend Architecture", "Dmitry Petrov", 15, 2, "Ivan Mentor", 5));
+    // 3. Создание дисциплины и наполнение пула преподавателей (Course::operator+=)
+    Course* oop = faculty.createCourse(1, "Объектно-Ориентированное Программирование");
+    *oop += tLec;
+    *oop += tLab;
+    *oop += tPr;
 
-    if (CourseNode* cppNode = courseList.getCoursePointerById(1))
-    {
-        cppNode->data->enrollStudent(5583001, "John Smith");
-        cppNode->data->enrollStudent(5583002, "Anna Smirnova");
-        cppNode->data->recordTaskCompletion(5583001);
-        cppNode->data->recordTaskCompletion(5583001);
+    // 4. Добавление по одной активности каждого типа
+    oop->addActivityForGroup("550501", std::make_unique<LectureActivity>(16, 101, 8, 32));
+    oop->addActivityForGroup("550501", std::make_unique<LabActivity>(12, 102, 6, 60));
+    oop->addActivityForGroup("550501", std::make_unique<PracticeActivity>(8, 103, 2, 4, 1));
+
+    // 5. Выставление и удаление оценок в журналах
+    Date d1(12, 10, 2026);
+    Date d2(19, 10, 2026);
+
+    if (auto* labAct = dynamic_cast<LabActivity*>(oop->findActivity("550501", ActivityType::Lab))) {
+        labAct->addGradeForStudent(1001, LabGrade(9, d1, 1));
+        labAct->addGradeForStudent(1001, LabGrade(8, d2, 2));
+        labAct->addGradeForStudent(1002, LabGrade(6, d1, 1));
+
+        std::cout << "\n";
+        printLabJournal(std::cout, *labAct);
+
+        // Удаление оценки по дате
+        labAct->removeGradeForStudentByDate(1001, d1);
+        std::cout << "\nПосле удаления оценки за 12.10.2026 у студента 1001:\n";
+        printLabJournal(std::cout, *labAct);
     }
 
-    if (CourseNode* webNode = courseList.getCoursePointerById(2))
-    {
-        webNode->data->enrollStudent(5583002, "Anna Smirnova");
-        webNode->data->enrollStudent(5583003, "Paul Kovalev");
-        webNode->data->recordTaskCompletion(5583003);
+    // 6. Проверка работы friend-функции инспектирования Student
+    if (StudyGroup* g = faculty.findGroup("550501")) {
+        if (Student* s = g->findStudent(1001)) {
+            inspectStudentInternals(*s);
+        }
     }
-}
 
-void verifyBasicOperations()
-{
-    Student s1(5583001, "John Smith", 6);
-    Student s2(5583001, "John Smith (Duplicate ID)", 2);
-    Student s3(5583002, "Anna Smirnova", 8);
+    // 7. Сводная карточка курса
+    oop->printFullCourseInfo();
 
-    std::cout << s1 << "\n\n";
-    std::cout << s2 << "\n\n";
-    std::cout << s3 << "\n\n";
-
-    std::cout << "s1 == s2: " << (s1 == s2) << "\n";
-    std::cout << "s1 == s3: " << (s1 == s3) << "\n";
-    std::cout << "s1 != s3: " << (s1 != s3) << "\n";
-
-    std::cout << "s1 > s3 : " << (s1 > s3) << "\n";
-    std::cout << "s1 < s3 : " << (s1 < s3) << "\n";
-    std::cout << "s1 >= s3: " << (s1 >= s3) << "\n";
-    std::cout << "s1 <= s3: " << (s1 <= s3) << "\n";
-
-    inspectStudentInternals(s1);
-
-    Course testCourse;
-    testCourse.initCourse(10, "Software Engineering", "Dr. Miller", 12, 2);
-
-    testCourse += s1;
-    testCourse += s3;
-
-    Student s4(5583004, "David Brown", 3);
-    testCourse += s4;
-
-    testCourse.printFullCourseInfo();
-
-    testCourse -= s1;
-    testCourse += s4;
-
-    testCourse.printFullCourseInfo();
-}
-
-void demonstrateInheritance()
-{
-    Student testStudent1(6001, "Alice Cooper", 2);
-    Student testStudent2(6002, "Bob Dylan", 1);
-
-    // РџСЂРёРјРµСЂ СЂР°Р±РѕС‚С‹ InteractiveCourse: СѓРЅР°СЃР»РµРґРѕРІР°РЅРЅС‹Рµ Рё СЃРїРµС†РёР°Р»РёР·РёСЂРѕРІР°РЅРЅС‹Рµ РјРµС‚РѕРґС‹
-    InteractiveCourse ic(101, "Python Algorithms", "G. Rossum", 8, 3, 20, 80);
-    ic.enrollStudent(testStudent1);
-    ic.submitExercise(6001, 60);
-    ic.submitExercise(6001, 81);
-    ic.printFullCourseInfo();
-
-    // РџСЂРёРјРµСЂ СЂР°Р±РѕС‚С‹ WebinarCourse: СѓРЅР°СЃР»РµРґРѕРІР°РЅРЅС‹Рµ РјРµС‚РѕРґС‹ Рё СЂР°СЃРїРёСЃР°РЅРёРµ
-    WebinarDetails semDetails{ "https://zoom.us/j/12345678", "Wed 19:00", 6 };
-    WebinarCourse wc(102, "Machine Learning Seminars", "Andrew Ng", 6, 20, semDetails);
-    wc.enrollStudent(testStudent2);
-    wc.recordTaskCompletion(6002);
-    wc.printFullCourseInfo();
-
-    // РџСЂРёРјРµСЂ СЂР°Р±РѕС‚С‹ MentoredCourse: РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹Рµ СЂРµРІСЊСЋ Рё Р»РёРјРёС‚ РјРµРЅС‚РѕСЂР°
-    MentoredCourse mc(103, "C++ Senior Mentorship", "B. Stroustrup", 14, 2, "Senior Oleg", 4);
-    mc.enrollStudent(testStudent1);
-    mc.conductReview(6001);
-    mc.printFullCourseInfo();
-}
-
-int main()
-{
-    verifyBasicOperations();
-    demonstrateInheritance();
-
-    CourseList courseList;
-    populateInitialData(courseList);
-
-    mainMenu(courseList);
+    // 8. Отчисление студента (StudyGroup::operator-=)
+    faculty.expelStudent(1002);
+    faculty.findGroup("550501")->printInfo();
 
     return 0;
 }

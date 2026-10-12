@@ -1,346 +1,103 @@
-п»ї#include "../Header files/course.h"
+#include "../Header files/course.h"
+#include <algorithm>
+#include <stdexcept>
 #include <iostream>
 
-Course::Course(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
-    : courseTitle(title), teacherName(teacher), totalLessons(lessons), maxCapacity(capacity),
-    Id(id)
-{
-    if (maxCapacity > 0)
-    {
-        enrolledStudents.reserve(maxCapacity);
+Course::Course(int courseId, std::string_view courseTitle)
+    : id(courseId), title(courseTitle) {
+}
+
+int Course::getId() const { return id; }
+std::string Course::getTitle() const { return title; }
+const std::vector<Teacher*>& Course::getTeachers() const { return teachers; }
+
+Course& Course::operator+=(Teacher* teacher) {
+    if (!teacher) {
+        throw std::invalid_argument("Преподаватель nullptr.");
     }
-}
-
-void Course::initCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
-{
-    courseTitle = title;
-    teacherName = teacher;
-    totalLessons = lessons;
-    maxCapacity = capacity;
-    Id = id;
-    currentStudentsCount = 0;
-    enrolledStudents.clear();
-
-    if (maxCapacity > 0)
-    {
-        enrolledStudents.reserve(maxCapacity);
+    if (findTeacher(teacher->getId())) {
+        throw std::invalid_argument("Преподаватель ID " + std::to_string(teacher->getId()) + " уже на курсе.");
     }
-}
-
-int Course::getCourseId() const
-{
-    return Id;
-}
-
-std::string Course::getCourseTitle() const
-{
-    return courseTitle;
-}
-
-std::string Course::getTeacherName() const
-{
-    return teacherName;
-}
-
-int Course::getTotalLessons() const
-{
-    return totalLessons;
-}
-
-int Course::getMaxCapacity() const
-{
-    return maxCapacity;
-}
-
-int Course::getEnrolledCount() const
-{
-    return currentStudentsCount;
-}
-
-void Course::setTeacherName(std::string_view teacher)
-{
-    teacherName = teacher;
-}
-
-void Course::setTotalLessons(int lessons)
-{
-    if (lessons > 0) {
-        totalLessons = lessons;
-    }
-}
-
-bool Course::enrollStudent(const Student& student)
-{
-    if (currentStudentsCount >= maxCapacity)
-    {
-        std::cout << "Failed to enroll student " << student.getStudentName()
-            << ": course limit reached (limit: " << maxCapacity << ").\n";
-        return false;
-    }
-
-    for (int i = 0; i < currentStudentsCount; i++)
-    {
-        if (enrolledStudents[i] == student)
-        {
-            std::cout << "Student with ID " << student.getStudentId()
-                << " is already enrolled in this course.\n";
-            return false;
-        }
-    }
-
-    enrolledStudents.push_back(student);
-    currentStudentsCount++;
-
-    std::cout << "Student " << student.getStudentName() << " successfully enrolled in \""
-        << courseTitle << "\".\n";
-    return true;
-}
-
-bool Course::enrollStudent(int id, std::string_view name)
-{
-    Student newStudent;
-    newStudent.initStudent(id, name);
-    return enrollStudent(newStudent);
-}
-
-bool Course::removeStudent(int id)
-{
-    int targetIndex = -1;
-
-    for (int i = 0; i < currentStudentsCount; i++)
-    {
-        if (enrolledStudents[i].getStudentId() == id)
-        {
-            targetIndex = i;
-            break;
-        }
-    }
-
-    if (targetIndex == -1)
-    {
-        std::cout << "Student with ID " << id << " was not found on this course.\n";
-        return false;
-    }
-
-    std::string deletedName = enrolledStudents[targetIndex].getStudentName();
-    enrolledStudents.erase(enrolledStudents.begin() + targetIndex);
-    currentStudentsCount--;
-
-    std::cout << "Student " << deletedName << " has been removed from \""
-        << courseTitle << "\". Spot freed.\n";
-    return true;
-}
-
-Course& Course::operator+=(const Student& student)
-{
-    enrollStudent(student);
+    teachers.push_back(teacher);
     return *this;
 }
 
-Course& Course::operator-=(const Student& student)
-{
-    removeStudent(student.getStudentId());
+Course& Course::operator-=(int teacherId) {
+    auto it = std::find_if(teachers.begin(), teachers.end(),
+        [teacherId](const Teacher* t) { return t && t->getId() == teacherId; });
+
+    if (it == teachers.end()) {
+        throw std::runtime_error("Преподаватель ID " + std::to_string(teacherId) + " не найден на курсе.");
+    }
+    teachers.erase(it);
     return *this;
 }
 
-void Course::recordTaskCompletion(int studentId)
-{
-    for (int i = 0; i < currentStudentsCount; i++)
-    {
-        if (enrolledStudents[i].getStudentId() == studentId)
-        {
-            enrolledStudents[i].completeTask();
-            std::cout << "Completed task recorded for " << enrolledStudents[i].getStudentName() << ".\n";
-            return;
+Teacher* Course::findTeacher(int teacherId) const {
+    for (auto* t : teachers) {
+        if (t && t->getId() == teacherId) return t;
+    }
+    return nullptr;
+}
+
+void Course::addActivityForGroup(std::string_view groupNumber, std::unique_ptr<CourseActivity> activity) {
+    if (!activity) {
+        throw std::invalid_argument("Передана пустая активность.");
+    }
+
+    int tId = activity->getTeacherId();
+    if (!findTeacher(tId)) {
+        throw std::runtime_error("Преподаватель ID " + std::to_string(tId) + " отсутствует в пуле курса \"" + title + "\"!");
+    }
+
+    auto profileIt = std::find_if(groupProfiles.begin(), groupProfiles.end(),
+        [groupNumber](const GroupActivityProfile& p) { return p.groupNumber == groupNumber; });
+
+    if (profileIt == groupProfiles.end()) {
+        groupProfiles.push_back(GroupActivityProfile{ std::string(groupNumber), {} });
+        profileIt = groupProfiles.end() - 1;
+    }
+
+    ActivityType incomingType = activity->getType();
+    for (const auto& existing : profileIt->activities) {
+        if (existing->getType() == incomingType) {
+            throw std::logic_error("Для группы " + std::string(groupNumber) +
+                " активность \"" + activityTypeToString(incomingType) + "\" уже существует!");
         }
     }
 
-    std::cout << "Student with ID " << studentId << " was not found on this course.\n";
+    profileIt->activities.push_back(std::move(activity));
 }
 
-int Course::calculateStudentProgress(int studentId) const
-{
-    if (totalLessons <= 0)
-    {
-        return 0;
-    }
-
-    for (int i = 0; i < currentStudentsCount; i++)
-    {
-        if (enrolledStudents[i].getStudentId() == studentId)
-        {
-            int progress = (enrolledStudents[i].getCompletedTasks() * 100) / totalLessons;
-            if (progress > 100)
-            {
-                return 100;
+CourseActivity* Course::findActivity(std::string_view groupNumber, ActivityType type) {
+    for (auto& prof : groupProfiles) {
+        if (prof.groupNumber == groupNumber) {
+            for (auto& act : prof.activities) {
+                if (act->getType() == type) return act.get();
             }
-            return progress;
         }
-    }
-    return -1;
-}
-
-void Course::printEnrolledStudentsList(std::string_view taskLabel) const
-{
-    if (currentStudentsCount == 0)
-    {
-        std::cout << "No students currently enrolled.\n";
-        return;
-    }
-
-    std::cout << "Student list:\n";
-    for (int i = 0; i < currentStudentsCount; i++)
-    {
-        int progress = calculateStudentProgress(enrolledStudents[i].getStudentId());
-        std::cout << "  " << i + 1 << ". "
-            << enrolledStudents[i].getStudentName()
-            << " (ID: " << enrolledStudents[i].getStudentId() << ")"
-            << " - " << taskLabel << ": " << enrolledStudents[i].getCompletedTasks()
-            << ", progress: " << progress << "%\n";
-    }
-}
-
-void Course::printFullCourseInfo() const
-{
-    std::cout << "\nCourse Information:\n";
-    std::cout << "Title: " << courseTitle << "\n";
-    std::cout << "Instructor: " << teacherName << "\n";
-    std::cout << "Total lessons: " << totalLessons << "\n";
-    std::cout << "Enrolled students: " << currentStudentsCount << " / " << maxCapacity << "\n";
-    printEnrolledStudentsList("tasks completed");
-    std::cout << std::endl;
-}
-
-void CourseList::deleteNode(CourseNode* node)
-{
-    if (node == nullptr) return;
-
-    if (node == head.get())
-    {
-        head = std::move(head->next);
-        if (head != nullptr)
-        {
-            head->prev = nullptr;
-        }
-    }
-    else
-    {
-        CourseNode* prevNode = node->prev;
-        std::unique_ptr<CourseNode> nextNode = std::move(node->next);
-
-        if (nextNode != nullptr)
-        {
-            nextNode->prev = prevNode;
-        }
-
-        if (prevNode != nullptr)
-        {
-            prevNode->next = std::move(nextNode);
-        }
-    }
-
-    numberOfCourses--;
-}
-
-CourseNode* CourseList::getCoursePointerById(int targetId)
-{
-    CourseNode* current = head.get();
-    while (current != nullptr)
-    {
-        if (current->data && current->data->getCourseId() == targetId)
-        {
-            return current;
-        }
-        current = current->next.get();
     }
     return nullptr;
 }
 
-const CourseNode* CourseList::getCoursePointerById(int targetId) const
-{
-    const CourseNode* current = head.get();
-    while (current != nullptr)
-    {
-        if (current->data && current->data->getCourseId() == targetId)
-        {
-            return current;
+void Course::printFullCourseInfo() const {
+    std::cout << "\n=======================================================\n";
+    std::cout << "КУРС: " << title << " (ID: " << id << ")\n";
+    std::cout << "Преподаватели курса (" << teachers.size() << "):\n";
+    for (const auto* t : teachers) {
+        std::cout << "  * " << t->getFullName() << " [ID: " << t->getId()
+            << ", Кафедра: " << t->getDepartment() << "]\n";
+    }
+
+    std::cout << "\nАктивности по учебным группам:\n";
+    for (const auto& prof : groupProfiles) {
+        std::cout << ">>> Группа: " << prof.groupNumber
+            << " (Назначено типов: " << prof.activities.size() << "/3)\n";
+        for (const auto& act : prof.activities) {
+            Teacher* t = findTeacher(act->getTeacherId());
+            std::cout << "  Ведущий: " << (t ? t->getFullName() : "N/A") << "\n";
+            act->printDetails();
         }
-        current = current->next.get();
     }
-    return nullptr;
-}
-
-Course* CourseList::getCourseById(int targetId)
-{
-    return getCoursePointerById(targetId) != nullptr ? getCoursePointerById(targetId)->data.get() : nullptr;
-}
-
-const Course* CourseList::getCourseById(int targetId) const
-{
-    return getCoursePointerById(targetId) != nullptr ? getCoursePointerById(targetId)->data.get() : nullptr;
-}
-
-void CourseList::addCourse(std::unique_ptr<Course> newCourse)
-{
-    if (!newCourse) return;
-
-    auto newNode = std::make_unique<CourseNode>();
-    newNode->data = std::move(newCourse);
-    newNode->next = nullptr;
-    newNode->prev = nullptr;
-
-    if (head == nullptr)
-    {
-        head = std::move(newNode);
-    }
-    else
-    {
-        CourseNode* current = head.get();
-        while (current->next != nullptr)
-        {
-            current = current->next.get();
-        }
-        newNode->prev = current;
-        current->next = std::move(newNode);
-    }
-
-    numberOfCourses++;
-}
-
-void CourseList::addCourse(int id, std::string_view title, std::string_view teacher, int lessons, int capacity)
-{
-    addCourse(std::make_unique<Course>(id, title, teacher, lessons, capacity));
-}
-
-bool CourseList::removeCourseById(int targetId)
-{
-    if (CourseNode* targetNode = getCoursePointerById(targetId))
-    {
-        deleteNode(targetNode);
-        return true;
-    }
-    return false;
-}
-
-void CourseList::displayListOfCourses() const
-{
-    if (head == nullptr)
-    {
-        std::cout << "No courses available.\n";
-        return;
-    }
-
-    std::cout << "\nCourses List (" << numberOfCourses << "):\n";
-    const CourseNode* current = head.get();
-    while (current != nullptr)
-    {
-        if (current->data)
-        {
-            std::cout << "ID: " << current->data->getCourseId()
-                << " | Title: " << current->data->getCourseTitle()
-                << " | Students: " << current->data->getEnrolledCount() << "/"
-                << current->data->getMaxCapacity() << "\n";
-        }
-        current = current->next.get();
-    }
+    std::cout << "=======================================================\n";
 }
