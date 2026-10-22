@@ -24,8 +24,7 @@ static int readIntChoice() {
 void handleCourseActivities(const Course* course) {
     if (!course) return;
     std::cout << "\nActivities for course: " << course->getTitle() << "\n";
-    const LabActivity* labAct = static_cast<const LabActivity*>(course->findActivity("550501", ActivityType::Lab));
-    if (labAct) {
+    if (const auto* labAct = static_cast<const LabActivity*>(course->findActivity("550501", ActivityType::Lab)); labAct) {
         labAct->printDetails();
     }
 }
@@ -33,8 +32,7 @@ void handleCourseActivities(const Course* course) {
 void handleAddGrade(const Course* course) {
     if (!course) return;
     std::cout << "\nAdd grade in course: " << course->getTitle() << "\n";
-    const PracticeActivity* practiceAct = static_cast<const PracticeActivity*>(course->findActivity("550501", ActivityType::Practice));
-    if (practiceAct) {
+    if (const auto* practiceAct = static_cast<const PracticeActivity*>(course->findActivity("550501", ActivityType::Practice)); practiceAct) {
         practiceAct->printDetails();
     }
 }
@@ -42,12 +40,10 @@ void handleAddGrade(const Course* course) {
 void handleRemoveGrade(const Course* course) {
     if (!course) return;
     std::cout << "\nRemove grade in course: " << course->getTitle() << "\n";
-    const LabActivity* labAct = static_cast<const LabActivity*>(course->findActivity("550501", ActivityType::Lab));
-    const PracticeActivity* practiceAct = static_cast<const PracticeActivity*>(course->findActivity("550501", ActivityType::Practice));
-    if (labAct) {
+    if (const auto* labAct = static_cast<const LabActivity*>(course->findActivity("550501", ActivityType::Lab)); labAct) {
         labAct->printDetails();
     }
-    if (practiceAct) {
+    if (const auto* practiceAct = static_cast<const PracticeActivity*>(course->findActivity("550501", ActivityType::Practice)); practiceAct) {
         practiceAct->printDetails();
     }
 }
@@ -77,21 +73,21 @@ void showCourseDetailsSubmenu(Faculty& /*faculty*/, const Course* course) {
     }
 }
 
-void showTeachersSubmenu(Faculty& faculty) {
+void showTeachersSubmenu(const Faculty& faculty) {
     std::cout << "\n--- Faculty Teachers (" << faculty.getTeachers().size() << ") ---\n";
     for (const std::unique_ptr<Teacher>& t : faculty.getTeachers()) {
         if (t) t->printInfo();
     }
 }
 
-void showGroupsSubmenu(Faculty& faculty) {
+void showGroupsSubmenu(const Faculty& faculty) {
     std::cout << "\n--- Faculty Groups (" << faculty.getGroups().size() << ") ---\n";
     for (const std::unique_ptr<StudyGroup>& g : faculty.getGroups()) {
         if (g) g->printInfo();
     }
 }
 
-void showCoursesSubmenu(Faculty& faculty) {
+void showCoursesSubmenu(const Faculty& faculty) {
     std::cout << "\n--- Faculty Courses (" << faculty.getCourses().size() << ") ---\n";
     for (const std::unique_ptr<Course>& c : faculty.getCourses()) {
         if (c) std::cout << "ID: " << c->getId() << " | Title: " << c->getTitle() << "\n";

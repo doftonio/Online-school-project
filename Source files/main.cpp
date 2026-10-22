@@ -31,8 +31,7 @@ int main() {
     course->addActivity(std::make_unique<LabActivity>(16, t2, 8, 4));
     course->addActivity(std::make_unique<PracticeActivity>(16, t3, 4, 12, 6));
 
-    const LabActivity* labAct = static_cast<const LabActivity*>(course->findActivity(ActivityType::Lab));
-    if (labAct) {
+    if (const auto* labAct = static_cast<const LabActivity*>(course->findActivity(ActivityType::Lab)); labAct) {
         std::cout << "Lab Activity initialized successfully: " << labAct->getTitle() << "\n";
     }
 

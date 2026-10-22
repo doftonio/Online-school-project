@@ -20,9 +20,9 @@ StudyGroup& StudyGroup::operator-=(Student* student) {
 }
 
 Student* StudyGroup::findStudent(int studentId) const {
-    for (const Student* s : students) {
+    for (Student* s : students) {
         if (s && s->getId() == studentId) {
-            return const_cast<Student*>(s);
+            return s;
         }
     }
     return nullptr;

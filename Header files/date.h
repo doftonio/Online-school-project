@@ -17,15 +17,8 @@ public:
     int getMonth() const noexcept { return month; }
     int getYear() const noexcept { return year; }
 
-    bool operator==(const Date& other) const noexcept {
-        return day == other.day && month == other.month && year == other.year;
-    }
-
-    auto operator<=>(const Date& other) const noexcept {
-        if (auto cmp = year <=> other.year; cmp != 0) return cmp;
-        if (auto cmp = month <=> other.month; cmp != 0) return cmp;
-        return day <=> other.day;
-    }
+    bool operator==(const Date& other) const noexcept = default;
+    auto operator<=>(const Date& other) const noexcept = default;
 };
 
 #endif // DATE_H

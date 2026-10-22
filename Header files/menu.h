@@ -6,10 +6,9 @@ class Course;
 
 void runMainMenu(Faculty& faculty);
 
-void showFacultySubmenu(Faculty& faculty);
-void showTeachersSubmenu(Faculty& faculty);
-void showGroupsSubmenu(Faculty& faculty);
-void showCoursesSubmenu(Faculty& faculty);
+void showTeachersSubmenu(const Faculty& faculty);
+void showGroupsSubmenu(const Faculty& faculty);
+void showCoursesSubmenu(const Faculty& faculty);
 void showCourseDetailsSubmenu(Faculty& faculty, const Course* course);
 
 void handleCourseActivities(const Course* course);
