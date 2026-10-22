@@ -1,26 +1,31 @@
-#pragma once
-#include <iostream>
+#ifndef DATE_H
+#define DATE_H
+
+#include <compare>
 
 class Date {
 private:
-    int day{ 1 };
-    int month{ 1 };
-    int year{ 2026 };
+    int day{1};
+    int month{1};
+    int year{2026};
 
 public:
     Date() = default;
-    Date(int d, int m, int y);
+    Date(int d, int m, int y) : day(d), month(m), year(y) {}
 
-    int getDay() const;
-    int getMonth() const;
-    int getYear() const;
+    int getDay() const noexcept { return day; }
+    int getMonth() const noexcept { return month; }
+    int getYear() const noexcept { return year; }
 
-    bool operator==(const Date& other) const = default;
+    bool operator==(const Date& other) const noexcept {
+        return day == other.day && month == other.month && year == other.year;
+    }
 
-    friend std::ostream& operator<<(std::ostream& os, const Date& d) {
-        os << (d.day < 10 ? "0" : "") << d.day << "."
-            << (d.month < 10 ? "0" : "") << d.month << "."
-            << d.year;
-        return os;
+    auto operator<=>(const Date& other) const noexcept {
+        if (auto cmp = year <=> other.year; cmp != 0) return cmp;
+        if (auto cmp = month <=> other.month; cmp != 0) return cmp;
+        return day <=> other.day;
     }
 };
+
+#endif // DATE_H

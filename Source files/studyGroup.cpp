@@ -20,9 +20,9 @@ StudyGroup& StudyGroup::operator-=(Student* student) {
 }
 
 Student* StudyGroup::findStudent(int studentId) const {
-    for (auto* s : students) {
+    for (const Student* s : students) {
         if (s && s->getId() == studentId) {
-            return s;
+            return const_cast<Student*>(s);
         }
     }
     return nullptr;
@@ -31,7 +31,7 @@ Student* StudyGroup::findStudent(int studentId) const {
 void StudyGroup::printInfo() const {
     std::cout << "Group " << number << " (Year: " << courseYear
               << ", Capacity: " << students.size() << "/" << maxCapacity << ")\n";
-    for (const auto* s : students) {
+    for (const Student* s : students) {
         if (s) {
             std::cout << "  - ";
             s->printInfo();

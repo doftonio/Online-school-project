@@ -36,7 +36,7 @@ public:
 };
 
 inline void printPracticeJournal(const auto&... /*args*/) {
-    // Intentionally left empty: backward compatibility stub for legacy menu calls
+    // Compatibility stub for legacy menu calls
 }
 
 #endif // PRACTICE_ACTIVITY_H

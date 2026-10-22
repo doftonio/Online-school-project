@@ -36,7 +36,7 @@ void Course::addActivityForGroup(std::string_view /*groupNumber*/, std::unique_p
 }
 
 CourseActivity* Course::findActivity(ActivityType type) const {
-    for (const auto& act : activities) {
+    for (const std::unique_ptr<CourseActivity>& act : activities) {
         if (act && act->getType() == type) {
             return act.get();
         }
@@ -50,11 +50,11 @@ CourseActivity* Course::findActivity(std::string_view /*groupNumber*/, ActivityT
 
 void Course::printFullCourseInfo() const {
     std::cout << "\nCourse: " << title << " (ID: " << id << ")\nTeachers:\n";
-    for (const auto* t : teachers) {
+    for (const Teacher* t : teachers) {
         if (t) std::cout << "  - " << t->getFullName() << " (" << t->getDepartment() << ")\n";
     }
     std::cout << "Course Activities:\n";
-    for (const auto& act : activities) {
+    for (const std::unique_ptr<CourseActivity>& act : activities) {
         if (act) act->printDetails();
     }
 }

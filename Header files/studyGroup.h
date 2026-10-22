@@ -27,7 +27,6 @@ public:
     StudyGroup& operator-=(Student* student);
 
     Student* findStudent(int studentId) const;
-
     void printInfo() const;
 };
 

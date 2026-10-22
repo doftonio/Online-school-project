@@ -25,7 +25,6 @@ public:
     }
 
     void printInfo() const override;
-
     void inspectStudentInternals(const Student& other) const;
 
     bool operator==(const Student& other) const noexcept { return id == other.id; }

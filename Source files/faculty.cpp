@@ -25,28 +25,28 @@ Course* Faculty::createCourse(int id, std::string_view title) {
 }
 
 StudyGroup* Faculty::findGroup(std::string_view groupNum) const {
-    for (const auto& g : allGroups) {
+    for (const std::unique_ptr<StudyGroup>& g : allGroups) {
         if (g && g->getNumber() == groupNum) return g.get();
     }
     return nullptr;
 }
 
 Teacher* Faculty::findTeacher(int teacherId) const {
-    for (const auto& t : allTeachers) {
+    for (const std::unique_ptr<Teacher>& t : allTeachers) {
         if (t && t->getId() == teacherId) return t.get();
     }
     return nullptr;
 }
 
 Course* Faculty::findCourse(int courseId) const {
-    for (const auto& c : allCourses) {
+    for (const std::unique_ptr<Course>& c : allCourses) {
         if (c && c->getId() == courseId) return c.get();
     }
     return nullptr;
 }
 
 Student* Faculty::findStudent(int studentId) const {
-    for (const auto& s : allStudents) {
+    for (const std::unique_ptr<Student>& s : allStudents) {
         if (s && s->getId() == studentId) return s.get();
     }
     return nullptr;
@@ -69,13 +69,13 @@ Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::stri
 void Faculty::expelStudent(Student* student) {
     if (!student) return;
 
-    for (const auto& course : allCourses) {
+    for (const std::unique_ptr<Course>& course : allCourses) {
         if (course) {
             course->getGradeBook().removeAllGradesForStudent(student);
         }
     }
 
-    for (const auto& grp : allGroups) {
+    for (const std::unique_ptr<StudyGroup>& grp : allGroups) {
         if (grp) {
             *grp -= student;
         }

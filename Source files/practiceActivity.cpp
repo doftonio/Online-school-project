@@ -4,7 +4,7 @@
 #include <format>
 
 void PracticeActivity::addGradeForStudent(int /*studentId*/, const Grade& /*grade*/) const {
-    // Compatibility stub: grade storage is handled by CourseGradeBook
+    // Compatibility stub: grade entries are managed in CourseGradeBook
 }
 
 bool PracticeActivity::removeGradeForStudentByDate(int /*studentId*/, const Date& /*date*/) const {

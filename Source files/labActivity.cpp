@@ -4,7 +4,7 @@
 #include <format>
 
 void LabActivity::addGradeForStudent(int /*studentId*/, const Grade& /*grade*/) const {
-    // Compatibility stub: grade storage is handled by CourseGradeBook
+    // Compatibility stub: grade entries are managed in CourseGradeBook
 }
 
 bool LabActivity::removeGradeForStudentByDate(int /*studentId*/, const Date& /*date*/) const {

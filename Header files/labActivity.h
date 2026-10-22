@@ -35,7 +35,7 @@ public:
 };
 
 inline void printLabJournal(const auto&... /*args*/) {
-    // Intentionally left empty: backward compatibility stub for legacy menu calls
+    // Compatibility stub for legacy menu calls
 }
 
 #endif // LAB_ACTIVITY_H
