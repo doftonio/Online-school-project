@@ -1,67 +1,32 @@
-#include "../Header files/studyGroup.h"
-#include "../Header files/exceptions.h"
-#include <format>
+#include "studyGroup.h"
+#include "student.h"
 #include <iostream>
+#include <algorithm>
 
 StudyGroup::StudyGroup(std::string_view groupNum, int year, int capacity)
-    : number(groupNum), courseYear(year), maxCapacity(capacity) {
-    if (capacity <= 0) {
-        throw InvalidOperationException("Group capacity must be positive.");
-    }
-}
-
-std::string StudyGroup::getNumber() const { return number; }
-int StudyGroup::getCourseYear() const { return courseYear; }
-int StudyGroup::getMaxCapacity() const { return maxCapacity; }
-std::span<const Student* const> StudyGroup::getStudents() const { return students; }
+    : number(groupNum), courseYear(year), maxCapacity(capacity) {}
 
 StudyGroup& StudyGroup::operator+=(Student* student) {
-    if (!student) {
-        throw InvalidOperationException("Attempted to attach nullptr to group.");
-    }
-    if (static_cast<int>(students.size()) >= maxCapacity) {
-        throw CapacityExceededException(std::format("Group {} is full!", number));
-    }
-    for (const auto* s : students) {
-        if (s->getId() == student->getId()) {
-            throw DuplicateEntityException(std::format("Student ID {} is already in this group.", student->getId()));
+    if (student && static_cast<int>(students.size()) < maxCapacity) {
+        if (std::find(students.begin(), students.end(), student) == students.end()) {
+            students.push_back(student);
         }
     }
-    students.push_back(student);
-    student->setGroupNumber(number);
     return *this;
 }
 
-StudyGroup& StudyGroup::operator-=(int studentId) {
-    for (size_t i = 0; i < students.size(); ++i) {
-        if (students[i] && students[i]->getId() == studentId) {
-            students[i]->setGroupNumber("");
-            students.erase(students.begin() + i);
-            return *this;
-        }
-    }
-    throw EntityNotFoundException(std::format("Student ID {} not found in group {}", studentId, number));
-}
-
-Student* StudyGroup::findStudent(int studentId) {
-    for (auto* s : students) {
-        if (s && s->getId() == studentId) return s;
-    }
-    return nullptr;
-}
-
-const Student* StudyGroup::findStudent(int studentId) const {
-    for (const auto* s : students) {
-        if (s && s->getId() == studentId) return s;
-    }
-    return nullptr;
+StudyGroup& StudyGroup::operator-=(Student* student) {
+    std::erase(students, student);
+    return *this;
 }
 
 void StudyGroup::printInfo() const {
-    std::cout << "Group #" << number
-        << " (Year " << courseYear << ", students: "
-        << students.size() << "/" << maxCapacity << ")\n";
+    std::cout << "Группа " << number << " (Курс: " << courseYear
+              << ", Вместимость: " << students.size() << "/" << maxCapacity << ")\n";
     for (const auto* s : students) {
-        std::cout << "   * " << *s << "\n";
+        if (s) {
+            std::cout << "  - ";
+            s->printInfo();
+        }
     }
 }

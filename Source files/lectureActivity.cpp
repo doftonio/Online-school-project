@@ -1,15 +1,10 @@
-#include "../Header files/lectureActivity.h"
-
-LectureActivity::LectureActivity(int lessons, int assignedTeacher, int topics, int lectureHrs)
-    : CourseActivity("Lectures", lessons, assignedTeacher),
-    topicsCount(topics), hours(lectureHrs) {
-}
-
-ActivityType LectureActivity::getType() const { return ActivityType::Lecture; }
-int LectureActivity::calculateHours() const { return hours; }
+#include "lectureActivity.h"
+#include "teacher.h"
+#include <iostream>
 
 void LectureActivity::printDetails() const {
-    std::cout << "    [Lectures] Lessons: " << getLessonsCount()
-        << " (" << calculateHours() << " h) | Teacher ID: " << getTeacherId() << "\n"
-        << "      Syllabus topics: " << topicsCount << "\n";
+    std::cout << "  [Лекция] Занятий: " << lessonsCount
+              << ", Темы: " << topicsCount
+              << ", Часы: " << hours
+              << ", Преподаватель: " << (teacher ? teacher->getFullName() : "Не назначен") << "\n";
 }

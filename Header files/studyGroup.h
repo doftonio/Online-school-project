@@ -1,29 +1,32 @@
-#pragma once
-#include "student.h"
-#include <span>
+#ifndef STUDY_GROUP_H
+#define STUDY_GROUP_H
+
 #include <string>
 #include <string_view>
 #include <vector>
+#include <span>
+
+class Student;
 
 class StudyGroup {
 private:
-    std::string number{};
-    int courseYear{ 1 };
-    int maxCapacity{ 30 };
-    std::vector<Student*> students{};
+    std::string number;
+    int courseYear{1};
+    int maxCapacity{30};
+    std::vector<Student*> students;
 
 public:
-    StudyGroup(std::string_view groupNum, int year, int capacity = 30);
+    StudyGroup(std::string_view groupNum, int year, int capacity);
 
-    std::string getNumber() const;
-    int getCourseYear() const;
-    int getMaxCapacity() const;
-    std::span<const Student* const> getStudents() const;
+    [[nodiscard]] const std::string& getNumber() const noexcept { return number; }
+    [[nodiscard]] int getCourseYear() const noexcept { return courseYear; }
+    [[nodiscard]] int getMaxCapacity() const noexcept { return maxCapacity; }
+    [[nodiscard]] std::span<const Student* const> getStudents() const noexcept { return students; }
 
     StudyGroup& operator+=(Student* student);
-    StudyGroup& operator-=(int studentId);
+    StudyGroup& operator-=(Student* student);
 
-    Student* findStudent(int studentId);
-    const Student* findStudent(int studentId) const;
     void printInfo() const;
 };
+
+#endif // STUDY_GROUP_H

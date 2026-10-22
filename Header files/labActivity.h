@@ -1,26 +1,23 @@
-#pragma once
+#ifndef LAB_ACTIVITY_H
+#define LAB_ACTIVITY_H
+
 #include "courseActivity.h"
-#include "studentContainers.h"
-#include <vector>
-#include <iostream>
 
 class LabActivity : public CourseActivity {
 private:
-    int count{ 0 };
-    int minPassingScore{ 4 };
-    std::vector<StudentLabGradesContainer> journal{};
+    int count{0};
+    int minPassingScore{4};
 
 public:
-    LabActivity(int lessons, int assignedTeacher, int labsCount, int minScore);
+    LabActivity(int lessons, Teacher* assignedTeacher, int labsCount, int minScore)
+        : CourseActivity("Лабораторная работа", lessons, assignedTeacher), count(labsCount), minPassingScore(minScore) {}
 
-    ActivityType getType() const override;
-    int getCount() const;
-    int getMinPassingScore() const;
-
-    void addGradeForStudent(int studentId, const LabGrade& grade);
-    bool removeGradeForStudentByDate(int studentId, const Date& date);
-    double getGroupAverageScore() const;
+    [[nodiscard]] ActivityType getType() const noexcept override { return ActivityType::Lab; }
+    [[nodiscard]] int calculateHours() const override { return lessonsCount * 2; }
+    [[nodiscard]] int getCount() const noexcept { return count; }
+    [[nodiscard]] int getMinPassingScore() const noexcept { return minPassingScore; }
 
     void printDetails() const override;
-    friend void printLabJournal(std::ostream& os, const LabActivity& activity);
 };
+
+#endif // LAB_ACTIVITY_H

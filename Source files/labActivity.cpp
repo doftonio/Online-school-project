@@ -1,54 +1,10 @@
-#include "../Header files/labActivity.h"
-
-LabActivity::LabActivity(int lessons, int assignedTeacher, int labsCount, int minScore)
-    : CourseActivity("Labs", lessons, assignedTeacher),
-    count(labsCount), minPassingScore(minScore) {
-}
-
-ActivityType LabActivity::getType() const { return ActivityType::Lab; }
-int LabActivity::getCount() const { return count; }
-int LabActivity::getMinPassingScore() const { return minPassingScore; }
-
-void LabActivity::addGradeForStudent(int studentId, const LabGrade& grade) {
-    for (auto& record : journal) {
-        if (record.getStudentId() == studentId) {
-            record.addGrade(grade);
-            return;
-        }
-    }
-    StudentLabGradesContainer newRecord(studentId);
-    newRecord.addGrade(grade);
-    journal.push_back(newRecord);
-}
-
-bool LabActivity::removeGradeForStudentByDate(int studentId, const Date& date) {
-    for (auto& record : journal) {
-        if (record.getStudentId() == studentId) {
-            return record.removeGradeByDate(date);
-        }
-    }
-    return false;
-}
-
-double LabActivity::getGroupAverageScore() const {
-    if (journal.empty()) return 0.0;
-    double sum = 0.0;
-    for (const auto& record : journal) sum += record.getAverageScore();
-    return sum / journal.size();
-}
+#include "labActivity.h"
+#include "teacher.h"
+#include <iostream>
 
 void LabActivity::printDetails() const {
-    std::cout << "    [Laboratory Works] Lessons: " << getLessonsCount()
-        << " (" << calculateHours() << " h) | Teacher ID: " << getTeacherId() << "\n"
-        << "      Required labs: " << count
-        << " | Min score: " << minPassingScore << "\n";
-}
-
-void printLabJournal(std::ostream& os, const LabActivity& activity) {
-    os << "--- Laboratory Journal (Required: " << activity.count
-        << ", Min score: " << activity.minPassingScore << ") ---\n";
-    for (const auto& record : activity.journal) {
-        os << "  * " << record << "\n";
-    }
-    os << "  -> Group average score for labs: " << activity.getGroupAverageScore() << "\n";
+    std::cout << "  [Лабораторная] Занятий: " << lessonsCount
+              << ", Всего работ: " << count
+              << ", Мин. проходной балл: " << minPassingScore
+              << ", Преподаватель: " << (teacher ? teacher->getFullName() : "Не назначен") << "\n";
 }

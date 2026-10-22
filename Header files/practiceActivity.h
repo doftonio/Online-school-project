@@ -1,26 +1,23 @@
-#pragma once
+#ifndef PRACTICE_ACTIVITY_H
+#define PRACTICE_ACTIVITY_H
+
 #include "courseActivity.h"
-#include "studentContainers.h"
-#include <vector>
-#include <iostream>
 
 class PracticeActivity : public CourseActivity {
 private:
-    int testsCount{ 0 };
-    int tasksCount{ 0 };
-    int calculationsCount{ 0 };
-    std::vector<StudentPracticeGradesContainer> journal{};
+    int testsCount{0};
+    int tasksCount{0};
+    int calculationsCount{0};
 
 public:
-    PracticeActivity(int lessons, int assignedTeacher, int tests, int practicals, int calculations);
+    PracticeActivity(int lessons, Teacher* assignedTeacher, int tests, int practicals, int calculations)
+        : CourseActivity("Практическое занятие", lessons, assignedTeacher),
+          testsCount(tests), tasksCount(practicals), calculationsCount(calculations) {}
 
-    ActivityType getType() const override;
-    int calculateHours() const override;
+    [[nodiscard]] ActivityType getType() const noexcept override { return ActivityType::Practice; }
+    [[nodiscard]] int calculateHours() const override { return lessonsCount * 2; }
+
     void printDetails() const override;
-
-    void addGradeForStudent(int studentId, const PracticeGrade& grade);
-    bool removeGradeForStudentByDate(int studentId, const Date& date);
-    double getGroupAverageScore() const;
-
-    friend void printPracticeJournal(std::ostream& os, const PracticeActivity& activity);
 };
+
+#endif // PRACTICE_ACTIVITY_H

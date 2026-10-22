@@ -1,85 +1,82 @@
-#include "../Header files/faculty.h"
-#include "../Header files/exceptions.h"
-#include <format>
+#include "faculty.h"
+#include <algorithm>
 
 Faculty::Faculty(std::string_view facultyName) : name(facultyName) {}
 
-std::string Faculty::getName() const { return name; }
-
 Teacher* Faculty::createTeacher(int id, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept) {
-    allTeachers.push_back(std::make_unique<Teacher>(id, first, last, middle, dept));
-    return allTeachers.back().get();
+    auto teacher = std::make_unique<Teacher>(id, first, last, middle, dept);
+    Teacher* raw = teacher.get();
+    allTeachers.push_back(std::move(teacher));
+    return raw;
 }
 
 StudyGroup* Faculty::createGroup(std::string_view number, int year, int capacity) {
-    allGroups.push_back(std::make_unique<StudyGroup>(number, year, capacity));
-    return allGroups.back().get();
+    auto grp = std::make_unique<StudyGroup>(number, year, capacity);
+    StudyGroup* raw = grp.get();
+    allGroups.push_back(std::move(grp));
+    return raw;
 }
 
 Course* Faculty::createCourse(int id, std::string_view title) {
-    allCourses.push_back(std::make_unique<Course>(id, title));
-    return allCourses.back().get();
+    auto c = std::make_unique<Course>(id, title);
+    Course* raw = c.get();
+    allCourses.push_back(std::move(c));
+    return raw;
 }
 
 StudyGroup* Faculty::findGroup(std::string_view groupNum) const {
     for (const auto& g : allGroups) {
-        if (g->getNumber() == groupNum) return g.get();
+        if (g && g->getNumber() == groupNum) return g.get();
     }
     return nullptr;
 }
 
 Teacher* Faculty::findTeacher(int teacherId) const {
     for (const auto& t : allTeachers) {
-        if (t->getId() == teacherId) return t.get();
+        if (t && t->getId() == teacherId) return t.get();
     }
     return nullptr;
 }
 
 Course* Faculty::findCourse(int courseId) const {
     for (const auto& c : allCourses) {
-        if (c->getId() == courseId) return c.get();
+        if (c && c->getId() == courseId) return c.get();
     }
     return nullptr;
 }
 
-const std::vector<std::unique_ptr<Teacher>>& Faculty::getTeachers() const { return allTeachers; }
-const std::vector<std::unique_ptr<StudyGroup>>& Faculty::getGroups() const { return allGroups; }
-const std::vector<std::unique_ptr<Course>>& Faculty::getCourses() const { return allCourses; }
-
-Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::string_view last,
-    std::string_view middle, std::string_view groupNum)
-{
-    StudyGroup* group = findGroup(groupNum);
-    if (!group) {
-        throw EntityNotFoundException(std::format("Group {} not found on the faculty.", groupNum));
-    }
-
+Student* Faculty::findStudent(int studentId) const {
     for (const auto& s : allStudents) {
-        if (s->getId() == id) {
-            throw DuplicateEntityException(std::format("Student ID {} already exists.", id));
-        }
+        if (s && s->getId() == studentId) return s.get();
     }
-
-    allStudents.push_back(std::make_unique<Student>(id, first, last, middle));
-    Student* studentPtr = allStudents.back().get();
-    *group += studentPtr;
-    return studentPtr;
+    return nullptr;
 }
 
-void Faculty::expelStudent(int studentId) {
-    for (size_t i = 0; i < allStudents.size(); ++i) {
-        if (allStudents[i]->getId() != studentId) {
-            continue;
-        }
+Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::string_view last, std::string_view middle, StudyGroup* group) {
+    if (!group) return nullptr;
+    auto student = std::make_unique<Student>(id, first, last, middle, 0);
+    Student* raw = student.get();
+    allStudents.push_back(std::move(student));
+    *group += raw;
+    return raw;
+}
 
-        if (const std::string& groupNum = allStudents[i]->getGroupNumber(); !groupNum.empty()) {
-            if (StudyGroup* group = findGroup(groupNum)) {
-                *group -= studentId;
-            }
-        }
+void Faculty::expelStudent(Student* student) {
+    if (!student) return;
 
-        allStudents.erase(allStudents.begin() + i);
-        return;
+    for (auto& course : allCourses) {
+        if (course) {
+            course->getGradeBook().removeAllGradesForStudent(student);
+        }
     }
-    throw EntityNotFoundException(std::format("Student ID {} not found on the faculty.", studentId));
+
+    for (auto& grp : allGroups) {
+        if (grp) {
+            *grp -= student;
+        }
+    }
+
+    std::erase_if(allStudents, [student](const std::unique_ptr<Student>& ptr) {
+        return ptr.get() == student;
+    });
 }

@@ -1,39 +1,39 @@
-#pragma once
-#include "teacher.h"
-#include "courseActivity.h"
-#include <span>
+#ifndef COURSE_H
+#define COURSE_H
+
 #include <string>
 #include <string_view>
 #include <vector>
 #include <memory>
+#include <span>
+#include "courseActivity.h"
+#include "courseGradeBook.h"
 
-struct GroupActivityProfile {
-    std::string groupNumber{};
-    std::vector<std::unique_ptr<CourseActivity>> activities{};
-};
+class Teacher;
 
 class Course {
 private:
-    int id{ 0 };
-    std::string title{};
-    std::vector<Teacher*> teachers{};
-    std::vector<GroupActivityProfile> groupProfiles{};
+    int id{0};
+    std::string title;
+    std::vector<Teacher*> teachers;
+    std::vector<std::unique_ptr<CourseActivity>> activities;
+    CourseGradeBook gradeBook;
 
 public:
     Course(int courseId, std::string_view courseTitle);
 
-    int getId() const;
-    std::string getTitle() const;
-    std::span<const Teacher* const> getTeachers() const;
-    const std::vector<GroupActivityProfile>& getGroupProfiles() const;
+    [[nodiscard]] int getId() const noexcept { return id; }
+    [[nodiscard]] const std::string& getTitle() const noexcept { return title; }
+    [[nodiscard]] std::span<Teacher* const> getTeachers() const noexcept { return teachers; }
+    [[nodiscard]] CourseGradeBook& getGradeBook() noexcept { return gradeBook; }
+    [[nodiscard]] const CourseGradeBook& getGradeBook() const noexcept { return gradeBook; }
 
     Course& operator+=(Teacher* teacher);
-    Course& operator-=(int teacherId);
+    Course& operator-=(Teacher* teacher);
 
-    Teacher* findTeacher(int teacherId) const;
-
-    void addActivityForGroup(std::string_view groupNumber, std::unique_ptr<CourseActivity> activity);
-    CourseActivity* findActivity(std::string_view groupNumber, ActivityType type);
-
+    void addActivity(std::unique_ptr<CourseActivity> activity);
+    [[nodiscard]] CourseActivity* findActivity(ActivityType type) const;
     void printFullCourseInfo() const;
 };
+
+#endif // COURSE_H

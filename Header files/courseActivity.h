@@ -1,7 +1,10 @@
-#pragma once
+#ifndef COURSE_ACTIVITY_H
+#define COURSE_ACTIVITY_H
+
 #include <string>
 #include <string_view>
-#include <iostream>
+
+class Teacher;
 
 enum class ActivityType {
     Lecture,
@@ -9,27 +12,26 @@ enum class ActivityType {
     Practice
 };
 
-std::string activityTypeToString(ActivityType type);
-
 class CourseActivity {
-private:
-    std::string title{};
-    int lessonsCount{ 0 };
-    int teacherId{ -1 };
+protected:
+    std::string title;
+    int lessonsCount{0};
+    Teacher* teacher{nullptr};
 
 public:
     CourseActivity() = default;
-    CourseActivity(std::string_view actTitle, int lessons, int assignedTeacher);
+    CourseActivity(std::string_view actTitle, int lessons, Teacher* assignedTeacher)
+        : title(actTitle), lessonsCount(lessons), teacher(assignedTeacher) {}
     virtual ~CourseActivity() = default;
 
-    std::string getTitle() const;
-    int getLessonsCount() const;
-    int getTeacherId() const;
+    [[nodiscard]] const std::string& getTitle() const noexcept { return title; }
+    [[nodiscard]] int getLessonsCount() const noexcept { return lessonsCount; }
+    [[nodiscard]] Teacher* getTeacher() const noexcept { return teacher; }
+    void setTeacher(Teacher* t) noexcept { teacher = t; }
 
-    void setLessonsCount(int lessons);
-    void setTeacherId(int id);
-
-    virtual int calculateHours() const;
-    virtual ActivityType getType() const = 0;
+    [[nodiscard]] virtual int calculateHours() const = 0;
+    [[nodiscard]] virtual ActivityType getType() const noexcept = 0;
     virtual void printDetails() const = 0;
 };
+
+#endif // COURSE_ACTIVITY_H
