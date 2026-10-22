@@ -28,14 +28,15 @@ public:
     ActivityType getType() const noexcept override { return ActivityType::Practice; }
     int calculateHours() const override { return getLessonsCount() * 2; }
 
-    void addGradeForStudent(int studentId, const Grade& grade);
-    bool removeGradeForStudentByDate(int studentId, const Date& date);
+    void addGradeForStudent(int studentId, const Grade& grade) const;
+    bool removeGradeForStudentByDate(int studentId, const Date& date) const;
     void printJournal() const;
 
     void printDetails() const override;
 };
 
 inline void printPracticeJournal(const auto&... /*args*/) {
+    // Intentionally left empty: backward compatibility stub for legacy menu calls
 }
 
 #endif // PRACTICE_ACTIVITY_H

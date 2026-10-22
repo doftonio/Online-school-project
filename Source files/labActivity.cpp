@@ -1,11 +1,13 @@
 #include "../Header files/labActivity.h"
 #include "../Header files/teacher.h"
 #include <iostream>
+#include <format>
 
-void LabActivity::addGradeForStudent(int /*studentId*/, const Grade& /*grade*/) {
+void LabActivity::addGradeForStudent(int /*studentId*/, const Grade& /*grade*/) const {
+    // Compatibility stub: grade storage is handled by CourseGradeBook
 }
 
-bool LabActivity::removeGradeForStudentByDate(int /*studentId*/, const Date& /*date*/) {
+bool LabActivity::removeGradeForStudentByDate(int /*studentId*/, const Date& /*date*/) const {
     return true;
 }
 
@@ -14,8 +16,9 @@ void LabActivity::printJournal() const {
 }
 
 void LabActivity::printDetails() const {
+    std::string teacherStr = getTeacher() ? getTeacher()->getFullName() : std::format("ID: {}", getTeacherId());
     std::cout << "  [Lab] Lessons: " << getLessonsCount()
               << ", Total labs: " << count
               << ", Min passing score: " << minPassingScore
-              << ", Teacher: " << (getTeacher() ? getTeacher()->getFullName() : "ID: " + std::to_string(getTeacherId())) << "\n";
+              << ", Teacher: " << teacherStr << "\n";
 }

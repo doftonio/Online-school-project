@@ -18,6 +18,11 @@ public:
         : value(val), date(d), workNumber(num), topicOrType(topic) {}
     virtual ~Grade() = default;
 
+    Grade(Grade&&) noexcept = default;
+    Grade& operator=(Grade&&) noexcept = default;
+    Grade(const Grade&) = default;
+    Grade& operator=(const Grade&) = default;
+
     int getValue() const noexcept { return value; }
     Date getDate() const noexcept { return date; }
     int getWorkNumber() const noexcept { return workNumber; }

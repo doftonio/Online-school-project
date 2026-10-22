@@ -4,7 +4,7 @@
 #include "person.h"
 #include <compare>
 #include <string_view>
-#include <iosfwd>
+#include <iostream>
 
 class Student : public Person {
 private:
@@ -30,9 +30,14 @@ public:
 
     bool operator==(const Student& other) const noexcept { return id == other.id; }
     auto operator<=>(const Student& other) const noexcept { return id <=> other.id; }
+
+    friend std::ostream& operator<<(std::ostream& os, const Student& student) {
+        os << "Student [ID: " << student.getId() << "] " << student.getFullName()
+           << " | Completed tasks: " << student.getCompletedTasks();
+        return os;
+    }
 };
 
-std::ostream& operator<<(std::ostream& os, const Student& student);
 void inspectStudentInternals(const Student& s);
 void inspectStudentInternals(const Student& s1, const Student& s2);
 

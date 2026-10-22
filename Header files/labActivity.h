@@ -27,14 +27,15 @@ public:
     int getCount() const noexcept { return count; }
     int getMinPassingScore() const noexcept { return minPassingScore; }
 
-    void addGradeForStudent(int studentId, const Grade& grade);
-    bool removeGradeForStudentByDate(int studentId, const Date& date);
+    void addGradeForStudent(int studentId, const Grade& grade) const;
+    bool removeGradeForStudentByDate(int studentId, const Date& date) const;
     void printJournal() const;
 
     void printDetails() const override;
 };
 
 inline void printLabJournal(const auto&... /*args*/) {
+    // Intentionally left empty: backward compatibility stub for legacy menu calls
 }
 
 #endif // LAB_ACTIVITY_H

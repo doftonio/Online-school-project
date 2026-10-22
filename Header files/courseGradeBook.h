@@ -12,6 +12,14 @@ struct GradeEntry {
     Student* student{nullptr};
     CourseActivity* activity{nullptr};
     Grade grade;
+
+    GradeEntry(Student* s, CourseActivity* a, const Grade& g)
+        : student(s), activity(a), grade(g) {}
+
+    GradeEntry(GradeEntry&&) noexcept = default;
+    GradeEntry& operator=(GradeEntry&&) noexcept = default;
+    GradeEntry(const GradeEntry&) = default;
+    GradeEntry& operator=(const GradeEntry&) = default;
 };
 
 class CourseGradeBook {

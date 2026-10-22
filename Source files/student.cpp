@@ -13,12 +13,6 @@ void Student::inspectStudentInternals(const Student& other) const {
     std::cout << "Inspect student [ID: " << other.id << "], tasks: " << other.completedTasks << "\n";
 }
 
-std::ostream& operator<<(std::ostream& os, const Student& student) {
-    os << "Student [ID: " << student.getId() << "] " << student.getFullName()
-       << " | Completed tasks: " << student.getCompletedTasks();
-    return os;
-}
-
 void inspectStudentInternals(const Student& s) {
     s.printInfo();
 }

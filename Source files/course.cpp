@@ -19,7 +19,7 @@ Course& Course::operator-=(Teacher* teacher) {
 }
 
 Course& Course::operator-=(int teacherId) {
-    std::erase_if(teachers, [teacherId](Teacher* t) {
+    std::erase_if(teachers, [teacherId](const Teacher* t) {
         return t && t->getId() == teacherId;
     });
     return *this;
