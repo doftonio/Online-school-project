@@ -14,10 +14,10 @@ public:
     Teacher() = default;
     Teacher(int teacherId, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept);
 
-    [[nodiscard]] int getId() const noexcept { return id; }
-    [[nodiscard]] const std::string& getDepartment() const noexcept { return department; }
+    int getId() const noexcept { return id; }
+    const std::string& getDepartment() const noexcept { return department; }
 
-    [[nodiscard]] int calculateAnnualWorkload(int assignedContactHours, double prepMultiplier = 1.25) const noexcept {
+    int calculateAnnualWorkload(int assignedContactHours, double prepMultiplier = 1.25) const noexcept {
         if (assignedContactHours <= 0) return 0;
         return static_cast<int>(assignedContactHours * prepMultiplier);
     }

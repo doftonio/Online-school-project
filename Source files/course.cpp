@@ -1,5 +1,5 @@
-#include "course.h"
-#include "teacher.h"
+#include "../Header files/course.h"
+#include "../Header files/teacher.h"
 #include <iostream>
 #include <algorithm>
 
@@ -18,10 +18,21 @@ Course& Course::operator-=(Teacher* teacher) {
     return *this;
 }
 
+Course& Course::operator-=(int teacherId) {
+    std::erase_if(teachers, [teacherId](Teacher* t) {
+        return t && t->getId() == teacherId;
+    });
+    return *this;
+}
+
 void Course::addActivity(std::unique_ptr<CourseActivity> activity) {
     if (activity) {
         activities.push_back(std::move(activity));
     }
+}
+
+void Course::addActivityForGroup(std::string_view /*groupNumber*/, std::unique_ptr<CourseActivity> activity) {
+    addActivity(std::move(activity));
 }
 
 CourseActivity* Course::findActivity(ActivityType type) const {
@@ -33,12 +44,16 @@ CourseActivity* Course::findActivity(ActivityType type) const {
     return nullptr;
 }
 
+CourseActivity* Course::findActivity(std::string_view /*groupNumber*/, ActivityType type) const {
+    return findActivity(type);
+}
+
 void Course::printFullCourseInfo() const {
-    std::cout << "\nКурс: " << title << " (ID: " << id << ")\nПреподаватели:\n";
+    std::cout << "\nCourse: " << title << " (ID: " << id << ")\nTeachers:\n";
     for (const auto* t : teachers) {
         if (t) std::cout << "  - " << t->getFullName() << " (" << t->getDepartment() << ")\n";
     }
-    std::cout << "Активности курса:\n";
+    std::cout << "Course Activities:\n";
     for (const auto& act : activities) {
         if (act) act->printDetails();
     }

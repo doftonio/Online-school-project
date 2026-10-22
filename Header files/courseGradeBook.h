@@ -43,7 +43,7 @@ public:
         });
     }
 
-    [[nodiscard]] std::vector<Grade> getGrades(const Student* student, const CourseActivity* activity) const {
+    std::vector<Grade> getGrades(const Student* student, const CourseActivity* activity) const {
         std::vector<Grade> result;
         for (const auto& entry : entries) {
             if (entry.student == student && entry.activity == activity) {
@@ -53,7 +53,7 @@ public:
         return result;
     }
 
-    [[nodiscard]] double getStudentAverage(const Student* student) const noexcept {
+    double getStudentAverage(const Student* student) const noexcept {
         double sum = 0.0;
         int count = 0;
         for (const auto& entry : entries) {
@@ -65,7 +65,7 @@ public:
         return count == 0 ? 0.0 : (sum / count);
     }
 
-    [[nodiscard]] double getActivityAverage(const CourseActivity* activity) const noexcept {
+    double getActivityAverage(const CourseActivity* activity) const noexcept {
         double sum = 0.0;
         int count = 0;
         for (const auto& entry : entries) {

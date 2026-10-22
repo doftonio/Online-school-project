@@ -1,4 +1,4 @@
-#include "faculty.h"
+#include "../Header files/faculty.h"
 #include <algorithm>
 
 Faculty::Faculty(std::string_view facultyName) : name(facultyName) {}
@@ -61,6 +61,11 @@ Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::stri
     return raw;
 }
 
+Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::string_view last, std::string_view middle, std::string_view groupNum) {
+    StudyGroup* group = findGroup(groupNum);
+    return enrollStudentInGroup(id, first, last, middle, group);
+}
+
 void Faculty::expelStudent(Student* student) {
     if (!student) return;
 
@@ -79,4 +84,11 @@ void Faculty::expelStudent(Student* student) {
     std::erase_if(allStudents, [student](const std::unique_ptr<Student>& ptr) {
         return ptr.get() == student;
     });
+}
+
+void Faculty::expelStudent(int studentId) {
+    Student* student = findStudent(studentId);
+    if (student) {
+        expelStudent(student);
+    }
 }

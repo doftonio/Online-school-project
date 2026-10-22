@@ -16,11 +16,26 @@ public:
     Grade() = default;
     Grade(int val, const Date& d, int num = 0, std::string_view topic = "")
         : value(val), date(d), workNumber(num), topicOrType(topic) {}
+    virtual ~Grade() = default;
 
-    [[nodiscard]] int getValue() const noexcept { return value; }
-    [[nodiscard]] Date getDate() const noexcept { return date; }
-    [[nodiscard]] int getWorkNumber() const noexcept { return workNumber; }
-    [[nodiscard]] std::string_view getTopicOrType() const noexcept { return topicOrType; }
+    int getValue() const noexcept { return value; }
+    Date getDate() const noexcept { return date; }
+    int getWorkNumber() const noexcept { return workNumber; }
+    std::string_view getTopicOrType() const noexcept { return topicOrType; }
+};
+
+class LabGrade : public Grade {
+public:
+    LabGrade() = default;
+    LabGrade(int val, const Date& d, int num = 0)
+        : Grade(val, d, num, "Lab") {}
+};
+
+class PracticeGrade : public Grade {
+public:
+    PracticeGrade() = default;
+    PracticeGrade(int val, const Date& d, int num = 0, std::string_view type = "")
+        : Grade(val, d, num, type) {}
 };
 
 #endif // GRADE_H

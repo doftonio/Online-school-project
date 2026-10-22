@@ -1,3 +1,1 @@
-#include "grade.h"
-
-// Все методы Grade заинлайнены в заголовочном файле.
+#include "../Header files/grade.h"

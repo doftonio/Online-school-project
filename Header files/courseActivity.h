@@ -16,21 +16,26 @@ class CourseActivity {
 private:
     std::string title;
     int lessonsCount{0};
+    int teacherId{0};
     Teacher* teacher{nullptr};
 
 public:
     CourseActivity() = default;
     CourseActivity(std::string_view actTitle, int lessons, Teacher* assignedTeacher)
         : title(actTitle), lessonsCount(lessons), teacher(assignedTeacher) {}
+    CourseActivity(std::string_view actTitle, int lessons, int assignedTeacherId)
+        : title(actTitle), lessonsCount(lessons), teacherId(assignedTeacherId) {}
     virtual ~CourseActivity() = default;
 
-    [[nodiscard]] const std::string& getTitle() const noexcept { return title; }
-    [[nodiscard]] int getLessonsCount() const noexcept { return lessonsCount; }
-    [[nodiscard]] Teacher* getTeacher() const noexcept { return teacher; }
+    const std::string& getTitle() const noexcept { return title; }
+    int getLessonsCount() const noexcept { return lessonsCount; }
+    int getTeacherId() const noexcept { return teacherId; }
+    Teacher* getTeacher() const noexcept { return teacher; }
     void setTeacher(Teacher* t) noexcept { teacher = t; }
+    void setTeacherId(int id) noexcept { teacherId = id; }
 
-    [[nodiscard]] virtual int calculateHours() const = 0;
-    [[nodiscard]] virtual ActivityType getType() const noexcept = 0;
+    virtual int calculateHours() const = 0;
+    virtual ActivityType getType() const noexcept = 0;
     virtual void printDetails() const = 0;
 };
 

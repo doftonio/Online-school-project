@@ -21,19 +21,27 @@ private:
 public:
     explicit Faculty(std::string_view facultyName);
 
-    [[nodiscard]] const std::string& getName() const noexcept { return name; }
+    const std::string& getName() const noexcept { return name; }
+
+    const std::vector<std::unique_ptr<Student>>& getStudents() const noexcept { return allStudents; }
+    const std::vector<std::unique_ptr<Teacher>>& getTeachers() const noexcept { return allTeachers; }
+    const std::vector<std::unique_ptr<StudyGroup>>& getGroups() const noexcept { return allGroups; }
+    const std::vector<std::unique_ptr<Course>>& getCourses() const noexcept { return allCourses; }
 
     Teacher* createTeacher(int id, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept);
     StudyGroup* createGroup(std::string_view number, int year, int capacity);
     Course* createCourse(int id, std::string_view title);
 
-    [[nodiscard]] StudyGroup* findGroup(std::string_view groupNum) const;
-    [[nodiscard]] Teacher* findTeacher(int teacherId) const;
-    [[nodiscard]] Course* findCourse(int courseId) const;
-    [[nodiscard]] Student* findStudent(int studentId) const;
+    StudyGroup* findGroup(std::string_view groupNum) const;
+    Teacher* findTeacher(int teacherId) const;
+    Course* findCourse(int courseId) const;
+    Student* findStudent(int studentId) const;
 
     Student* enrollStudentInGroup(int id, std::string_view first, std::string_view last, std::string_view middle, StudyGroup* group);
+    Student* enrollStudentInGroup(int id, std::string_view first, std::string_view last, std::string_view middle, std::string_view groupNum);
+
     void expelStudent(Student* student);
+    void expelStudent(int studentId);
 };
 
 #endif // FACULTY_H

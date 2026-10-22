@@ -1,5 +1,5 @@
-#include "studyGroup.h"
-#include "student.h"
+#include "../Header files/studyGroup.h"
+#include "../Header files/student.h"
 #include <iostream>
 #include <algorithm>
 
@@ -19,9 +19,18 @@ StudyGroup& StudyGroup::operator-=(Student* student) {
     return *this;
 }
 
+Student* StudyGroup::findStudent(int studentId) const {
+    for (auto* s : students) {
+        if (s && s->getId() == studentId) {
+            return s;
+        }
+    }
+    return nullptr;
+}
+
 void StudyGroup::printInfo() const {
-    std::cout << "Группа " << number << " (Курс: " << courseYear
-              << ", Вместимость: " << students.size() << "/" << maxCapacity << ")\n";
+    std::cout << "Group " << number << " (Year: " << courseYear
+              << ", Capacity: " << students.size() << "/" << maxCapacity << ")\n";
     for (const auto* s : students) {
         if (s) {
             std::cout << "  - ";

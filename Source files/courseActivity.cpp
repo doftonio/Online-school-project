@@ -1,3 +1,1 @@
-#include "courseActivity.h"
-
-// Базовые реализации инлайн или пустые
+#include "../Header files/courseActivity.h"
