@@ -3,9 +3,9 @@
 #include <iostream>
 
 void PracticeActivity::printDetails() const {
-    std::cout << "  [Практика] Занятий: " << lessonsCount
+    std::cout << "  [Практика] Занятий: " << getLessonsCount()
               << ", Тестов: " << testsCount
               << ", Задач: " << tasksCount
               << ", Расчетов: " << calculationsCount
-              << ", Преподаватель: " << (teacher ? teacher->getFullName() : "Не назначен") << "\n";
+              << ", Преподаватель: " << (getTeacher() ? getTeacher()->getFullName() : "Не назначен") << "\n";
 }

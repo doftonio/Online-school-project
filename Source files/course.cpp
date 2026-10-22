@@ -7,7 +7,7 @@ Course::Course(int courseId, std::string_view courseTitle)
     : id(courseId), title(courseTitle) {}
 
 Course& Course::operator+=(Teacher* teacher) {
-    if (teacher && std::find(teachers.begin(), teachers.end(), teacher) == teachers.end()) {
+    if (teacher && std::ranges::find(teachers, teacher) == teachers.end()) {
         teachers.push_back(teacher);
     }
     return *this;

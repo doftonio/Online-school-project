@@ -3,8 +3,8 @@
 #include <iostream>
 
 void LabActivity::printDetails() const {
-    std::cout << "  [Лабораторная] Занятий: " << lessonsCount
+    std::cout << "  [Лабораторная] Занятий: " << getLessonsCount()
               << ", Всего работ: " << count
               << ", Мин. проходной балл: " << minPassingScore
-              << ", Преподаватель: " << (teacher ? teacher->getFullName() : "Не назначен") << "\n";
+              << ", Преподаватель: " << (getTeacher() ? getTeacher()->getFullName() : "Не назначен") << "\n";
 }

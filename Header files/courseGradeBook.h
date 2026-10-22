@@ -23,13 +23,13 @@ public:
 
     void addGrade(Student* student, CourseActivity* activity, const Grade& grade) {
         if (student && activity) {
-            entries.push_back({student, activity, grade});
+            entries.emplace_back(student, activity, grade);
         }
     }
 
     bool removeGradeByDate(const Student* student, const CourseActivity* activity, const Date& targetDate) {
         auto countBefore = entries.size();
-        std::erase_if(entries, [&](const GradeEntry& entry) {
+        std::erase_if(entries, [&targetDate, student, activity](const GradeEntry& entry) {
             return entry.student == student &&
                    entry.activity == activity &&
                    entry.grade.getDate() == targetDate;
@@ -38,7 +38,7 @@ public:
     }
 
     void removeAllGradesForStudent(const Student* student) noexcept {
-        std::erase_if(entries, [&](const GradeEntry& entry) {
+        std::erase_if(entries, [student](const GradeEntry& entry) {
             return entry.student == student;
         });
     }

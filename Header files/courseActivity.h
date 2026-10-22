@@ -13,7 +13,7 @@ enum class ActivityType {
 };
 
 class CourseActivity {
-protected:
+private:
     std::string title;
     int lessonsCount{0};
     Teacher* teacher{nullptr};

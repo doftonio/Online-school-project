@@ -64,13 +64,13 @@ Student* Faculty::enrollStudentInGroup(int id, std::string_view first, std::stri
 void Faculty::expelStudent(Student* student) {
     if (!student) return;
 
-    for (auto& course : allCourses) {
+    for (const auto& course : allCourses) {
         if (course) {
             course->getGradeBook().removeAllGradesForStudent(student);
         }
     }
 
-    for (auto& grp : allGroups) {
+    for (const auto& grp : allGroups) {
         if (grp) {
             *grp -= student;
         }

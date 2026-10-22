@@ -3,8 +3,8 @@
 #include <iostream>
 
 void LectureActivity::printDetails() const {
-    std::cout << "  [Лекция] Занятий: " << lessonsCount
+    std::cout << "  [Лекция] Занятий: " << getLessonsCount()
               << ", Темы: " << topicsCount
               << ", Часы: " << hours
-              << ", Преподаватель: " << (teacher ? teacher->getFullName() : "Не назначен") << "\n";
+              << ", Преподаватель: " << (getTeacher() ? getTeacher()->getFullName() : "Не назначен") << "\n";
 }

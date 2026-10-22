@@ -7,10 +7,9 @@ StudyGroup::StudyGroup(std::string_view groupNum, int year, int capacity)
     : number(groupNum), courseYear(year), maxCapacity(capacity) {}
 
 StudyGroup& StudyGroup::operator+=(Student* student) {
-    if (student && static_cast<int>(students.size()) < maxCapacity) {
-        if (std::find(students.begin(), students.end(), student) == students.end()) {
-            students.push_back(student);
-        }
+    if (student && static_cast<int>(students.size()) < maxCapacity &&
+        std::ranges::find(students, student) == students.end()) {
+        students.push_back(student);
     }
     return *this;
 }
