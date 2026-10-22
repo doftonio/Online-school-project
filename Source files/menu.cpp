@@ -94,7 +94,7 @@ void handleCreateCourse(Faculty& faculty) {
     std::cout << "Course created successfully.\n";
 }
 
-void handleAssignTeacherToCourse(Faculty& faculty, Course* course) {
+void handleAssignTeacherToCourse(const Faculty& faculty, Course* course) {
     if (!course) return;
     std::cout << "\n--- Assign Teacher to Course ---\n";
     int teacherId = readInt("Enter Teacher ID: ");
@@ -115,7 +115,7 @@ void handleRemoveTeacherFromCourse(Course* course) {
     std::cout << "Teacher removed from course via operator-=(int).\n";
 }
 
-void handleAddActivityToCourse(Faculty& /*faculty*/, Course* course) {
+void handleAddActivityToCourse(Course* course) {
     if (!course) return;
     std::cout << "\n--- Add Activity to Course (Polymorphic) ---\n"
               << "1. Lecture Activity\n"
@@ -147,7 +147,7 @@ void handleAddActivityToCourse(Faculty& /*faculty*/, Course* course) {
     }
 }
 
-void handleAddGradeToCourse(Faculty& faculty, Course* course) {
+void handleAddGradeToCourse(const Faculty& faculty, Course* course) {
     if (!course) return;
     std::cout << "\n--- Add Grade for Student ---\n";
     int studentId = readInt("Enter Student ID: ");
@@ -177,7 +177,7 @@ void handleAddGradeToCourse(Faculty& faculty, Course* course) {
     std::cout << "Grade added and student completed task counter updated.\n";
 }
 
-void handleRemoveGradeFromCourse(Faculty& faculty, Course* course) {
+void handleRemoveGradeFromCourse(const Faculty& faculty, Course* course) {
     if (!course) return;
     std::cout << "\n--- Remove Grade ---\n";
     int studentId = readInt("Enter Student ID: ");
@@ -191,7 +191,7 @@ void handleRemoveGradeFromCourse(Faculty& faculty, Course* course) {
     int month = readInt("Enter date month: ");
     int year = readInt("Enter date year: ");
 
-    CourseActivity* labAct = course->findActivity(ActivityType::Lab);
+    const CourseActivity* labAct = course->findActivity(ActivityType::Lab);
     bool removed = course->getGradeBook().removeGradeByDate(student, labAct, Date(day, month, year));
     if (removed) {
         std::cout << "Grade removed successfully.\n";
@@ -200,7 +200,7 @@ void handleRemoveGradeFromCourse(Faculty& faculty, Course* course) {
     }
 }
 
-void showCourseDetailsSubmenu(Faculty& faculty, Course* course) {
+void showCourseDetailsSubmenu(const Faculty& faculty, Course* course) {
     if (!course) return;
     int choice = -1;
     while (choice != 0) {
@@ -217,7 +217,7 @@ void showCourseDetailsSubmenu(Faculty& faculty, Course* course) {
         if (choice == 1) course->printFullCourseInfo();
         else if (choice == 2) handleAssignTeacherToCourse(faculty, course);
         else if (choice == 3) handleRemoveTeacherFromCourse(course);
-        else if (choice == 4) handleAddActivityToCourse(faculty, course);
+        else if (choice == 4) handleAddActivityToCourse(course);
         else if (choice == 5) handleAddGradeToCourse(faculty, course);
         else if (choice == 6) handleRemoveGradeFromCourse(faculty, course);
     }
