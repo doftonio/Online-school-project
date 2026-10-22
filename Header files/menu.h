@@ -4,12 +4,12 @@
 class Faculty;
 class Course;
 
-void runMainMenu(Faculty& faculty);
+void runMainMenu(const Faculty& faculty);
 
 void showTeachersSubmenu(const Faculty& faculty);
 void showGroupsSubmenu(const Faculty& faculty);
 void showCoursesSubmenu(const Faculty& faculty);
-void showCourseDetailsSubmenu(Faculty& faculty, const Course* course);
+void showCourseDetailsSubmenu(const Faculty& faculty, const Course* course);
 
 void handleCourseActivities(const Course* course);
 void handleAddGrade(const Course* course);

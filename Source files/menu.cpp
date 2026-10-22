@@ -54,7 +54,7 @@ void handlePrintGrades(const Course* course) {
     course->printFullCourseInfo();
 }
 
-void showCourseDetailsSubmenu(Faculty& /*faculty*/, const Course* course) {
+void showCourseDetailsSubmenu(const Faculty& /*faculty*/, const Course* course) {
     if (!course) return;
     int choice = -1;
     while (choice != 0) {
@@ -94,7 +94,7 @@ void showCoursesSubmenu(const Faculty& faculty) {
     }
 }
 
-void runMainMenu(Faculty& faculty) {
+void runMainMenu(const Faculty& faculty) {
     int choice = -1;
     while (choice != 0) {
         std::cout << "\n=== Online School System: " << faculty.getName() << " ===\n"

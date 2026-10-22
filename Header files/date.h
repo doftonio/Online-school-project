@@ -17,7 +17,6 @@ public:
     int getMonth() const noexcept { return month; }
     int getYear() const noexcept { return year; }
 
-    bool operator==(const Date& other) const noexcept = default;
     auto operator<=>(const Date& other) const noexcept = default;
 };
 
