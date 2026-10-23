@@ -31,10 +31,6 @@ void Course::addActivity(std::unique_ptr<CourseActivity> activity) {
     }
 }
 
-void Course::addActivityForGroup(std::string_view /*groupNumber*/, std::unique_ptr<CourseActivity> activity) {
-    addActivity(std::move(activity));
-}
-
 CourseActivity* Course::findActivity(ActivityType type) const {
     for (const std::unique_ptr<CourseActivity>& act : activities) {
         if (act && act->getType() == type) {
@@ -42,10 +38,6 @@ CourseActivity* Course::findActivity(ActivityType type) const {
         }
     }
     return nullptr;
-}
-
-CourseActivity* Course::findActivity(std::string_view /*groupNumber*/, ActivityType type) const {
-    return findActivity(type);
 }
 
 void Course::printFullCourseInfo() const {

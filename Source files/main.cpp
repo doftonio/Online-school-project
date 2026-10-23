@@ -1,7 +1,5 @@
 #include "../Header files/faculty.h"
 #include "../Header files/teacher.h"
-#include "../Header files/student.h"
-#include "../Header files/studyGroup.h"
 #include "../Header files/course.h"
 #include "../Header files/lectureActivity.h"
 #include "../Header files/labActivity.h"
@@ -11,16 +9,16 @@
 #include <memory>
 #include <vector>
 
-void demonstratePolymorphism() {
+void demonstratePolymorphism(Teacher* t1, Teacher* t2, Teacher* t3) {
     std::cout << "\n=======================================================\n"
               << "  DEMONSTRATION OF DYNAMIC POLYMORPHISM (LAB 4)\n"
               << "=======================================================\n";
 
     // Heterogeneous collection of abstract base class pointers
     std::vector<std::unique_ptr<CourseActivity>> activities;
-    activities.push_back(std::make_unique<LectureActivity>(16, 101, 8, 32));
-    activities.push_back(std::make_unique<LabActivity>(16, 102, 8, 4));
-    activities.push_back(std::make_unique<PracticeActivity>(16, 103, 4, 12, 6));
+    activities.push_back(std::make_unique<LectureActivity>(16, t1, 8, 32));
+    activities.push_back(std::make_unique<LabActivity>(16, t2, 8, 4));
+    activities.push_back(std::make_unique<PracticeActivity>(16, t3, 4, 12, 6));
 
     std::cout << "\n[1] Dynamic dispatch via CourseActivity* interface:\n";
     int totalAcademicHours = 0;
@@ -37,40 +35,33 @@ void demonstratePolymorphism() {
     std::cout << "\n[2] Virtual destructor demo (automatic memory deallocation via RAII)\n";
 }
 
-void demonstrateOperatorsAndFriends() {
+void demonstrateOperatorsAndFriends(const Teacher& t1, const Teacher& t2) {
     std::cout << "\n=======================================================\n"
               << "  DEMONSTRATION OF OPERATORS AND FRIEND FUNCTIONS\n"
               << "=======================================================\n";
 
-    Student s1(1, "Ivan", "Ivanov", "Ivanovich", 5);
-    Student s2(2, "Petr", "Petrov", "Petrovich", 3);
-    Student s3(1, "Ivan", "Ivanov", "Clone", 10);
+    Teacher tClone(101, "Alexey", "Sidorov", "Clone", "SEIT");
 
-    std::cout << "Student 1: " << s1 << "\n";
-    std::cout << "Student 2: " << s2 << "\n";
-    std::cout << "Student 1 == Student 3 (by ID): " << (s1 == s3 ? "true" : "false") << "\n";
-    std::cout << "Student 1 <=> Student 2: " << ((s1 <=> s2) < 0 ? "s1 < s2" : "s1 >= s2") << "\n";
+    std::cout << "Teacher 1: " << t1 << "\n";
+    std::cout << "Teacher 2: " << t2 << "\n";
+    std::cout << "Teacher 1 == Teacher Clone (by ID): " << (t1 == tClone ? "true" : "false") << "\n";
+    std::cout << "Teacher 1 <=> Teacher 2: " << ((t1 <=> t2) < 0 ? "t1 < t2" : "t1 >= t2") << "\n";
 
-    std::cout << "Friend function inspectStudentInternals:\n";
-    inspectStudentInternals(s1);
+    std::cout << "Friend function inspectTeacherInternals:\n";
+    inspectTeacherInternals(t1);
 }
 
 int main() {
-    // 1. Run clear, rich polymorphic & operators demonstration for Lab 4
-    demonstratePolymorphism();
-    demonstrateOperatorsAndFriends();
-
-    // 2. Initialize domain model
+    // 1. Initialize domain model
     Faculty faculty("Faculty of Computer Systems and Networks");
 
     Teacher* t1 = faculty.createTeacher(101, "Alexey", "Sidorov", "Ivanovich", "SEIT");
     Teacher* t2 = faculty.createTeacher(102, "Elena", "Kuznetsova", "Vasilyevna", "IIT");
     Teacher* t3 = faculty.createTeacher(103, "Mikhail", "Gromov", "Petrovich", "Higher Math");
 
-    StudyGroup* g1 = faculty.createGroup("550501", 2, 30);
-    faculty.enrollStudentInGroup(1, "Ivan", "Ivanov", "Ivanovich", g1);
-    faculty.enrollStudentInGroup(2, "Petr", "Petrov", "Petrovich", g1);
-    faculty.enrollStudentInGroup(3, "Anna", "Sidorova", "Alexandrovna", g1);
+    // 2. Run clear polymorphic & operators demonstration for Lab 4
+    demonstratePolymorphism(t1, t2, t3);
+    demonstrateOperatorsAndFriends(*t1, *t2);
 
     Course* course = faculty.createCourse(1, "Object-Oriented Programming");
     *course += t1;
@@ -81,7 +72,7 @@ int main() {
     course->addActivity(std::make_unique<LabActivity>(16, t2, 8, 4));
     course->addActivity(std::make_unique<PracticeActivity>(16, t3, 4, 12, 6));
 
-    // 3. Run interactive interactive management menu
+    // 3. Run interactive management menu
     runMainMenu(faculty);
     return 0;
 }

@@ -12,9 +12,6 @@ public:
     LectureActivity(int lessons, Teacher* assignedTeacher, int topics, int lectureHrs)
         : CourseActivity("Lecture", lessons, assignedTeacher), topicsCount(topics), hours(lectureHrs) {}
 
-    LectureActivity(int lessons, int assignedTeacherId, int topics, int lectureHrs)
-        : CourseActivity("Lecture", lessons, assignedTeacherId), topicsCount(topics), hours(lectureHrs) {}
-
     ActivityType getType() const noexcept override { return ActivityType::Lecture; }
     int calculateHours() const override { return hours; }
 

@@ -1,10 +1,12 @@
 #include "../Header files/teacher.h"
 #include <iostream>
 
-Teacher::Teacher(int teacherId, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept)
-    : Person(first, last, middle), id(teacherId), department(dept) {}
-
 void Teacher::printInfo() const {
     std::cout << "Teacher [ID: " << id << "] " << getFullName()
               << " | Department: " << department << "\n";
+}
+
+void inspectTeacherInternals(const Teacher& teacher) {
+    std::cout << "[Friend Inspect] Teacher internal ID: " << teacher.id
+              << ", Dept: " << teacher.department << "\n";
 }
