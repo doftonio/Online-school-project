@@ -10,7 +10,7 @@ Teacher* Faculty::createTeacher(int id, std::string_view first, std::string_view
     }
     auto teacher = std::make_unique<Teacher>(id, first, last, middle, dept);
     Teacher* raw = teacher.get();
-    allTeachers.push_back(std::move(teacher));
+    allTeachers.add(std::move(teacher));
     return raw;
 }
 
@@ -21,19 +21,19 @@ Course* Faculty::createCourse(int id, std::string_view title) {
     }
     auto c = std::make_unique<Course>(id, title);
     Course* raw = c.get();
-    allCourses.push_back(std::move(c));
+    allCourses.add(std::move(c));
     return raw;
 }
 
 Teacher* Faculty::findTeacher(int teacherId) const {
-    for (const std::unique_ptr<Teacher>& t : allTeachers) {
+    for (const auto& t : allTeachers) {
         if (t && t->getId() == teacherId) return t.get();
     }
     return nullptr;
 }
 
 Course* Faculty::findCourse(int courseId) const {
-    for (const std::unique_ptr<Course>& c : allCourses) {
+    for (const auto& c : allCourses) {
         if (c && c->getId() == courseId) return c.get();
     }
     return nullptr;

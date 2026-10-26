@@ -1,7 +1,6 @@
 #include "../Header files/course.h"
 #include "../Header files/teacher.h"
 #include <iostream>
-#include <algorithm>
 
 Course::Course(int courseId, std::string_view courseTitle)
     : id(courseId), title(courseTitle) {}
@@ -18,19 +17,19 @@ Course& Course::operator+=(Teacher* teacher) {
         return *this;
     }
 
-    if (std::ranges::find(teachers, teacher) != teachers.end()) {
+    if (teachers.find(teacher).has_value()) {
         std::cerr << "[Warning] Teacher [ID: " << teacher->getId()
                   << "] is already assigned to this course.\n";
         return *this;
     }
 
-    teachers.push_back(teacher);
+    teachers.add(teacher);
     return *this;
 }
 
 Course& Course::operator-=(Teacher* teacher) {
     if (!teacher) return *this;
-    if (const auto erasedCount = std::erase(teachers, teacher); erasedCount == 0) {
+    if (!teachers.remove(teacher)) {
         std::cerr << "[Warning] Teacher [ID: " << teacher->getId()
                   << "] was not found in course \"" << title << "\".\n";
     }
@@ -41,7 +40,7 @@ Course& Course::operator-=(int teacherId) {
     const auto predicate = [teacherId](const Teacher* t) {
         return t && t->getId() == teacherId;
     };
-    if (const auto erasedCount = std::erase_if(teachers, predicate); erasedCount == 0) {
+    if (const auto erasedCount = teachers.removeIf(predicate); erasedCount == 0) {
         std::cerr << "[Warning] Teacher with ID " << teacherId
                   << " was not found in course \"" << title << "\".\n";
     }
@@ -50,12 +49,12 @@ Course& Course::operator-=(int teacherId) {
 
 void Course::addActivity(std::unique_ptr<CourseActivity> activity) {
     if (activity) {
-        activities.push_back(std::move(activity));
+        activities.add(std::move(activity));
     }
 }
 
 CourseActivity* Course::findActivity(ActivityType type) const {
-    for (const std::unique_ptr<CourseActivity>& act : activities) {
+    for (const auto& act : activities) {
         if (act && act->getType() == type) {
             return act.get();
         }
@@ -65,11 +64,11 @@ CourseActivity* Course::findActivity(ActivityType type) const {
 
 void Course::printFullCourseInfo() const {
     std::cout << "\nCourse: " << title << " (ID: " << id << ")\nTeachers:\n";
-    for (const Teacher* t : teachers) {
+    for (const auto* t : teachers) {
         if (t) std::cout << "  - " << t->getFullName() << " (" << t->getDepartment() << ")\n";
     }
     std::cout << "Course Activities:\n";
-    for (const std::unique_ptr<CourseActivity>& act : activities) {
+    for (const auto& act : activities) {
         if (act) act->printDetails();
     }
 }

@@ -3,11 +3,11 @@
 
 #include <string>
 #include <string_view>
-#include <vector>
 #include <memory>
-#include <span>
 #include <cstddef>
+#include <iostream>
 #include "courseActivity.h"
+#include "collection.h"
 
 class Teacher;
 
@@ -18,15 +18,30 @@ public:
 private:
     int id{0};
     std::string title;
-    std::vector<Teacher*> teachers;
-    std::vector<std::unique_ptr<CourseActivity>> activities;
+    Collection<Teacher*> teachers;
+    Collection<std::unique_ptr<CourseActivity>> activities;
 
 public:
+    Course() = default;
     Course(int courseId, std::string_view courseTitle);
+    Course(Course&&) noexcept = default;
+    Course& operator=(Course&&) noexcept = default;
+    Course(const Course&) = delete;
+    Course& operator=(const Course&) = delete;
 
     int getId() const noexcept { return id; }
     const std::string& getTitle() const noexcept { return title; }
-    std::span<Teacher* const> getTeachers() const noexcept { return teachers; }
+    const Collection<Teacher*>& getTeachers() const noexcept { return teachers; }
+    const Collection<std::unique_ptr<CourseActivity>>& getActivities() const noexcept { return activities; }
+
+    bool operator==(const Course& other) const noexcept {
+        return id == other.id;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Course& course) {
+        os << "Course [ID: " << course.id << "] " << course.title;
+        return os;
+    }
 
     Course& operator+=(Teacher* teacher);
     Course& operator-=(Teacher* teacher);

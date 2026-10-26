@@ -5,62 +5,95 @@
 #include "../Header files/labActivity.h"
 #include "../Header files/practiceActivity.h"
 #include "../Header files/menu.h"
+#include "../Header files/collection.h"
 #include <iostream>
 #include <memory>
-#include <vector>
+#include <string>
 
-void demonstratePolymorphism(Teacher* t1, Teacher* t2, Teacher* t3) {
+void demonstrateTemplates() {
     std::cout << "\n=======================================================\n"
-              << "  DEMONSTRATION OF DYNAMIC POLYMORPHISM (LAB 4)\n"
+              << "  DEMONSTRATION OF TEMPLATE CLASS AND FUNCTIONS (LAB 5)\n"
               << "=======================================================\n";
 
-    std::vector<std::unique_ptr<CourseActivity>> activities;
-    activities.push_back(std::make_unique<LectureActivity>(16, t1, 8, 32));
-    activities.push_back(std::make_unique<LabActivity>(16, t2, 8, 4));
-    activities.push_back(std::make_unique<PracticeActivity>(16, t3, 4, 12, 6));
+    std::cout << "\n--- 1. Primitive Type Collection (Collection<int>) ---\n";
+    Collection<int> intColl;
+    intColl.add(10);
+    intColl.add(25);
+    intColl.add(50);
+    intColl.add(75);
+    std::cout << "Count of elements: " << intColl.size() << "\n";
+    intColl.print();
 
-    std::cout << "\n[1] Dynamic dispatch via CourseActivity* interface:\n";
-    int totalAcademicHours = 0;
-    for (const auto& act : activities) {
-        if (act) {
-            act->printDetails(); 
-            int hours = act->calculateHours(); 
-            totalAcademicHours += hours;
-            std::cout << "    --> Calculated academic hours: " << hours << "\n";
-        } 
+    intColl.remove(25);
+    std::cout << "After removing value 25 (size: " << intColl.size() << "):\n";
+    intColl.print();
+
+    const int* intFound = findByCriterion(intColl, [](int value) {
+        return value > 40;
+    });
+    if (intFound != nullptr) {
+        std::cout << "Found element greater than 40: " << *intFound << "\n";
     }
-    std::cout << "Total academic hours for all activities: " << totalAcademicHours << "\n";
 
-    std::cout << "\n[2] Virtual destructor demo (automatic memory deallocation via RAII)\n";
-}
+    intColl.clear();
+    std::cout << "After clear (empty: " << (intColl.empty() ? "true" : "false") << "):\n";
+    intColl.print();
 
-void demonstrateOperatorsAndFriends(const Teacher& t1, const Teacher& t2) {
-    std::cout << "\n=======================================================\n"
-              << "  DEMONSTRATION OF OPERATORS AND FRIEND FUNCTIONS\n"
-              << "=======================================================\n";
+    std::cout << "\n--- 2. Custom Type Collection 1 (Collection<Teacher>) ---\n";
+    Collection<Teacher> teacherColl;
+    teacherColl.add(Teacher(201, "Anna", "Belaeva", "Sergeevna", "SEIT"));
+    teacherColl.add(Teacher(202, "Dmitry", "Kozlov", "Alexandrovich", "IIT"));
+    teacherColl.add(Teacher(203, "Olga", "Morozova", "Viktorovna", "IIT"));
+    std::cout << "Count of teachers: " << teacherColl.size() << "\n";
+    teacherColl.print();
 
-    Teacher tClone(101, "Alexey", "Sidorov", "Clone", "SEIT");
+    std::cout << "Accessing element at index 1: " << teacherColl.get(1) << "\n";
 
-    std::cout << "Teacher 1: " << t1 << "\n";
-    std::cout << "Teacher 2: " << t2 << "\n";
-    std::cout << "Teacher 1 == Teacher Clone (by ID): " << (t1 == tClone ? "true" : "false") << "\n";
-    std::cout << "Teacher 1 <=> Teacher 2: " << ((t1 <=> t2) < 0 ? "t1 < t2" : "t1 >= t2") << "\n";
+    Teacher searchTeacher(202, "", "", "", "");
+    auto teacherIndex = teacherColl.find(searchTeacher);
+    if (teacherIndex.has_value()) {
+        std::cout << "Teacher with ID 202 found at index: " << *teacherIndex << "\n";
+    }
 
-    std::cout << "Friend function inspectTeacherInternals:\n";
-    inspectTeacherInternals(t1);
+    const Teacher* iitTeacher = findByCriterion(teacherColl, [](const Teacher& t) {
+        return t.getDepartment() == "IIT";
+    });
+    if (iitTeacher != nullptr) {
+        std::cout << "Teacher found by department criterion (IIT): " << *iitTeacher << "\n";
+    }
+
+    teacherColl.removeAt(0);
+    std::cout << "After removing teacher at index 0:\n";
+    teacherColl.print();
+
+    std::cout << "\n--- 3. Custom Type Collection 2 (Collection<Course>) ---\n";
+    Collection<Course> courseColl;
+    courseColl.add(Course(10, "Computer Networks"));
+    courseColl.add(Course(20, "Operating Systems"));
+    courseColl.add(Course(30, "Database Systems"));
+    std::cout << "Count of courses: " << courseColl.size() << "\n";
+    courseColl.print();
+
+    const Course* dbCourse = findByCriterion(courseColl, [](const Course& c) {
+        return c.getTitle().find("Data") != std::string::npos;
+    });
+    if (dbCourse != nullptr) {
+        std::cout << "Course found by title criterion: " << *dbCourse << "\n";
+    }
+
+    courseColl.remove(Course(20, ""));
+    std::cout << "After removing course with ID 20:\n";
+    courseColl.print();
 }
 
 int main() {
- 
+    demonstrateTemplates();
+
     Faculty faculty("Faculty of Computer Systems and Networks");
 
     Teacher* t1 = faculty.createTeacher(101, "Alexey", "Sidorov", "Ivanovich", "SEIT");
     Teacher* t2 = faculty.createTeacher(102, "Elena", "Kuznetsova", "Vasilyevna", "IIT");
     Teacher* t3 = faculty.createTeacher(103, "Mikhail", "Gromov", "Petrovich", "Higher Math");
-
-   
-    demonstratePolymorphism(t1, t2, t3);
-    demonstrateOperatorsAndFriends(*t1, *t2);
 
     Course* course = faculty.createCourse(1, "Object-Oriented Programming");
     *course += t1;
@@ -71,7 +104,6 @@ int main() {
     course->addActivity(std::make_unique<LabActivity>(16, t2, 8, 4));
     course->addActivity(std::make_unique<PracticeActivity>(16, t3, 4, 12, 6));
 
-   
     runMainMenu(faculty);
     return 0;
 }
