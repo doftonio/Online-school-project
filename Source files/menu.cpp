@@ -140,7 +140,7 @@ void showTeachersSubmenu(Faculty& faculty) {
     int choice = -1;
     while (choice != 0) {
         std::cout << "\n--- Faculty Teachers (" << faculty.getTeachers().size() << ") ---\n";
-        for (const std::unique_ptr<Teacher>& t : faculty.getTeachers()) {
+        for (const auto& t : faculty.getTeachers()) {
             if (t) t->printInfo();
         }
         std::cout << "1. Add new teacher\n"
@@ -155,7 +155,7 @@ void showCoursesSubmenu(Faculty& faculty) {
     int choice = -1;
     while (choice != 0) {
         std::cout << "\n--- Faculty Courses (" << faculty.getCourses().size() << ") ---\n";
-        for (const std::unique_ptr<Course>& c : faculty.getCourses()) {
+        for (const auto& c : faculty.getCourses()) {
             if (c) std::cout << "ID: " << c->getId() << " | Title: " << c->getTitle() << "\n";
         }
         std::cout << "1. Create new course\n"

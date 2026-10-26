@@ -12,8 +12,8 @@
 
 void demonstrateTemplates() {
     std::cout << "\n=======================================================\n"
-              << "  DEMONSTRATION OF TEMPLATE CLASS AND FUNCTIONS (LAB 5)\n"
-              << "=======================================================\n";
+        << "  DEMONSTRATION OF TEMPLATE CLASS AND FUNCTIONS (LAB 5)\n"
+        << "=======================================================\n";
 
     std::cout << "\n--- 1. Primitive Type Collection (Collection<int>) ---\n";
     Collection<int> intColl;
@@ -25,7 +25,7 @@ void demonstrateTemplates() {
     intColl.print();
 
     intColl.remove(25);
-    std::cout << "After removing value 25 (size: " << intColl.size() << "):\n";
+    std::cout << "After removing value 25 (size: " << intColl.size() << "): \n";
     intColl.print();
 
     if (const int* intFound = findByCriterion(intColl, [](int value) { return value > 40; }); intFound != nullptr) {
@@ -33,7 +33,7 @@ void demonstrateTemplates() {
     }
 
     intColl.clear();
-    std::cout << "After clear (empty: " << (intColl.empty() ? "true" : "false") << "):\n";
+    std::cout << "After clear (empty: " << (intColl.empty() ? "true" : "false") << "): \n";
     intColl.print();
 
     std::cout << "\n--- 2. Custom Type Collection 1 (Collection<Teacher>) ---\n";
@@ -67,7 +67,7 @@ void demonstrateTemplates() {
     std::cout << "Count of courses: " << courseColl.size() << "\n";
     courseColl.print();
 
-    if (const Course* dbCourse = findByCriterion(courseColl, [](const Course& c) { return c.getTitle().contains("Data"); }); dbCourse != nullptr) {
+    if (const Course* dbCourse = findByCriterion(courseColl, [](const Course& c) { return c.getTitle() == "Database Systems"; }); dbCourse != nullptr) {
         std::cout << "Course found by title criterion: " << *dbCourse << "\n";
     }
 
