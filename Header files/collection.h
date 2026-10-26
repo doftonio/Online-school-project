@@ -45,8 +45,7 @@ public:
     }
 
     bool remove(const T& element) requires std::equality_comparable<T> {
-        auto it = std::find(elements.begin(), elements.end(), element);
-        if (it != elements.end()) {
+        if (const auto it = std::ranges::find(elements, element); it != elements.end()) {
             elements.erase(it);
             return true;
         }
@@ -85,8 +84,7 @@ public:
     }
 
     std::optional<std::size_t> find(const T& element) const requires std::equality_comparable<T> {
-        auto it = std::find(elements.begin(), elements.end(), element);
-        if (it != elements.end()) {
+        if (const auto it = std::ranges::find(elements, element); it != elements.end()) {
             return static_cast<std::size_t>(std::distance(elements.begin(), it));
         }
         return std::nullopt;
@@ -94,8 +92,7 @@ public:
 
     template <typename Predicate>
     std::optional<std::size_t> findIndex(Predicate predicate) const {
-        auto it = std::find_if(elements.begin(), elements.end(), predicate);
-        if (it != elements.end()) {
+        if (const auto it = std::ranges::find_if(elements, predicate); it != elements.end()) {
             return static_cast<std::size_t>(std::distance(elements.begin(), it));
         }
         return std::nullopt;

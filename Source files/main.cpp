@@ -28,10 +28,7 @@ void demonstrateTemplates() {
     std::cout << "After removing value 25 (size: " << intColl.size() << "):\n";
     intColl.print();
 
-    const int* intFound = findByCriterion(intColl, [](int value) {
-        return value > 40;
-    });
-    if (intFound != nullptr) {
+    if (const int* intFound = findByCriterion(intColl, [](int value) { return value > 40; }); intFound != nullptr) {
         std::cout << "Found element greater than 40: " << *intFound << "\n";
     }
 
@@ -50,15 +47,11 @@ void demonstrateTemplates() {
     std::cout << "Accessing element at index 1: " << teacherColl.get(1) << "\n";
 
     Teacher searchTeacher(202, "", "", "", "");
-    auto teacherIndex = teacherColl.find(searchTeacher);
-    if (teacherIndex.has_value()) {
+    if (const auto teacherIndex = teacherColl.find(searchTeacher); teacherIndex.has_value()) {
         std::cout << "Teacher with ID 202 found at index: " << *teacherIndex << "\n";
     }
 
-    const Teacher* iitTeacher = findByCriterion(teacherColl, [](const Teacher& t) {
-        return t.getDepartment() == "IIT";
-    });
-    if (iitTeacher != nullptr) {
+    if (const Teacher* iitTeacher = findByCriterion(teacherColl, [](const Teacher& t) { return t.getDepartment() == "IIT"; }); iitTeacher != nullptr) {
         std::cout << "Teacher found by department criterion (IIT): " << *iitTeacher << "\n";
     }
 
@@ -74,10 +67,7 @@ void demonstrateTemplates() {
     std::cout << "Count of courses: " << courseColl.size() << "\n";
     courseColl.print();
 
-    const Course* dbCourse = findByCriterion(courseColl, [](const Course& c) {
-        return c.getTitle().find("Data") != std::string::npos;
-    });
-    if (dbCourse != nullptr) {
+    if (const Course* dbCourse = findByCriterion(courseColl, [](const Course& c) { return c.getTitle().contains("Data"); }); dbCourse != nullptr) {
         std::cout << "Course found by title criterion: " << *dbCourse << "\n";
     }
 
