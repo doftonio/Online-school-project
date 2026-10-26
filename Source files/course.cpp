@@ -30,8 +30,7 @@ Course& Course::operator+=(Teacher* teacher) {
 
 Course& Course::operator-=(Teacher* teacher) {
     if (!teacher) return *this;
-    const auto erasedCount = std::erase(teachers, teacher);
-    if (erasedCount == 0) {
+    if (const auto erasedCount = std::erase(teachers, teacher); erasedCount == 0) {
         std::cerr << "[Warning] Teacher [ID: " << teacher->getId()
                   << "] was not found in course \"" << title << "\".\n";
     }
@@ -39,10 +38,10 @@ Course& Course::operator-=(Teacher* teacher) {
 }
 
 Course& Course::operator-=(int teacherId) {
-    const auto erasedCount = std::erase_if(teachers, [teacherId](const Teacher* t) {
+    const auto predicate = [teacherId](const Teacher* t) {
         return t && t->getId() == teacherId;
-    });
-    if (erasedCount == 0) {
+    };
+    if (const auto erasedCount = std::erase_if(teachers, predicate); erasedCount == 0) {
         std::cerr << "[Warning] Teacher with ID " << teacherId
                   << " was not found in course \"" << title << "\".\n";
     }

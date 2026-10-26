@@ -39,7 +39,7 @@ void handleAddTeacher(Faculty& faculty) {
         return;
     }
 
-    Teacher* created = faculty.createTeacher(
+    const Teacher* created = faculty.createTeacher(
         tempTeacher.getId(),
         tempTeacher.getFirstName(),
         tempTeacher.getLastName(),
@@ -57,7 +57,7 @@ void handleCreateCourse(Faculty& faculty) {
     int id = readInt("Enter Course ID: ");
     std::string title = readLine("Enter Course Title: ");
 
-    Course* created = faculty.createCourse(id, title);
+    const Course* created = faculty.createCourse(id, title);
     if (created) {
         std::cout << "Course created successfully.\n";
     }

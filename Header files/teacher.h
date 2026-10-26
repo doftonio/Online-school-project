@@ -45,7 +45,28 @@ public:
         return os;
     }
 
-    friend std::istream& operator>>(std::istream& is, Teacher& teacher);
+    friend std::istream& operator>>(std::istream& is, Teacher& teacher) {
+        std::cout << "Enter Teacher ID: ";
+        if (!(is >> teacher.id)) {
+            return is;
+        }
+        std::cout << "Enter Last Name: ";
+        if (!(is >> teacher.lastName)) {
+            return is;
+        }
+        std::cout << "Enter First Name: ";
+        if (!(is >> teacher.firstName)) {
+            return is;
+        }
+        std::cout << "Enter Middle Name: ";
+        if (!(is >> teacher.middleName)) {
+            return is;
+        }
+        std::cout << "Enter Department: ";
+        is >> teacher.department;
+        return is;
+    }
+
     friend void inspectTeacherInternals(const Teacher& teacher);
 };
 
