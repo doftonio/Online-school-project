@@ -6,11 +6,15 @@
 #include <vector>
 #include <memory>
 #include <span>
+#include <cstddef>
 #include "courseActivity.h"
 
 class Teacher;
 
 class Course {
+public:
+    static constexpr std::size_t MAX_TEACHERS_PER_COURSE = 5;
+
 private:
     int id{0};
     std::string title;

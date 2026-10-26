@@ -32,6 +32,6 @@ public:
     virtual int calculateHours() const = 0;
     virtual ActivityType getType() const noexcept = 0;
     virtual void printDetails() const = 0;
-};
+}; 
 
 #endif // COURSE_ACTIVITY_H

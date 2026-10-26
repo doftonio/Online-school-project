@@ -7,21 +7,45 @@ Course::Course(int courseId, std::string_view courseTitle)
     : id(courseId), title(courseTitle) {}
 
 Course& Course::operator+=(Teacher* teacher) {
-    if (teacher && std::ranges::find(teachers, teacher) == teachers.end()) {
-        teachers.push_back(teacher);
+    if (!teacher) {
+        std::cerr << "[Error] Cannot assign a null teacher to course \"" << title << "\".\n";
+        return *this;
     }
+
+    if (teachers.size() >= MAX_TEACHERS_PER_COURSE) {
+        std::cerr << "[Constraint Violation] Capacity limit reached: Maximum "
+                  << MAX_TEACHERS_PER_COURSE << " teachers allowed per course.\n";
+        return *this;
+    }
+
+    if (std::ranges::find(teachers, teacher) != teachers.end()) {
+        std::cerr << "[Warning] Teacher [ID: " << teacher->getId()
+                  << "] is already assigned to this course.\n";
+        return *this;
+    }
+
+    teachers.push_back(teacher);
     return *this;
 }
 
 Course& Course::operator-=(Teacher* teacher) {
-    std::erase(teachers, teacher);
+    if (!teacher) return *this;
+    const auto erasedCount = std::erase(teachers, teacher);
+    if (erasedCount == 0) {
+        std::cerr << "[Warning] Teacher [ID: " << teacher->getId()
+                  << "] was not found in course \"" << title << "\".\n";
+    }
     return *this;
 }
 
 Course& Course::operator-=(int teacherId) {
-    std::erase_if(teachers, [teacherId](const Teacher* t) {
+    const auto erasedCount = std::erase_if(teachers, [teacherId](const Teacher* t) {
         return t && t->getId() == teacherId;
     });
+    if (erasedCount == 0) {
+        std::cerr << "[Warning] Teacher with ID " << teacherId
+                  << " was not found in course \"" << title << "\".\n";
+    }
     return *this;
 }
 

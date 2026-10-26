@@ -14,7 +14,6 @@ void demonstratePolymorphism(Teacher* t1, Teacher* t2, Teacher* t3) {
               << "  DEMONSTRATION OF DYNAMIC POLYMORPHISM (LAB 4)\n"
               << "=======================================================\n";
 
-    // Heterogeneous collection of abstract base class pointers
     std::vector<std::unique_ptr<CourseActivity>> activities;
     activities.push_back(std::make_unique<LectureActivity>(16, t1, 8, 32));
     activities.push_back(std::make_unique<LabActivity>(16, t2, 8, 4));
@@ -24,11 +23,11 @@ void demonstratePolymorphism(Teacher* t1, Teacher* t2, Teacher* t3) {
     int totalAcademicHours = 0;
     for (const auto& act : activities) {
         if (act) {
-            act->printDetails(); // Virtual call
-            int hours = act->calculateHours(); // Pure virtual call overridden in subclasses
+            act->printDetails(); 
+            int hours = act->calculateHours(); 
             totalAcademicHours += hours;
             std::cout << "    --> Calculated academic hours: " << hours << "\n";
-        }
+        } 
     }
     std::cout << "Total academic hours for all activities: " << totalAcademicHours << "\n";
 
@@ -52,14 +51,14 @@ void demonstrateOperatorsAndFriends(const Teacher& t1, const Teacher& t2) {
 }
 
 int main() {
-    // 1. Initialize domain model
+ 
     Faculty faculty("Faculty of Computer Systems and Networks");
 
     Teacher* t1 = faculty.createTeacher(101, "Alexey", "Sidorov", "Ivanovich", "SEIT");
     Teacher* t2 = faculty.createTeacher(102, "Elena", "Kuznetsova", "Vasilyevna", "IIT");
     Teacher* t3 = faculty.createTeacher(103, "Mikhail", "Gromov", "Petrovich", "Higher Math");
 
-    // 2. Run clear polymorphic & operators demonstration for Lab 4
+   
     demonstratePolymorphism(t1, t2, t3);
     demonstrateOperatorsAndFriends(*t1, *t2);
 
@@ -72,7 +71,7 @@ int main() {
     course->addActivity(std::make_unique<LabActivity>(16, t2, 8, 4));
     course->addActivity(std::make_unique<PracticeActivity>(16, t3, 4, 12, 6));
 
-    // 3. Run interactive management menu
+   
     runMainMenu(faculty);
     return 0;
 }

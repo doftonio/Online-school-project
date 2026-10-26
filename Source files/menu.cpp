@@ -21,32 +21,46 @@ static int readInt(const std::string& prompt) {
     return val;
 }
 
-static std::string readString(const std::string& prompt) {
+static std::string readLine(const std::string& prompt) {
     std::cout << prompt;
     std::string val;
-    std::cin >> val;
+    std::cin >> std::ws;
+    std::getline(std::cin, val);
     return val;
 }
 
 void handleAddTeacher(Faculty& faculty) {
-    std::cout << "\n--- Add New Teacher ---\n";
-    int id = readInt("Enter Teacher ID: ");
-    std::string first = readString("Enter First Name: ");
-    std::string last = readString("Enter Last Name: ");
-    std::string middle = readString("Enter Middle Name: ");
-    std::string dept = readString("Enter Department: ");
+    std::cout << "\n--- Add New Teacher (via operator>>) ---\n";
+    Teacher tempTeacher;
+    if (!(std::cin >> tempTeacher)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Error: invalid input data for teacher.\n";
+        return;
+    }
 
-    faculty.createTeacher(id, first, last, middle, dept);
-    std::cout << "Teacher added successfully.\n";
+    Teacher* created = faculty.createTeacher(
+        tempTeacher.getId(),
+        tempTeacher.getFirstName(),
+        tempTeacher.getLastName(),
+        tempTeacher.getMiddleName(),
+        tempTeacher.getDepartment()
+    );
+
+    if (created) {
+        std::cout << "Teacher added successfully: " << *created << "\n";
+    }
 }
 
 void handleCreateCourse(Faculty& faculty) {
     std::cout << "\n--- Create New Course ---\n";
     int id = readInt("Enter Course ID: ");
-    std::string title = readString("Enter Course Title: ");
+    std::string title = readLine("Enter Course Title: ");
 
-    faculty.createCourse(id, title);
-    std::cout << "Course created successfully.\n";
+    Course* created = faculty.createCourse(id, title);
+    if (created) {
+        std::cout << "Course created successfully.\n";
+    }
 }
 
 void handleAssignTeacherToCourse(const Faculty& faculty, Course* course) {
@@ -59,7 +73,7 @@ void handleAssignTeacherToCourse(const Faculty& faculty, Course* course) {
         return;
     }
     *course += teacher;
-    std::cout << "Teacher assigned to course via operator+=.\n";
+    std::cout << "Assignment attempt completed via operator+=\n";
 }
 
 void handleRemoveTeacherFromCourse(Course* course) {
@@ -67,7 +81,7 @@ void handleRemoveTeacherFromCourse(Course* course) {
     std::cout << "\n--- Remove Teacher from Course ---\n";
     int teacherId = readInt("Enter Teacher ID to remove: ");
     *course -= teacherId;
-    std::cout << "Teacher removed from course via operator-=(int).\n";
+    std::cout << "Removal attempt completed via operator-=(int).\n";
 }
 
 void handleAddActivityToCourse(const Faculty& faculty, Course* course) {

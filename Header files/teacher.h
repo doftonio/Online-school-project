@@ -45,6 +45,7 @@ public:
         return os;
     }
 
+    friend std::istream& operator>>(std::istream& is, Teacher& teacher);
     friend void inspectTeacherInternals(const Teacher& teacher);
 };
 
