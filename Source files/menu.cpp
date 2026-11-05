@@ -5,6 +5,7 @@
 #include "../Header files/labActivity.h"
 #include "../Header files/practiceActivity.h"
 #include "../Header files/lectureActivity.h"
+#include "../Header files/collection.h"
 #include <iostream>
 #include <string>
 #include <memory>
@@ -52,6 +53,20 @@ void handleAddTeacher(Faculty& faculty) {
     }
 }
 
+void handleFindTeacherByDepartment(const Faculty& faculty) {
+    std::cout << "\n--- Find Teacher by Department (Member Method findIndex) ---\n";
+    std::string dept = readLine("Enter department name: ");
+
+    const auto& teachers = faculty.getTeachers();
+    if (const auto idx = teachers.findIndex([&dept](const std::unique_ptr<Teacher>& t) {
+        return t && t->getDepartment() == dept;
+    }); idx.has_value()) {
+        std::cout << "Found teacher at index " << *idx << ": " << *(teachers.get(*idx)) << "\n";
+    } else {
+        std::cout << "No teachers found for department \"" << dept << "\".\n";
+    }
+}
+
 void handleCreateCourse(Faculty& faculty) {
     std::cout << "\n--- Create New Course ---\n";
     int id = readInt("Enter Course ID: ");
@@ -60,6 +75,19 @@ void handleCreateCourse(Faculty& faculty) {
     const Course* created = faculty.createCourse(id, title);
     if (created) {
         std::cout << "Course created successfully.\n";
+    }
+}
+
+void handleFindCourseByTitle(const Faculty& faculty) {
+    std::cout << "\n--- Find Course by Title (Free Function findByCriterion) ---\n";
+    std::string titleQuery = readLine("Enter course title to search: ");
+
+    if (const auto* foundCoursePtr = findByCriterion(faculty.getCourses(), [&titleQuery](const std::unique_ptr<Course>& c) {
+        return c && c->getTitle() == titleQuery;
+    }); foundCoursePtr != nullptr && *foundCoursePtr != nullptr) {
+        std::cout << "Course found: " << **foundCoursePtr << "\n";
+    } else {
+        std::cout << "Course \"" << titleQuery << "\" not found.\n";
     }
 }
 
@@ -144,10 +172,12 @@ void showTeachersSubmenu(Faculty& faculty) {
             if (t) t->printInfo();
         }
         std::cout << "1. Add new teacher\n"
+                  << "2. Find teacher by department (Collection::findIndex)\n"
                   << "0. Back\n"
                   << "Select: ";
         choice = readInt("");
         if (choice == 1) handleAddTeacher(faculty);
+        else if (choice == 2) handleFindTeacherByDepartment(faculty);
     }
 }
 
@@ -160,6 +190,7 @@ void showCoursesSubmenu(Faculty& faculty) {
         }
         std::cout << "1. Create new course\n"
                   << "2. Open course management\n"
+                  << "3. Find course by title (findByCriterion)\n"
                   << "0. Back\n"
                   << "Select: ";
         choice = readInt("");
@@ -173,6 +204,8 @@ void showCoursesSubmenu(Faculty& faculty) {
             } else {
                 std::cout << "Course with ID " << cId << " not found.\n";
             }
+        } else if (choice == 3) {
+            handleFindCourseByTitle(faculty);
         }
     }
 }

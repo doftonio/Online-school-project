@@ -12,8 +12,8 @@
 
 void demonstrateTemplates() {
     std::cout << "\n=======================================================\n"
-        << "  DEMONSTRATION OF TEMPLATE CLASS AND FUNCTIONS (LAB 5)\n"
-        << "=======================================================\n";
+              << "  DEMONSTRATION OF TEMPLATE CLASS AND FUNCTIONS (LAB 5)\n"
+              << "=======================================================\n";
 
     std::cout << "\n--- 1. Primitive Type Collection (Collection<int>) ---\n";
     Collection<int> intColl;
@@ -25,15 +25,19 @@ void demonstrateTemplates() {
     intColl.print();
 
     intColl.remove(25);
-    std::cout << "After removing value 25 (size: " << intColl.size() << "): \n";
+    std::cout << "After removing value 25 (size: " << intColl.size() << "):\n";
     intColl.print();
 
+    if (const auto intIdx = intColl.findIndex([](int val) { return val > 40; }); intIdx.has_value()) {
+        std::cout << "[Member method findIndex] Found element > 40 at index: " << *intIdx << "\n";
+    }
+
     if (const int* intFound = findByCriterion(intColl, [](int value) { return value > 40; }); intFound != nullptr) {
-        std::cout << "Found element greater than 40: " << *intFound << "\n";
+        std::cout << "[Free function findByCriterion] Found element > 40: " << *intFound << "\n";
     }
 
     intColl.clear();
-    std::cout << "After clear (empty: " << (intColl.empty() ? "true" : "false") << "): \n";
+    std::cout << "After clear (empty: " << (intColl.empty() ? "true" : "false") << "):\n";
     intColl.print();
 
     std::cout << "\n--- 2. Custom Type Collection 1 (Collection<Teacher>) ---\n";
@@ -48,11 +52,15 @@ void demonstrateTemplates() {
 
     Teacher searchTeacher(202, "", "", "", "");
     if (const auto teacherIndex = teacherColl.find(searchTeacher); teacherIndex.has_value()) {
-        std::cout << "Teacher with ID 202 found at index: " << *teacherIndex << "\n";
+        std::cout << "[Member method find] Teacher with ID 202 found at index: " << *teacherIndex << "\n";
+    }
+
+    if (const auto iitIdx = teacherColl.findIndex([](const Teacher& t) { return t.getDepartment() == "IIT"; }); iitIdx.has_value()) {
+        std::cout << "[Member method findIndex] Teacher (IIT) found at index: " << *iitIdx << "\n";
     }
 
     if (const Teacher* iitTeacher = findByCriterion(teacherColl, [](const Teacher& t) { return t.getDepartment() == "IIT"; }); iitTeacher != nullptr) {
-        std::cout << "Teacher found by department criterion (IIT): " << *iitTeacher << "\n";
+        std::cout << "[Free function findByCriterion] Teacher found: " << *iitTeacher << "\n";
     }
 
     teacherColl.removeAt(0);
@@ -67,8 +75,12 @@ void demonstrateTemplates() {
     std::cout << "Count of courses: " << courseColl.size() << "\n";
     courseColl.print();
 
+    if (const auto courseIdx = courseColl.findIndex([](const Course& c) { return c.getTitle() == "Database Systems"; }); courseIdx.has_value()) {
+        std::cout << "[Member method findIndex] Course found at index: " << *courseIdx << "\n";
+    }
+
     if (const Course* dbCourse = findByCriterion(courseColl, [](const Course& c) { return c.getTitle() == "Database Systems"; }); dbCourse != nullptr) {
-        std::cout << "Course found by title criterion: " << *dbCourse << "\n";
+        std::cout << "[Free function findByCriterion] Course found: " << *dbCourse << "\n";
     }
 
     courseColl.remove(Course(20, ""));
