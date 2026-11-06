@@ -9,6 +9,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 void demonstrateTemplates() {
     std::cout << "\n=======================================================\n"
@@ -28,12 +29,16 @@ void demonstrateTemplates() {
     std::cout << "After removing value 25 (size: " << intColl.size() << "):\n";
     intColl.print();
 
-    if (const auto intIdx = intColl.findIndex([](int val) { return val > 40; }); intIdx.has_value()) {
-        std::cout << "[Member method findIndex] Found element > 40 at index: " << *intIdx << "\n";
+    const auto intIndices = intColl.findIndex([](int val) { return val > 40; });
+    std::cout << "[Member method findIndex] Found " << intIndices.size() << " index(es) for elements > 40:\n";
+    for (std::size_t idx : intIndices) {
+        std::cout << "  Index: " << idx << " (Value: " << intColl[idx] << ")\n";
     }
 
-    if (const int* intFound = findByCriterion(intColl, [](int value) { return value > 40; }); intFound != nullptr) {
-        std::cout << "[Free function findByCriterion] Found element > 40: " << *intFound << "\n";
+    const auto intMatches = findByCriterion(intColl, [](int value) { return value > 40; });
+    std::cout << "[Free function findByCriterion] Found " << intMatches.size() << " element(s) > 40:\n";
+    for (const int* valPtr : intMatches) {
+        std::cout << "  Value: " << *valPtr << "\n";
     }
 
     intColl.clear();
@@ -52,15 +57,19 @@ void demonstrateTemplates() {
 
     Teacher searchTeacher(202, "", "", "", "");
     if (const auto teacherIndex = teacherColl.find(searchTeacher); teacherIndex.has_value()) {
-        std::cout << "[Member method find] Teacher with ID 202 found at index: " << *teacherIndex << "\n";
+        std::cout << "[Member method find] Exact teacher with ID 202 found at index: " << *teacherIndex << "\n";
     }
 
-    if (const auto iitIdx = teacherColl.findIndex([](const Teacher& t) { return t.getDepartment() == "IIT"; }); iitIdx.has_value()) {
-        std::cout << "[Member method findIndex] Teacher (IIT) found at index: " << *iitIdx << "\n";
+    const auto iitIndices = teacherColl.findIndex([](const Teacher& t) { return t.getDepartment() == "IIT"; });
+    std::cout << "[Member method findIndex] Found " << iitIndices.size() << " teacher(s) in IIT department:\n";
+    for (std::size_t idx : iitIndices) {
+        std::cout << "  Index: " << idx << " -> " << teacherColl[idx] << "\n";
     }
 
-    if (const Teacher* iitTeacher = findByCriterion(teacherColl, [](const Teacher& t) { return t.getDepartment() == "IIT"; }); iitTeacher != nullptr) {
-        std::cout << "[Free function findByCriterion] Teacher found: " << *iitTeacher << "\n";
+    const auto iitTeachers = findByCriterion(teacherColl, [](const Teacher& t) { return t.getDepartment() == "IIT"; });
+    std::cout << "[Free function findByCriterion] Found " << iitTeachers.size() << " teacher(s) in IIT department:\n";
+    for (const Teacher* t : iitTeachers) {
+        std::cout << "  " << *t << "\n";
     }
 
     teacherColl.removeAt(0);
@@ -75,12 +84,20 @@ void demonstrateTemplates() {
     std::cout << "Count of courses: " << courseColl.size() << "\n";
     courseColl.print();
 
-    if (const auto courseIdx = courseColl.findIndex([](const Course& c) { return c.getTitle() == "Database Systems"; }); courseIdx.has_value()) {
-        std::cout << "[Member method findIndex] Course found at index: " << *courseIdx << "\n";
+    const auto systemsIndices = courseColl.findIndex([](const Course& c) {
+        return c.getTitle().ends_with("Systems");
+    });
+    std::cout << "[Member method findIndex] Found " << systemsIndices.size() << " course(s) ending with \"Systems\":\n";
+    for (std::size_t idx : systemsIndices) {
+        std::cout << "  Index: " << idx << " -> " << courseColl[idx] << "\n";
     }
 
-    if (const Course* dbCourse = findByCriterion(courseColl, [](const Course& c) { return c.getTitle() == "Database Systems"; }); dbCourse != nullptr) {
-        std::cout << "[Free function findByCriterion] Course found: " << *dbCourse << "\n";
+    const auto systemsCourses = findByCriterion(courseColl, [](const Course& c) {
+        return c.getTitle().ends_with("Systems");
+    });
+    std::cout << "[Free function findByCriterion] Found " << systemsCourses.size() << " course(s) ending with \"Systems\":\n";
+    for (const Course* c : systemsCourses) {
+        std::cout << "  " << *c << "\n";
     }
 
     courseColl.remove(Course(20, ""));

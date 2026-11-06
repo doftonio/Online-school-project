@@ -10,6 +10,7 @@
 #include <string>
 #include <memory>
 #include <limits>
+#include <vector>
 
 static int readInt(const std::string& prompt) {
     std::cout << prompt;
@@ -54,16 +55,22 @@ void handleAddTeacher(Faculty& faculty) {
 }
 
 void handleFindTeacherByDepartment(const Faculty& faculty) {
-    std::cout << "\n--- Find Teacher by Department (Member Method findIndex) ---\n";
+    std::cout << "\n--- Find Teachers by Department (Member Method findIndex) ---\n";
     std::string dept = readLine("Enter department name: ");
 
     const auto& teachers = faculty.getTeachers();
-    if (const auto idx = teachers.findIndex([&dept](const std::unique_ptr<Teacher>& t) {
+    const auto indices = teachers.findIndex([&dept](const std::unique_ptr<Teacher>& t) {
         return t && t->getDepartment() == dept;
-    }); idx.has_value()) {
-        std::cout << "Found teacher at index " << *idx << ": " << *(teachers.get(*idx)) << "\n";
-    } else {
+    });
+
+    if (indices.empty()) {
         std::cout << "No teachers found for department \"" << dept << "\".\n";
+        return;
+    }
+
+    std::cout << "Found " << indices.size() << " teacher(s) in department \"" << dept << "\":\n";
+    for (std::size_t idx : indices) {
+        std::cout << "  [" << idx << "] " << *(teachers.get(idx)) << "\n";
     }
 }
 
@@ -79,15 +86,23 @@ void handleCreateCourse(Faculty& faculty) {
 }
 
 void handleFindCourseByTitle(const Faculty& faculty) {
-    std::cout << "\n--- Find Course by Title (Free Function findByCriterion) ---\n";
-    std::string titleQuery = readLine("Enter course title to search: ");
+    std::cout << "\n--- Find Courses by Title Keyword (Free Function findByCriterion) ---\n";
+    std::string titleQuery = readLine("Enter search keyword in title: ");
 
-    if (const auto* foundCoursePtr = findByCriterion(faculty.getCourses(), [&titleQuery](const std::unique_ptr<Course>& c) {
-        return c && c->getTitle() == titleQuery;
-    }); foundCoursePtr != nullptr && *foundCoursePtr != nullptr) {
-        std::cout << "Course found: " << **foundCoursePtr << "\n";
-    } else {
-        std::cout << "Course \"" << titleQuery << "\" not found.\n";
+    const auto matches = findByCriterion(faculty.getCourses(), [&titleQuery](const std::unique_ptr<Course>& c) {
+        return c && (c->getTitle().find(titleQuery) != std::string::npos);
+    });
+
+    if (matches.empty()) {
+        std::cout << "No courses found matching \"" << titleQuery << "\".\n";
+        return;
+    }
+
+    std::cout << "Found " << matches.size() << " course(s) matching \"" << titleQuery << "\":\n";
+    for (const auto* coursePtr : matches) {
+        if (coursePtr && *coursePtr) {
+            std::cout << "  - " << **coursePtr << "\n";
+        }
     }
 }
 
@@ -172,7 +187,7 @@ void showTeachersSubmenu(Faculty& faculty) {
             if (t) t->printInfo();
         }
         std::cout << "1. Add new teacher\n"
-                  << "2. Find teacher by department (Collection::findIndex)\n"
+                  << "2. Find teachers by department (Collection::findIndex)\n"
                   << "0. Back\n"
                   << "Select: ";
         choice = readInt("");
@@ -190,7 +205,7 @@ void showCoursesSubmenu(Faculty& faculty) {
         }
         std::cout << "1. Create new course\n"
                   << "2. Open course management\n"
-                  << "3. Find course by title (findByCriterion)\n"
+                  << "3. Find courses by title keyword (findByCriterion)\n"
                   << "0. Back\n"
                   << "Select: ";
         choice = readInt("");

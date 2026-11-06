@@ -91,11 +91,14 @@ public:
     }
 
     template <typename Predicate>
-    std::optional<std::size_t> findIndex(Predicate predicate) const {
-        if (const auto it = std::ranges::find_if(elements, predicate); it != elements.end()) {
-            return static_cast<std::size_t>(std::distance(elements.begin(), it));
+    std::vector<std::size_t> findIndex(Predicate predicate) const {
+        std::vector<std::size_t> indices;
+        for (std::size_t i = 0; i < elements.size(); ++i) {
+            if (predicate(elements[i])) {
+                indices.push_back(i);
+            }
         }
-        return std::nullopt;
+        return indices;
     }
 
     std::size_t size() const noexcept {
@@ -129,13 +132,14 @@ public:
 };
 
 template <typename T, typename Predicate>
-const T* findByCriterion(const Collection<T>& collection, Predicate criterion) {
+std::vector<const T*> findByCriterion(const Collection<T>& collection, Predicate criterion) {
+    std::vector<const T*> matches;
     for (std::size_t i = 0; i < collection.size(); ++i) {
         if (criterion(collection[i])) {
-            return &collection[i];
+            matches.push_back(&collection[i]);
         }
     }
-    return nullptr;
+    return matches;
 }
 
 #endif // COLLECTION_H
