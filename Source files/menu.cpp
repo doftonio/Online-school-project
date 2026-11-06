@@ -90,7 +90,7 @@ void handleFindCourseByTitle(const Faculty& faculty) {
     std::string titleQuery = readLine("Enter search keyword in title: ");
 
     const auto matches = findByCriterion(faculty.getCourses(), [&titleQuery](const std::unique_ptr<Course>& c) {
-        return c && (c->getTitle().find(titleQuery) != std::string::npos);
+        return c && c->getTitle().contains(titleQuery);
     });
 
     if (matches.empty()) {
