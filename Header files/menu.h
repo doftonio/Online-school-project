@@ -18,4 +18,4 @@ void handleAssignTeacherToCourse(const Faculty& faculty, Course* course);
 void handleRemoveTeacherFromCourse(Course* course);
 void handleAddActivityToCourse(const Faculty& faculty, Course* course);
 
-#endif // MENU_H
+#endif

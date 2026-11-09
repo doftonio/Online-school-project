@@ -9,17 +9,14 @@ private:
     int hours{0};
 
 public:
-    LectureActivity(int lessons, Teacher* assignedTeacher, int topics, int lectureHrs)
-        : CourseActivity("Lecture", lessons, assignedTeacher), topicsCount(topics), hours(lectureHrs) {}
+    LectureActivity(int lessons, Teacher* assignedTeacher, int topics, int lectureHrs);
 
     ActivityType getType() const noexcept override { return ActivityType::Lecture; }
     int calculateHours() const override { return hours; }
 
-    int calculateSelfStudyHours(double selfStudyRatio = 1.5) const noexcept {
-        return (hours <= 0) ? 0 : static_cast<int>(hours * selfStudyRatio);
-    }
+    int calculateSelfStudyHours(double selfStudyRatio = 1.5) const;
 
     void printDetails() const override;
 };
 
-#endif // LECTURE_ACTIVITY_H
+#endif

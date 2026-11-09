@@ -10,8 +10,7 @@ private:
 
 public:
     LabActivity() = default;
-    LabActivity(int lessons, Teacher* assignedTeacher, int labsCount, int minScore)
-        : CourseActivity("Lab", lessons, assignedTeacher), count(labsCount), minPassingScore(minScore) {}
+    LabActivity(int lessons, Teacher* assignedTeacher, int labsCount, int minScore);
 
     ActivityType getType() const noexcept override { return ActivityType::Lab; }
     int calculateHours() const override { return getLessonsCount() * 2; }
@@ -21,4 +20,4 @@ public:
     void printDetails() const override;
 };
 
-#endif // LAB_ACTIVITY_H
+#endif

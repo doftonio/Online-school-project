@@ -5,6 +5,7 @@
 #include <string_view>
 #include <compare>
 #include <iostream>
+#include "exceptions.h"
 
 class Teacher {
 private:
@@ -16,8 +17,7 @@ private:
 
 public:
     Teacher() = default;
-    Teacher(int teacherId, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept)
-        : id(teacherId), firstName(first), lastName(last), middleName(middle), department(dept) {}
+    Teacher(int teacherId, std::string_view first, std::string_view last, std::string_view middle, std::string_view dept);
 
     int getId() const noexcept { return id; }
     const std::string& getFirstName() const noexcept { return firstName; }
@@ -29,47 +29,19 @@ public:
         return lastName + " " + firstName + " " + middleName;
     }
 
-    int calculateAnnualWorkload(int assignedContactHours, double prepMultiplier = 1.25) const noexcept {
-        if (assignedContactHours <= 0) return 0;
-        return static_cast<int>(assignedContactHours * prepMultiplier);
-    }
+    int calculateAnnualWorkload(int assignedContactHours, double prepMultiplier = 1.25) const;
 
     void printInfo() const;
 
     bool operator==(const Teacher& other) const noexcept { return id == other.id; }
     auto operator<=>(const Teacher& other) const noexcept { return id <=> other.id; }
 
-    friend std::ostream& operator<<(std::ostream& os, const Teacher& teacher) {
-        os << "Teacher [ID: " << teacher.id << "] " << teacher.getFullName()
-           << " (" << teacher.department << ")";
-        return os;
-    }
-
-    friend std::istream& operator>>(std::istream& is, Teacher& teacher) {
-        std::cout << "Enter Teacher ID: ";
-        if (!(is >> teacher.id)) {
-            return is;
-        }
-        std::cout << "Enter Last Name: ";
-        if (!(is >> teacher.lastName)) {
-            return is;
-        }
-        std::cout << "Enter First Name: ";
-        if (!(is >> teacher.firstName)) {
-            return is;
-        }
-        std::cout << "Enter Middle Name: ";
-        if (!(is >> teacher.middleName)) {
-            return is;
-        }
-        std::cout << "Enter Department: ";
-        is >> teacher.department;
-        return is;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const Teacher& teacher);
+    friend std::istream& operator>>(std::istream& is, Teacher& teacher);
 
     friend void inspectTeacherInternals(const Teacher& teacher);
 };
 
 void inspectTeacherInternals(const Teacher& teacher);
 
-#endif // TEACHER_H
+#endif

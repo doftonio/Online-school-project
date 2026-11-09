@@ -11,9 +11,7 @@ private:
 
 public:
     PracticeActivity() = default;
-    PracticeActivity(int lessons, Teacher* assignedTeacher, int tests, int practicals, int calculations)
-        : CourseActivity("Practice", lessons, assignedTeacher),
-          testsCount(tests), tasksCount(practicals), calculationsCount(calculations) {}
+    PracticeActivity(int lessons, Teacher* assignedTeacher, int tests, int practicals, int calculations);
 
     ActivityType getType() const noexcept override { return ActivityType::Practice; }
     int calculateHours() const override { return getLessonsCount() * 2; }
@@ -21,4 +19,4 @@ public:
     void printDetails() const override;
 };
 
-#endif // PRACTICE_ACTIVITY_H
+#endif

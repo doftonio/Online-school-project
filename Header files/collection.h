@@ -5,10 +5,11 @@
 #include <optional>
 #include <cstddef>
 #include <iostream>
-#include <stdexcept>
 #include <algorithm>
 #include <concepts>
 #include <memory>
+#include <string>
+#include "exceptions.h"
 
 template <typename T>
 class Collection {
@@ -54,7 +55,8 @@ public:
 
     bool removeAt(std::size_t index) {
         if (index >= elements.size()) {
-            return false;
+            throw IndexOutOfBoundsException("Cannot remove from collection: index " +
+                std::to_string(index) + " is out of bounds (size: " + std::to_string(elements.size()) + ").");
         }
         elements.erase(elements.begin() + static_cast<std::ptrdiff_t>(index));
         return true;
@@ -68,11 +70,19 @@ public:
     }
 
     const T& get(std::size_t index) const {
-        return elements.at(index);
+        if (index >= elements.size()) {
+            throw IndexOutOfBoundsException("Collection access out of bounds: index " +
+                std::to_string(index) + ", size is " + std::to_string(elements.size()) + ".");
+        }
+        return elements[index];
     }
 
     T& get(std::size_t index) {
-        return elements.at(index);
+        if (index >= elements.size()) {
+            throw IndexOutOfBoundsException("Collection access out of bounds: index " +
+                std::to_string(index) + ", size is " + std::to_string(elements.size()) + ".");
+        }
+        return elements[index];
     }
 
     const T& operator[](std::size_t index) const noexcept {
@@ -142,4 +152,4 @@ std::vector<const T*> findByCriterion(const Collection<T>& collection, Predicate
     return matches;
 }
 
-#endif // COLLECTION_H
+#endif

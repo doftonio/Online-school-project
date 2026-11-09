@@ -7,6 +7,7 @@
 #include "teacher.h"
 #include "course.h"
 #include "collection.h"
+#include "exceptions.h"
 
 class Faculty {
 private:
@@ -26,6 +27,9 @@ public:
 
     Teacher* findTeacher(int teacherId) const;
     Course* findCourse(int courseId) const;
+
+    Teacher* getTeacher(int teacherId) const;
+    Course* getCourse(int courseId) const;
 };
 
-#endif // FACULTY_H
+#endif

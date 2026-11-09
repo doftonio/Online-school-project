@@ -8,6 +8,7 @@
 #include <iostream>
 #include "courseActivity.h"
 #include "collection.h"
+#include "exceptions.h"
 
 class Teacher;
 
@@ -53,4 +54,4 @@ public:
     void printFullCourseInfo() const;
 };
 
-#endif // COURSE_H
+#endif
