@@ -1,5 +1,6 @@
 #include "../Header files/courseActivity.h"
 #include "../Header files/teacher.h"
+#include <format>
 
 CourseActivity::CourseActivity(std::string_view actTitle, int lessons, Teacher* assignedTeacher)
     : title(actTitle), lessonsCount(lessons), teacher(assignedTeacher) {
@@ -7,7 +8,7 @@ CourseActivity::CourseActivity(std::string_view actTitle, int lessons, Teacher* 
         throw InvalidInputDataException("Activity title cannot be empty.");
     }
     if (lessons <= 0) {
-        throw InvalidInputDataException("Lessons count must be positive: provided " + std::to_string(lessons));
+        throw InvalidInputDataException(std::format("Lessons count must be positive: provided {}", lessons));
     }
     if (!assignedTeacher) {
         throw InvalidInputDataException("Course activity must have an assigned teacher.");

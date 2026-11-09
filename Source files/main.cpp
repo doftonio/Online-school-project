@@ -11,6 +11,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <format>
 
 void demonstrateTemplates() {
     std::cout << "\n=======================================================\n"
@@ -130,7 +131,7 @@ void demonstrateExceptions() {
 
     try {
         std::cout << "\n[Test 3] Attempting to fetch non-existent course with ID 999...\n";
-        [[maybe_unused]] Course* nonExistent = testFaculty.getCourse(999);
+        [[maybe_unused]] const Course* nonExistent = testFaculty.getCourse(999);
     } catch (const EntityNotFoundException& ex) {
         std::cout << "  -> Caught EntityNotFoundException: " << ex.what() << "\n";
     }
@@ -139,7 +140,7 @@ void demonstrateExceptions() {
         std::cout << "\n[Test 4] Attempting to assign 6th teacher to course exceeding limit 5...\n";
         Course* capacityCourse = testFaculty.createCourse(1, "Distributed Cloud Computing");
         for (int i = 1; i <= 6; ++i) {
-            Teacher* t = testFaculty.createTeacher(500 + i, "Teacher" + std::to_string(i), "Test", "T", "SEIT");
+            Teacher* t = testFaculty.createTeacher(500 + i, std::format("Teacher{}", i), "Test", "T", "SEIT");
             *capacityCourse += t;
         }
     } catch (const CapacityExceededException& ex) {

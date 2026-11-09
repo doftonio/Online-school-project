@@ -6,6 +6,7 @@
 #include <memory>
 #include <cstddef>
 #include <iostream>
+#include <format>
 #include "courseActivity.h"
 #include "collection.h"
 #include "exceptions.h"
@@ -40,7 +41,7 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Course& course) {
-        os << "Course [ID: " << course.id << "] " << course.title;
+        os << std::format("Course [ID: {}] {}", course.id, course.title);
         return os;
     }
 

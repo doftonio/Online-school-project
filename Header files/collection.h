@@ -9,6 +9,7 @@
 #include <concepts>
 #include <memory>
 #include <string>
+#include <format>
 #include "exceptions.h"
 
 template <typename T>
@@ -55,8 +56,9 @@ public:
 
     bool removeAt(std::size_t index) {
         if (index >= elements.size()) {
-            throw IndexOutOfBoundsException("Cannot remove from collection: index " +
-                std::to_string(index) + " is out of bounds (size: " + std::to_string(elements.size()) + ").");
+            throw IndexOutOfBoundsException(std::format(
+                "Cannot remove from collection: index {} is out of bounds (size: {}).",
+                index, elements.size()));
         }
         elements.erase(elements.begin() + static_cast<std::ptrdiff_t>(index));
         return true;
@@ -71,16 +73,18 @@ public:
 
     const T& get(std::size_t index) const {
         if (index >= elements.size()) {
-            throw IndexOutOfBoundsException("Collection access out of bounds: index " +
-                std::to_string(index) + ", size is " + std::to_string(elements.size()) + ".");
+            throw IndexOutOfBoundsException(std::format(
+                "Collection access out of bounds: index {}, size is {}.",
+                index, elements.size()));
         }
         return elements[index];
     }
 
     T& get(std::size_t index) {
         if (index >= elements.size()) {
-            throw IndexOutOfBoundsException("Collection access out of bounds: index " +
-                std::to_string(index) + ", size is " + std::to_string(elements.size()) + ".");
+            throw IndexOutOfBoundsException(std::format(
+                "Collection access out of bounds: index {}, size is {}.",
+                index, elements.size()));
         }
         return elements[index];
     }

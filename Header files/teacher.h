@@ -5,6 +5,7 @@
 #include <string_view>
 #include <compare>
 #include <iostream>
+#include <format>
 #include "exceptions.h"
 
 class Teacher {
@@ -26,7 +27,7 @@ public:
     const std::string& getDepartment() const noexcept { return department; }
 
     std::string getFullName() const {
-        return lastName + " " + firstName + " " + middleName;
+        return std::format("{} {} {}", lastName, firstName, middleName);
     }
 
     int calculateAnnualWorkload(int assignedContactHours, double prepMultiplier = 1.25) const;
@@ -36,8 +37,37 @@ public:
     bool operator==(const Teacher& other) const noexcept { return id == other.id; }
     auto operator<=>(const Teacher& other) const noexcept { return id <=> other.id; }
 
-    friend std::ostream& operator<<(std::ostream& os, const Teacher& teacher);
-    friend std::istream& operator>>(std::istream& is, Teacher& teacher);
+    friend std::ostream& operator<<(std::ostream& os, const Teacher& teacher) {
+        os << std::format("Teacher [ID: {}] {} ({})", teacher.id, teacher.getFullName(), teacher.department);
+        return os;
+    }
+
+    friend std::istream& operator>>(std::istream& is, Teacher& teacher) {
+        std::cout << "Enter Teacher ID: ";
+        if (!(is >> teacher.id)) {
+            throw InvalidInputDataException("Invalid input format for teacher ID.");
+        }
+        if (teacher.id <= 0) {
+            throw InvalidInputDataException("Teacher ID must be positive.");
+        }
+        std::cout << "Enter Last Name: ";
+        if (!(is >> teacher.lastName) || teacher.lastName.empty()) {
+            throw InvalidInputDataException("Teacher last name cannot be empty.");
+        }
+        std::cout << "Enter First Name: ";
+        if (!(is >> teacher.firstName) || teacher.firstName.empty()) {
+            throw InvalidInputDataException("Teacher first name cannot be empty.");
+        }
+        std::cout << "Enter Middle Name: ";
+        if (!(is >> teacher.middleName)) {
+            throw InvalidInputDataException("Invalid middle name input.");
+        }
+        std::cout << "Enter Department: ";
+        if (!(is >> teacher.department) || teacher.department.empty()) {
+            throw InvalidInputDataException("Teacher department cannot be empty.");
+        }
+        return is;
+    }
 
     friend void inspectTeacherInternals(const Teacher& teacher);
 };
