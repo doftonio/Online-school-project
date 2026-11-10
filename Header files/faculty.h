@@ -7,7 +7,7 @@
 #include "teacher.h"
 #include "course.h"
 #include "collection.h"
-#include "exceptions.h"
+#include "../Exceptions/exceptions.h"
 
 class Faculty {
 private:

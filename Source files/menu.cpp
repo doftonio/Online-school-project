@@ -6,7 +6,7 @@
 #include "../Header files/practiceActivity.h"
 #include "../Header files/lectureActivity.h"
 #include "../Header files/collection.h"
-#include "../Header files/exceptions.h"
+#include "../Exceptions/exceptions.h"
 #include <iostream>
 #include <string>
 #include <memory>

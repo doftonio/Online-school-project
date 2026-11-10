@@ -6,7 +6,7 @@
 #include <compare>
 #include <iostream>
 #include <format>
-#include "exceptions.h"
+#include "../Exceptions/exceptions.h"
 
 class Teacher {
 private:

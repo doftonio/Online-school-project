@@ -9,7 +9,7 @@
 #include <format>
 #include "courseActivity.h"
 #include "collection.h"
-#include "exceptions.h"
+#include "../Exceptions/exceptions.h"
 
 class Teacher;
 
