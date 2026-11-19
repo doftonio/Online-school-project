@@ -63,7 +63,7 @@ public:
             throw InvalidInputDataException("Invalid middle name input.");
         }
         std::cout << "Enter Department: ";
-        if (!(is >> teacher.department) || teacher.department.empty()) {
+        if (!std::getline(is >> std::ws, teacher.department) || teacher.department.empty()) {
             throw InvalidInputDataException("Teacher department cannot be empty.");
         }
         return is;

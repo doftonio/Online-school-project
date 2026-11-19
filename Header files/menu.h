@@ -15,7 +15,12 @@ void handleFindTeacherByDepartment(const Faculty& faculty);
 void handleCreateCourse(Faculty& faculty);
 void handleFindCourseByTitle(const Faculty& faculty);
 void handleAssignTeacherToCourse(const Faculty& faculty, Course* course);
-void handleRemoveTeacherFromCourse(Course* course);
+void handleRemoveTeacherFromCourse(const Faculty& faculty, Course* course);
 void handleAddActivityToCourse(const Faculty& faculty, Course* course);
+
+void handleManualSave(const Faculty& faculty);
+void handleManualLoad(Faculty& faculty);
+void handleExportReport(const Faculty& faculty);
+void handleViewLog();
 
 #endif

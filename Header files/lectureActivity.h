@@ -13,10 +13,14 @@ public:
 
     ActivityType getType() const noexcept override { return ActivityType::Lecture; }
     int calculateHours() const override { return hours; }
+    int calculateSelfStudyHours() const override;
+    int getTopicsCount() const noexcept { return topicsCount; }
 
-    int calculateSelfStudyHours(double selfStudyRatio = 1.5) const;
+    int calculateSelfStudyHoursWithRatio(double selfStudyRatio) const;
 
     void printDetails() const override;
+    std::string serializeRecord(int courseId) const override;
+    std::string formatReportLine() const override;
 };
 
 #endif

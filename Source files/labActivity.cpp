@@ -14,9 +14,21 @@ LabActivity::LabActivity(int lessons, Teacher* assignedTeacher, int labsCount, i
 }
 
 void LabActivity::printDetails() const {
-    std::string teacherStr = getTeacher() ? getTeacher()->getFullName() : "None";
+    const std::string teacherStr = getTeacher() ? getTeacher()->getFullName() : "None";
     std::cout << "  [Lab] Lessons: " << getLessonsCount()
               << ", Total labs: " << count
               << ", Min passing score: " << minPassingScore
               << ", Teacher: " << teacherStr << "\n";
+}
+
+std::string LabActivity::serializeRecord(int courseId) const {
+    const int teacherId = getTeacher() ? getTeacher()->getId() : 0;
+    return std::format("ACTIVITY|{}|LAB|{}|{}|{}|{}",
+                       courseId, getLessonsCount(), teacherId, count, minPassingScore);
+}
+
+std::string LabActivity::formatReportLine() const {
+    const std::string teacherName = getTeacher() ? getTeacher()->getFullName() : "Unassigned";
+    return std::format("    - [Lab] Lessons: {}, Labs: {}, Min Score: {}, Hours: {}, Teacher: {}",
+                       getLessonsCount(), count, minPassingScore, calculateHours(), teacherName);
 }

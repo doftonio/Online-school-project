@@ -7,5 +7,6 @@
 #include "entityNotFoundException.h"
 #include "capacityExceededException.h"
 #include "indexOutOfBoundsException.h"
+#include "fileStorageException.h"
 
 #endif

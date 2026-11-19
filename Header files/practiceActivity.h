@@ -15,8 +15,13 @@ public:
 
     ActivityType getType() const noexcept override { return ActivityType::Practice; }
     int calculateHours() const override { return getLessonsCount() * 2; }
+    int getTestsCount() const noexcept { return testsCount; }
+    int getTasksCount() const noexcept { return tasksCount; }
+    int getCalculationsCount() const noexcept { return calculationsCount; }
 
     void printDetails() const override;
+    std::string serializeRecord(int courseId) const override;
+    std::string formatReportLine() const override;
 };
 
 #endif

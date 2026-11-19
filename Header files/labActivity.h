@@ -18,6 +18,8 @@ public:
     int getMinPassingScore() const noexcept { return minPassingScore; }
 
     void printDetails() const override;
+    std::string serializeRecord(int courseId) const override;
+    std::string formatReportLine() const override;
 };
 
 #endif
