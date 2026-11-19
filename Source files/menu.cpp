@@ -161,11 +161,11 @@ void handleFindTeacherByDepartment(const Faculty& faculty) {
         });
 
         if (indices.empty()) {
-            std::cout << std::format(R"(No teachers found for department "{}".)" "\n", dept);
+            std::cout << std::format(R"(No teachers found for department "{}".)", dept) << "\n";
             return;
         }
 
-        std::cout << std::format(R"(Found {} teacher(s) in department "{}":)" "\n", indices.size(), dept);
+        std::cout << std::format(R"(Found {} teacher(s) in department "{}":) << "\n" -- indices.size(), dept);
         for (std::size_t idx : indices) {
             std::cout << "  [" << idx << "] " << *(teachers.get(idx)) << "\n";
         }
@@ -199,11 +199,11 @@ void handleFindCourseByTitle(const Faculty& faculty) {
         });
 
         if (matches.empty()) {
-            std::cout << std::format(R"(No courses found matching "{}".)" "\n", titleQuery);
+            std::cout << std::format(R"(No courses found matching "{}".)", titleQuery) << "\n";
             return;
         }
 
-        std::cout << std::format(R"(Found {} course(s) matching "{}":)" "\n", matches.size(), titleQuery);
+        std::cout << std::format(R"(Found {} course(s) matching "{}":) << "\n" -- matches.size(), titleQuery);
         for (const auto* coursePtr : matches) {
             if (coursePtr && *coursePtr) {
                 std::cout << "  - " << **coursePtr << "\n";
@@ -260,7 +260,7 @@ void handleManualSave(const Faculty& faculty) {
         const std::string inputPath = readLineWithDefault("Enter save file name or path", FileStorageService::DEFAULT_MANUAL_FILE);
         const std::string savedPath = FileStorageService::saveState(faculty, inputPath);
         Logger::info(std::format(R"(Manual save completed to "{}".)", savedPath));
-        std::cout << std::format(R"(System state successfully saved to "{}".)" "\n", savedPath);
+        std::cout << std::format(R"(System state successfully saved to "{}".)", savedPath) << "\n";
     });
 }
 
@@ -270,7 +270,7 @@ void handleManualLoad(Faculty& faculty) {
         const std::string inputPath = readLineWithDefault("Enter save file name or path", FileStorageService::DEFAULT_MANUAL_FILE);
         const std::string loadedPath = FileStorageService::loadState(faculty, inputPath);
         Logger::info(std::format(R"(Manual load completed from "{}".)", loadedPath));
-        std::cout << std::format(R"(System state successfully restored from "{}".)" "\n", loadedPath);
+        std::cout << std::format(R"(System state successfully restored from "{}".)", loadedPath) << "\n";
         triggerAutoSave(faculty, std::format(R"(Synchronized autosave after loading "{}")", loadedPath));
     });
 }
@@ -281,7 +281,7 @@ void handleExportReport(const Faculty& faculty) {
         const std::string inputPath = readLineWithDefault("Enter report file name or path", FileStorageService::DEFAULT_REPORT_FILE);
         const std::string reportPath = FileStorageService::exportReport(faculty, inputPath);
         Logger::info(std::format(R"(Text report exported to "{}".)", reportPath));
-        std::cout << std::format(R"(Text report successfully generated at "{}".)" "\n", reportPath);
+        std::cout << std::format(R"(Text report successfully generated at "{}".)", reportPath) << "\n";
     });
 }
 
