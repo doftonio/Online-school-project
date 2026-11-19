@@ -38,26 +38,24 @@ void FileStorageService::ensureDirectoryForFile(std::string_view filePath) {
         std::filesystem::create_directories(parentDir, ec);
         if (ec) {
             throw FileStorageException(std::format(
-                "Cannot create storage directory \"{}\": {}.", parentDir.string(), ec.message()));
+                R"(Cannot create storage directory "{}": {}.)", parentDir.string(), ec.message()));
         }
     }
 }
 
 void FileStorageService::validateField(std::string_view value, std::string_view fieldName) {
-    if (value.find('|') != std::string_view::npos ||
-        value.find('\n') != std::string_view::npos ||
-        value.find('\r') != std::string_view::npos) {
+    if (value.contains('|') || value.contains('\n') || value.contains('\r')) {
         throw FileStorageException(std::format(
-            "Field \"{}\" contains forbidden delimiter '|' or newline character.", fieldName));
+            R"(Field "{}" contains forbidden delimiter '|' or newline character.)", fieldName));
     }
 }
 
-std::vector<std::string> FileStorageService::splitRecord(const std::string& line, char delimiter) {
+std::vector<std::string> FileStorageService::splitRecord(std::string_view line, char delimiter) {
     std::vector<std::string> tokens;
     std::size_t start = 0;
     while (true) {
         const std::size_t pos = line.find(delimiter, start);
-        if (pos == std::string::npos) {
+        if (pos == std::string_view::npos) {
             tokens.emplace_back(line.substr(start));
             break;
         }
@@ -74,17 +72,44 @@ int FileStorageService::parseIntField(std::string_view token, std::size_t lineNu
     const auto [ptr, ec] = std::from_chars(first, last, value);
     if (ec != std::errc{} || ptr != last || token.empty()) {
         throw FileStorageException(std::format(
-            "Line {}: invalid integer value \"{}\" for field \"{}\".", lineNumber, token, fieldName));
+            R"(Line {}: invalid integer value "{}" for field "{}".)", lineNumber, token, fieldName));
     }
     return value;
 }
 
-void FileStorageService::parseActivityRecord(Faculty& targetFaculty, const std::vector<std::string>& tokens, std::size_t lineNumber) {
+void FileStorageService::parseTeacherRecord(Faculty& targetFaculty, const std::vector<std::string>& tokens, std::size_t lineNumber) {
+    if (tokens.size() != 6) {
+        throw FileStorageException(std::format("Line {}: malformed TEACHER record (expected 6 fields).", lineNumber));
+    }
+    const int id = parseIntField(tokens[1], lineNumber, "teacherId");
+    targetFaculty.createTeacher(id, tokens[2], tokens[3], tokens[4], tokens[5]);
+}
+
+void FileStorageService::parseCourseRecord(Faculty& targetFaculty, const std::vector<std::string>& tokens, std::size_t lineNumber) {
+    if (tokens.size() != 3) {
+        throw FileStorageException(std::format("Line {}: malformed COURSE record (expected 3 fields).", lineNumber));
+    }
+    const int id = parseIntField(tokens[1], lineNumber, "courseId");
+    targetFaculty.createCourse(id, tokens[2]);
+}
+
+void FileStorageService::parseCourseTeacherRecord(const Faculty& targetFaculty, const std::vector<std::string>& tokens, std::size_t lineNumber) {
+    if (tokens.size() != 3) {
+        throw FileStorageException(std::format("Line {}: malformed COURSE_TEACHER record (expected 3 fields).", lineNumber));
+    }
+    const int courseId = parseIntField(tokens[1], lineNumber, "courseId");
+    const int teacherId = parseIntField(tokens[2], lineNumber, "teacherId");
+    Course* course = targetFaculty.getCourse(courseId);
+    Teacher* teacher = targetFaculty.getTeacher(teacherId);
+    *course += teacher;
+}
+
+void FileStorageService::parseActivityRecord(const Faculty& targetFaculty, const std::vector<std::string>& tokens, std::size_t lineNumber) {
     if (tokens.size() < 6) {
         throw FileStorageException(std::format("Line {}: malformed ACTIVITY record.", lineNumber));
     }
     const int courseId = parseIntField(tokens[1], lineNumber, "courseId");
-    const std::string& actType = tokens[2];
+    const std::string_view actType = tokens[2];
     const int lessons = parseIntField(tokens[3], lineNumber, "lessonsCount");
     const int teacherId = parseIntField(tokens[4], lineNumber, "teacherId");
 
@@ -114,7 +139,39 @@ void FileStorageService::parseActivityRecord(Faculty& targetFaculty, const std::
         const int calcs = parseIntField(tokens[7], lineNumber, "calculationsCount");
         course->addActivity(std::make_unique<PracticeActivity>(lessons, teacher, tests, tasks, calcs));
     } else {
-        throw FileStorageException(std::format("Line {}: unknown activity type \"{}\".", lineNumber, actType));
+        throw FileStorageException(std::format(R"(Line {}: unknown activity type "{}".)", lineNumber, actType));
+    }
+}
+
+void FileStorageService::applyRecord(Faculty& targetFaculty, bool& hasFacultyHeader, const std::vector<std::string>& tokens, std::size_t lineNumber) {
+    const std::string_view recordType = tokens[0];
+
+    if (recordType == "FACULTY") {
+        if (tokens.size() != 2) {
+            throw FileStorageException(std::format("Line {}: malformed FACULTY record.", lineNumber));
+        }
+        if (hasFacultyHeader) {
+            throw FileStorageException(std::format("Line {}: duplicate FACULTY header record.", lineNumber));
+        }
+        targetFaculty = Faculty(tokens[1]);
+        hasFacultyHeader = true;
+        return;
+    }
+
+    if (!hasFacultyHeader) {
+        throw FileStorageException(std::format(R"(Line {}: "{}" record precedes FACULTY header.)", lineNumber, recordType));
+    }
+
+    if (recordType == "TEACHER") {
+        parseTeacherRecord(targetFaculty, tokens, lineNumber);
+    } else if (recordType == "COURSE") {
+        parseCourseRecord(targetFaculty, tokens, lineNumber);
+    } else if (recordType == "COURSE_TEACHER") {
+        parseCourseTeacherRecord(targetFaculty, tokens, lineNumber);
+    } else if (recordType == "ACTIVITY") {
+        parseActivityRecord(targetFaculty, tokens, lineNumber);
+    } else {
+        throw FileStorageException(std::format(R"(Line {}: unknown record tag "{}".)", lineNumber, recordType));
     }
 }
 
@@ -126,7 +183,7 @@ std::string FileStorageService::saveState(const Faculty& faculty, std::string_vi
 
     std::ofstream outFile{resolvedPath, std::ios::out | std::ios::trunc};
     if (!outFile.is_open()) {
-        throw FileStorageException(std::format("Cannot open file \"{}\" for writing.", resolvedPath));
+        throw FileStorageException(std::format(R"(Cannot open file "{}" for writing.)", resolvedPath));
     }
 
     outFile << std::format("FACULTY|{}\n", faculty.getName());
@@ -170,7 +227,7 @@ std::string FileStorageService::saveState(const Faculty& faculty, std::string_vi
 
     outFile.flush();
     if (outFile.fail() || outFile.bad()) {
-        throw FileStorageException(std::format("Write error occurred while saving state to \"{}\".", resolvedPath));
+        throw FileStorageException(std::format(R"(Write error occurred while saving state to "{}".)", resolvedPath));
     }
 
     return resolvedPath;
@@ -182,7 +239,7 @@ std::string FileStorageService::loadState(Faculty& faculty, std::string_view fil
 
     std::ifstream inFile{resolvedPath, std::ios::in};
     if (!inFile.is_open()) {
-        throw FileStorageException(std::format("Cannot open file \"{}\" for reading.", resolvedPath));
+        throw FileStorageException(std::format(R"(Cannot open file "{}" for reading.)", resolvedPath));
     }
 
     Faculty tempFaculty("Temporary");
@@ -198,91 +255,23 @@ std::string FileStorageService::loadState(Faculty& faculty, std::string_view fil
         if (line.empty()) {
             continue;
         }
-
         const auto tokens = splitRecord(line, '|');
-        const std::string& recordType = tokens[0];
-
-        if (recordType == "FACULTY") {
-            if (tokens.size() != 2) {
-                throw FileStorageException(std::format("Line {}: malformed FACULTY record.", lineNumber));
-            }
-            if (hasFacultyHeader) {
-                throw FileStorageException(std::format("Line {}: duplicate FACULTY header record.", lineNumber));
-            }
-            tempFaculty = Faculty(tokens[1]);
-            hasFacultyHeader = true;
-        } else if (recordType == "TEACHER") {
-            if (!hasFacultyHeader) {
-                throw FileStorageException(std::format("Line {}: TEACHER record precedes FACULTY header.", lineNumber));
-            }
-            if (tokens.size() != 6) {
-                throw FileStorageException(std::format("Line {}: malformed TEACHER record (expected 6 fields).", lineNumber));
-            }
-            const int id = parseIntField(tokens[1], lineNumber, "teacherId");
-            tempFaculty.createTeacher(id, tokens[2], tokens[3], tokens[4], tokens[5]);
-        } else if (recordType == "COURSE") {
-            if (!hasFacultyHeader) {
-                throw FileStorageException(std::format("Line {}: COURSE record precedes FACULTY header.", lineNumber));
-            }
-            if (tokens.size() != 3) {
-                throw FileStorageException(std::format("Line {}: malformed COURSE record (expected 3 fields).", lineNumber));
-            }
-            const int id = parseIntField(tokens[1], lineNumber, "courseId");
-            tempFaculty.createCourse(id, tokens[2]);
-        } else if (recordType == "COURSE_TEACHER") {
-            if (!hasFacultyHeader) {
-                throw FileStorageException(std::format("Line {}: COURSE_TEACHER record precedes FACULTY header.", lineNumber));
-            }
-            if (tokens.size() != 3) {
-                throw FileStorageException(std::format("Line {}: malformed COURSE_TEACHER record (expected 3 fields).", lineNumber));
-            }
-            const int courseId = parseIntField(tokens[1], lineNumber, "courseId");
-            const int teacherId = parseIntField(tokens[2], lineNumber, "teacherId");
-            Course* course = tempFaculty.getCourse(courseId);
-            Teacher* teacher = tempFaculty.getTeacher(teacherId);
-            *course += teacher;
-        } else if (recordType == "ACTIVITY") {
-            if (!hasFacultyHeader) {
-                throw FileStorageException(std::format("Line {}: ACTIVITY record precedes FACULTY header.", lineNumber));
-            }
-            parseActivityRecord(tempFaculty, tokens, lineNumber);
-        } else {
-            throw FileStorageException(std::format("Line {}: unknown record tag \"{}\".", lineNumber, recordType));
-        }
+        applyRecord(tempFaculty, hasFacultyHeader, tokens, lineNumber);
     }
 
     if (inFile.bad()) {
-        throw FileStorageException(std::format("I/O error occurred while reading file \"{}\".", resolvedPath));
+        throw FileStorageException(std::format(R"(I/O error occurred while reading file "{}".)", resolvedPath));
     }
 
     if (!hasFacultyHeader) {
-        throw FileStorageException(std::format("File \"{}\" is empty or missing FACULTY header.", resolvedPath));
+        throw FileStorageException(std::format(R"(File "{}" is empty or missing FACULTY header.)", resolvedPath));
     }
 
     faculty = std::move(tempFaculty);
     return resolvedPath;
 }
 
-std::string FileStorageService::exportReport(const Faculty& faculty, std::string_view filePath) {
-    validateFilePath(filePath);
-    const std::string resolvedPath = resolveStoragePath(filePath);
-    ensureDirectoryForFile(resolvedPath);
-
-    std::fstream reportFile{resolvedPath, std::ios::out | std::ios::trunc};
-    if (!reportFile.is_open()) {
-        throw FileStorageException(std::format("Cannot open report file \"{}\" for writing.", resolvedPath));
-    }
-
-    reportFile << "============================================================\n"
-               << "               ONLINE SCHOOL SYSTEM REPORT\n"
-               << "============================================================\n";
-
-    const std::streampos sizeFieldPos = reportFile.tellp();
-    reportFile << "Report Size (bytes) : 00000000\n";
-    reportFile << std::format("Faculty Name        : {}\n", faculty.getName());
-    reportFile << std::format("Registered Teachers : {}\n", faculty.getTeachers().size());
-    reportFile << std::format("Registered Courses  : {}\n", faculty.getCourses().size());
-
+std::pair<int, int> FileStorageService::calculateFacultyWorkload(const Faculty& faculty) {
     int totalContactHours = 0;
     int totalSelfStudyHours = 0;
     for (const auto& c : faculty.getCourses()) {
@@ -293,69 +282,107 @@ std::string FileStorageService::exportReport(const Faculty& faculty, std::string
             totalSelfStudyHours += act->calculateSelfStudyHours();
         }
     }
+    return {totalContactHours, totalSelfStudyHours};
+}
 
+void FileStorageService::writeTeachersSection(std::ostream& out, const Faculty& faculty) {
+    out << "1. FACULTY TEACHERS ROSTER\n"
+        << "------------------------------------------------------------\n";
+    if (faculty.getTeachers().empty()) {
+        out << "  (No teachers registered)\n";
+        return;
+    }
+    for (const auto& t : faculty.getTeachers()) {
+        if (!t) continue;
+        out << std::format("  [ID: {}] {} | Department: {}\n",
+                           t->getId(), t->getFullName(), t->getDepartment());
+    }
+}
+
+void FileStorageService::writeCourseDetails(std::ostream& out, const Course& course) {
+    out << std::format("\nCourse [ID: {}]: {}\n", course.getId(), course.getTitle());
+    out << "  Assigned Teachers:\n";
+    if (course.getTeachers().empty()) {
+        out << "    - None\n";
+    } else {
+        for (const auto* t : course.getTeachers()) {
+            if (!t) continue;
+            out << std::format("    - [ID: {}] {} ({})\n",
+                               t->getId(), t->getFullName(), t->getDepartment());
+        }
+    }
+
+    out << "  Activities:\n";
+    if (course.getActivities().empty()) {
+        out << "    - None\n";
+        return;
+    }
+    for (const auto& act : course.getActivities()) {
+        if (!act) continue;
+        out << act->formatReportLine() << "\n";
+    }
+}
+
+void FileStorageService::writeCoursesSection(std::ostream& out, const Faculty& faculty) {
+    out << "\n2. COURSES AND EDUCATIONAL ACTIVITIES\n"
+        << "------------------------------------------------------------\n";
+    if (faculty.getCourses().empty()) {
+        out << "  (No courses registered)\n";
+        return;
+    }
+    for (const auto& c : faculty.getCourses()) {
+        if (!c) continue;
+        writeCourseDetails(out, *c);
+    }
+}
+
+void FileStorageService::patchReportSize(std::ostream& out, std::streampos sizeFieldPos) {
+    if (const std::streampos endPos = out.tellp();
+        sizeFieldPos != std::streampos{-1} && endPos != std::streampos{-1}) {
+        const auto totalBytes = static_cast<std::size_t>(endPos);
+        out.seekp(sizeFieldPos);
+        out << std::format("Report Size (bytes) : {:08}\n", totalBytes);
+        out.seekp(endPos);
+    }
+}
+
+std::string FileStorageService::exportReport(const Faculty& faculty, std::string_view filePath) {
+    validateFilePath(filePath);
+    const std::string resolvedPath = resolveStoragePath(filePath);
+    ensureDirectoryForFile(resolvedPath);
+
+    std::fstream reportFile{resolvedPath, std::ios::out | std::ios::trunc};
+    if (!reportFile.is_open()) {
+        throw FileStorageException(std::format(R"(Cannot open report file "{}" for writing.)", resolvedPath));
+    }
+
+    reportFile << "============================================================\n"
+               << "               ONLINE SCHOOL SYSTEM REPORT\n"
+               << "============================================================\n";
+
+    const std::streampos sizeFieldPos = reportFile.tellp();
+    const auto [totalContactHours, totalSelfStudyHours] = calculateFacultyWorkload(faculty);
+
+    reportFile << "Report Size (bytes) : 00000000\n";
+    reportFile << std::format("Faculty Name        : {}\n", faculty.getName());
+    reportFile << std::format("Registered Teachers : {}\n", faculty.getTeachers().size());
+    reportFile << std::format("Registered Courses  : {}\n", faculty.getCourses().size());
     reportFile << std::format("Total Contact Hours : {}\n", totalContactHours);
     reportFile << std::format("Total Self-Study Hrs: {}\n", totalSelfStudyHours);
     reportFile << "============================================================\n\n";
 
-    reportFile << "1. FACULTY TEACHERS ROSTER\n"
-               << "------------------------------------------------------------\n";
-    if (faculty.getTeachers().empty()) {
-        reportFile << "  (No teachers registered)\n";
-    } else {
-        for (const auto& t : faculty.getTeachers()) {
-            if (!t) continue;
-            reportFile << std::format("  [ID: {}] {} | Department: {}\n",
-                                      t->getId(), t->getFullName(), t->getDepartment());
-        }
-    }
-
-    reportFile << "\n2. COURSES AND EDUCATIONAL ACTIVITIES\n"
-               << "------------------------------------------------------------\n";
-    if (faculty.getCourses().empty()) {
-        reportFile << "  (No courses registered)\n";
-    } else {
-        for (const auto& c : faculty.getCourses()) {
-            if (!c) continue;
-            reportFile << std::format("\nCourse [ID: {}]: {}\n", c->getId(), c->getTitle());
-            reportFile << "  Assigned Teachers:\n";
-            if (c->getTeachers().empty()) {
-                reportFile << "    - None\n";
-            } else {
-                for (const auto* t : c->getTeachers()) {
-                    if (!t) continue;
-                    reportFile << std::format("    - [ID: {}] {} ({})\n",
-                                              t->getId(), t->getFullName(), t->getDepartment());
-                }
-            }
-
-            reportFile << "  Activities:\n";
-            if (c->getActivities().empty()) {
-                reportFile << "    - None\n";
-            } else {
-                for (const auto& act : c->getActivities()) {
-                    if (!act) continue;
-                    reportFile << act->formatReportLine() << "\n";
-                }
-            }
-        }
-    }
+    writeTeachersSection(reportFile, faculty);
+    writeCoursesSection(reportFile, faculty);
 
     reportFile << "\n============================================================\n"
                << "                       END OF REPORT\n"
                << "============================================================\n";
 
-    const std::streampos endPos = reportFile.tellp();
-    if (sizeFieldPos != std::streampos{-1} && endPos != std::streampos{-1}) {
-        const auto totalBytes = static_cast<std::size_t>(endPos);
-        reportFile.seekp(sizeFieldPos);
-        reportFile << std::format("Report Size (bytes) : {:08}\n", totalBytes);
-        reportFile.seekp(endPos);
-    }
+    patchReportSize(reportFile, sizeFieldPos);
 
     reportFile.flush();
     if (reportFile.fail() || reportFile.bad()) {
-        throw FileStorageException(std::format("Write error occurred while generating report \"{}\".", resolvedPath));
+        throw FileStorageException(std::format(R"(Write error occurred while generating report "{}".)", resolvedPath));
     }
 
     return resolvedPath;

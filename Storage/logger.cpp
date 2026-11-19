@@ -25,14 +25,14 @@ void Logger::writeEntry(std::string_view level, std::string_view message, std::s
 
     std::ofstream logFile{std::string(logPath), std::ios::out | std::ios::app};
     if (!logFile.is_open()) {
-        throw FileStorageException(std::format("Unable to open log file for appending: \"{}\".", logPath));
+        throw FileStorageException(std::format(R"(Unable to open log file for appending: "{}".)", logPath));
     }
 
     logFile << formatted << "\n";
     logFile.flush();
 
     if (logFile.fail() || logFile.bad()) {
-        throw FileStorageException(std::format("Failed while writing entry to log file: \"{}\".", logPath));
+        throw FileStorageException(std::format(R"(Failed while writing entry to log file: "{}".)", logPath));
     }
 }
 
@@ -51,7 +51,7 @@ void Logger::error(std::string_view message, std::string_view logPath) {
 std::vector<std::string> Logger::readEntries(std::string_view logPath) {
     std::ifstream logFile{std::string(logPath), std::ios::in};
     if (!logFile.is_open()) {
-        throw FileStorageException(std::format("Log file does not exist or cannot be opened: \"{}\".", logPath));
+        throw FileStorageException(std::format(R"(Log file does not exist or cannot be opened: "{}".)", logPath));
     }
 
     std::vector<std::string> entries;
@@ -63,7 +63,7 @@ std::vector<std::string> Logger::readEntries(std::string_view logPath) {
     }
 
     if (logFile.bad()) {
-        throw FileStorageException(std::format("I/O error occurred while reading log file: \"{}\".", logPath));
+        throw FileStorageException(std::format(R"(I/O error occurred while reading log file: "{}".)", logPath));
     }
 
     return entries;
