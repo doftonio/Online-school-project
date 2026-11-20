@@ -165,7 +165,7 @@ void handleFindTeacherByDepartment(const Faculty& faculty) {
             return;
         }
 
-        std::cout << std::format(R"(Found {} teacher(s) in department "{}":) << "\n" -- indices.size(), dept);
+        std::cout << std::format(R"(Found {} teacher(s) in department "{}":)", indices.size(), dept) << "\n";
         for (std::size_t idx : indices) {
             std::cout << "  [" << idx << "] " << *(teachers.get(idx)) << "\n";
         }
@@ -203,7 +203,7 @@ void handleFindCourseByTitle(const Faculty& faculty) {
             return;
         }
 
-        std::cout << std::format(R"(Found {} course(s) matching "{}":) << "\n" -- matches.size(), titleQuery);
+        std::cout << std::format(R"(Found {} course(s) matching "{}":)", matches.size(), titleQuery) << "\n";
         for (const auto* coursePtr : matches) {
             if (coursePtr && *coursePtr) {
                 std::cout << "  - " << **coursePtr << "\n";
