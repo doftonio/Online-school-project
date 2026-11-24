@@ -7,7 +7,7 @@
 
 class Logger {
 public:
-    static constexpr std::string_view DEFAULT_LOG_FILE = "Storage/data/system_log.txt";
+    static constexpr std::string_view DEFAULT_LOG_FILE = "Storage/data/system_log.log";
 
     static void info(std::string_view message, std::string_view logPath = DEFAULT_LOG_FILE);
     static void warn(std::string_view message, std::string_view logPath = DEFAULT_LOG_FILE);

@@ -1,0 +1,60 @@
+============================================================
+               ONLINE SCHOOL SYSTEM REPORT
+============================================================
+Report Size (bytes) : 00002779
+Faculty Name        : Faculty of Computer Systems and Networks
+Registered Teachers : 6
+Registered Courses  : 4
+Total Contact Hours : 288
+Total Self-Study Hrs: 192
+============================================================
+
+1. FACULTY TEACHERS ROSTER
+------------------------------------------------------------
+  [ID: 101] Sidorov Alexey Ivanovich | Department: SEIT
+  [ID: 102] Kuznetsova Elena Vasilyevna | Department: IIT
+  [ID: 103] Gromov Mikhail Petrovich | Department: Higher Math
+  [ID: 104] Belaeva Anna Sergeevna | Department: SEIT
+  [ID: 105] Kozlov Dmitry Alexandrovich | Department: IIT
+  [ID: 106] Morozova Olga Viktorovna | Department: Higher Math
+
+2. COURSES AND EDUCATIONAL ACTIVITIES
+------------------------------------------------------------
+
+Course [ID: 1]: Object-Oriented Programming
+  Assigned Teachers:
+    - [ID: 101] Sidorov Alexey Ivanovich (SEIT)
+    - [ID: 102] Kuznetsova Elena Vasilyevna (IIT)
+    - [ID: 104] Belaeva Anna Sergeevna (SEIT)
+  Activities:
+    - [Lecture] Lessons: 16, Topics: 8, Hours: 32, Teacher: Sidorov Alexey Ivanovich
+    - [Lab] Lessons: 16, Labs: 8, Min Score: 4, Hours: 32, Teacher: Kuznetsova Elena Vasilyevna
+    - [Practice] Lessons: 16, Tests: 4, Tasks: 12, Calcs: 6, Hours: 32, Teacher: Belaeva Anna Sergeevna
+
+Course [ID: 2]: Algorithms and Data Structures
+  Assigned Teachers:
+    - [ID: 102] Kuznetsova Elena Vasilyevna (IIT)
+    - [ID: 105] Kozlov Dmitry Alexandrovich (IIT)
+  Activities:
+    - [Lecture] Lessons: 18, Topics: 9, Hours: 36, Teacher: Kuznetsova Elena Vasilyevna
+    - [Lab] Lessons: 18, Labs: 9, Min Score: 5, Hours: 36, Teacher: Kozlov Dmitry Alexandrovich
+
+Course [ID: 3]: Database Systems
+  Assigned Teachers:
+    - [ID: 101] Sidorov Alexey Ivanovich (SEIT)
+    - [ID: 105] Kozlov Dmitry Alexandrovich (IIT)
+  Activities:
+    - [Lecture] Lessons: 14, Topics: 7, Hours: 28, Teacher: Sidorov Alexey Ivanovich
+    - [Lab] Lessons: 14, Labs: 6, Min Score: 4, Hours: 28, Teacher: Kozlov Dmitry Alexandrovich
+
+Course [ID: 4]: Discrete Mathematics
+  Assigned Teachers:
+    - [ID: 103] Gromov Mikhail Petrovich (Higher Math)
+    - [ID: 106] Morozova Olga Viktorovna (Higher Math)
+  Activities:
+    - [Lecture] Lessons: 16, Topics: 8, Hours: 32, Teacher: Gromov Mikhail Petrovich
+    - [Practice] Lessons: 16, Tests: 6, Tasks: 15, Calcs: 8, Hours: 32, Teacher: Morozova Olga Viktorovna
+
+============================================================
+                       END OF REPORT
+============================================================
